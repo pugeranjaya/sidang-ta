@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (config('app.env') === 'production') {
-            URL::forceScheme('https');
+        if (config('app.env') === 'production' || str_contains(config('app.url'), 'https://') || env('RAILWAY_ENVIRONMENT')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
         if (str_contains(config('app.url'), 'ngrok') || request()->secure() || isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
