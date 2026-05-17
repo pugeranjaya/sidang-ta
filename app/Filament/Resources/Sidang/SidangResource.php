@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Filament\Resources\Sidang;
+
+use App\Filament\Resources\Sidang\Pages\CreateSidang;
+use App\Filament\Resources\Sidang\Pages\EditSidang;
+use App\Filament\Resources\Sidang\Pages\ListSidang;
+use App\Filament\Resources\Sidang\Pages\ViewSidang;
+use App\Filament\Resources\Sidang\Schemas\SidangForm;
+use App\Filament\Resources\Sidang\Schemas\SidangInfolist;
+use App\Filament\Resources\Sidang\Tables\SidangTable;
+use App\Models\Sidang;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Table;
+
+class SidangResource extends Resource
+{
+    protected static ?string $model = \App\Models\Sidang::class;
+
+    protected static ?string $slug = 'sidang';
+    protected static ?string $pluralModelLabel = 'Sidang';
+    protected static ?string $modelLabel = 'Sidang';
+    protected static ?int $navigationSort = 6;
+
+    protected static string|\BackedEnum|null $navigationIcon = 'icon-sidang';
+    protected static ?string $navigationLabel = 'Sidang';
+
+    protected static ?string $recordTitleAttribute = 'mahasiswa.nim';
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'Terjadwal')->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['mahasiswa.nama', 'mahasiswa.nim', 'tanggal'];
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return SidangForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return SidangInfolist::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return SidangTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListSidang::route('/'),
+            'create' => CreateSidang::route('/create'),
+            'view' => ViewSidang::route('/{record}'),
+            'edit' => EditSidang::route('/{record}/edit'),
+        ];
+    }
+}
