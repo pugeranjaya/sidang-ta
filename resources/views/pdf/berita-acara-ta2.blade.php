@@ -453,10 +453,10 @@
             <th style="width: 10%; text-align: center; background-color: #e5e5e5;">No.</th>
             <th style="width: 90%; text-align: center; background-color: #e5e5e5;">U r a i a n</th>
         </tr>
-        @for($i=0; $i<22; $i++)
+        @for($i=0; $i<16; $i++)
         <tr>
-            <td style="padding: 13.5px;"></td>
-            <td style="padding: 13.5px;"></td>
+            <td style="padding: 14px;"></td>
+            <td style="padding: 14px;"></td>
         </tr>
         @endfor
     </table>
