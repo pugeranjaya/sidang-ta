@@ -210,7 +210,7 @@ class SidangScheduler
                 ->first();
 
             if (!$historyTa1) {
-                $this->log("GAGAL: Mahasiswa ini belum menyelesaikan Seminar TA 1 (belum ada jadwal dengan status Selesai atau Disetujui). Tidak diizinkan Seminar TA 2.");
+                $this->log("GAGAL: Mahasiswa ini belum menyelesaikan Seminar TA 1 (belum ada jadwal dengan status Lulus). Tidak diizinkan Seminar TA 2.");
                 return ['success' => false, '_debug' => $this->debugLog];
             }
 
