@@ -64,15 +64,15 @@
 
         /* Seksi TTD Detail */
         .section-title {
-            margin-top: 10px;
-            margin-bottom: 2px;
+            margin-top: 15px;
+            margin-bottom: 10px;
         }
         .table-ttd-detail {
             width: 100%;
             border-collapse: collapse;
         }
         .table-ttd-detail td {
-            padding: 2px 0;
+            padding: 10px 0;
             vertical-align: top;
         }
 
@@ -314,7 +314,7 @@
     <br>
     <div class="judul text-center" style="line-height: 1.5; margin-bottom: 25px;">
         <span class="bold">DAFTAR HADIR</span><br>
-        <span class="bold uppercase">{{ $jenisSidangLabel }}</span>
+        <span class="bold underline uppercase">{{ $jenisSidangLabel }}</span>
     </div>
     
     <table class="table-data-top" style="margin-bottom: 25px;">
@@ -411,10 +411,10 @@
             <th style="text-align: center; width: 85%;">Catatan/Revisi</th>
             <th style="text-align: center; width: 15%;">Hal</th>
         </tr>
-        @for($i=0; $i<18; $i++)
+        @for($i=0; $i<30; $i++)
         <tr>
-            <td style="padding: 13px;"></td>
-            <td style="padding: 13px;"></td>
+            <td style="padding: 15px;"></td>
+            <td style="padding: 15px;"></td>
         </tr>
         @endfor
     </table>
@@ -422,7 +422,7 @@
     <table style="width: 100%; margin-top: 25px;">
         <tr>
             <td style="width: 65%;"></td>
-            <td style="width: 35%; text-align: left;">
+            <td style="width: 35%; text-align: center;">
                 <p style="margin:0">Yogyakarta, {{ $dt->translatedFormat('j F Y') }}</p>
                 <p style="margin:0">Penguji</p>
             </td>
