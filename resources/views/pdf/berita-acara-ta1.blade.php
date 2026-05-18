@@ -76,6 +76,20 @@
             vertical-align: top;
         }
 
+        /* Daftar Hadir TTD Detail */
+        .section-title-hadir {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .table-ttd-hadir {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-ttd-hadir td {
+            padding: 12px 0;
+            vertical-align: top;
+        }
+
         /* Keterangan Nilai */
         .keterangan-nilai {
             margin-top: 15px;
@@ -309,7 +323,7 @@
 
     <div class="header-teks">
         <div>KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
-        <div class="uppercase">UNIVERSITAS PEMBANGUNAN NASIONAL "VETERAN" YOGYAKARTA</div>
+        <div class="underline uppercase">UNIVERSITAS PEMBANGUNAN NASIONAL "VETERAN" YOGYAKARTA</div>
     </div>
     <br>
     <div class="judul text-center" style="line-height: 1.5; margin-bottom: 25px;">
@@ -356,24 +370,24 @@
         </tr>
     </table>
 
-    <div class="section-title underline">Dosen Pembimbing</div>
-    <table class="table-ttd-detail">
+    <div class="section-title-hadir underline">Dosen Pembimbing</div>
+    <table class="table-ttd-hadir">
         <tr>
             <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
             <td style="width: 45%;">1. ....................</td>
         </tr>
     </table>
 
-    <div class="section-title underline">Ketua Sidang</div>
-    <table class="table-ttd-detail">
+    <div class="section-title-hadir underline">Ketua Sidang</div>
+    <table class="table-ttd-hadir">
         <tr>
             <td style="width: 55%;">1. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
             <td style="width: 45%;">1. ....................</td>
         </tr>
     </table>
 
-    <div class="section-title underline">Dosen Penguji</div>
-    <table class="table-ttd-detail">
+    <div class="section-title-hadir underline">Dosen Penguji</div>
+    <table class="table-ttd-hadir">
         <tr>
             <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
             <td style="width: 45%;">1. ....................</td>
