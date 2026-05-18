@@ -64,15 +64,15 @@
 
         /* Seksi TTD Detail */
         .section-title {
-            margin-top: 15px;
-            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 5px;
         }
         .table-ttd-detail {
             width: 100%;
             border-collapse: collapse;
         }
         .table-ttd-detail td {
-            padding: 10px 0;
+            padding: 6px 0;
             vertical-align: top;
         }
 
@@ -167,7 +167,7 @@
     <!-- ==================== BERITA ACARA ==================== -->
     <div class="header-teks">
         <div>KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
-        <div class="uppercase">UNIVERSITAS PEMBANGUNAN NASIONAL "VETERAN" YOGYAKARTA</div>
+        <div class="underline uppercase">UNIVERSITAS PEMBANGUNAN NASIONAL "VETERAN" YOGYAKARTA</div>
     </div>
 
     <div class="judul text-center bold underline">BERITA ACARA</div>
@@ -411,7 +411,7 @@
             <th style="text-align: center; width: 85%;">Catatan/Revisi</th>
             <th style="text-align: center; width: 15%;">Hal</th>
         </tr>
-        @for($i=0; $i<30; $i++)
+        @for($i=0; $i<22; $i++)
         <tr>
             <td style="padding: 15px;"></td>
             <td style="padding: 15px;"></td>
