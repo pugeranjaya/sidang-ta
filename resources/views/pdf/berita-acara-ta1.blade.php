@@ -299,5 +299,141 @@
         </table>
     </div>
 
+    <!-- ==================== DAFTAR HADIR ==================== -->
+    <div style="page-break-before: always;"></div>
+
+    <!-- Header Teks (Daftar Hadir) -->
+    <div class="header-teks">
+        <div>KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
+        <div class="underline">UNIVERSITAS PEMBANGUNAN NASIONAL "VETERAN" YOGYAKARTA</div>
+    </div>
+    <br>
+    <div class="judul text-center bold underline" style="line-height: 1.5;">DAFTAR HADIR<br>{{ strtoupper($jenisSidangLabel) }}</div>
+    <br>
+    
+    <table class="table-data" style="margin-bottom: 20px;">
+        <tr><td style="width: 130px;">Fakultas</td><td style="width: 15px;">:</td><td class="uppercase">TEKNIK INDUSTRI</td></tr>
+        <tr><td>Jurusan</td><td>:</td><td class="uppercase">TEKNIK INDUSTRI</td></tr>
+        <tr><td>Program Studi</td><td>:</td><td class="uppercase">S1 TEKNIK INDUSTRI</td></tr>
+        <tr><td>Hari, Tanggal</td><td>:</td><td>{{ $hari }}, {{ $dt->translatedFormat('j F Y') }}</td></tr>
+        <tr><td>Tempat</td><td>:</td><td>{{ $sidang->ruangan }} Jurusan Teknik Industri</td></tr>
+        <tr><td>Pukul</td><td>:</td><td>{{ $dt->format('H.i') }} WIB - Selesai</td></tr>
+    </table>
+
+    <table border="1" style="width: 100%; border-collapse: collapse; text-align: center; margin-bottom: 30px;">
+        <tr class="bold">
+            <td style="padding: 10px;">NAMA MAHASISWA</td>
+            <td style="padding: 10px;">NO. MAHASISWA</td>
+            <td style="padding: 10px;">TANDA TANGAN</td>
+        </tr>
+        <tr>
+            <td style="padding: 15px; text-transform: uppercase;">{{ $mhs->nama ?? '-' }}</td>
+            <td style="padding: 15px;">{{ $mhs->nim ?? '-' }}</td>
+            <td style="padding: 15px; text-align: left;">1.........................</td>
+        </tr>
+    </table>
+
+    <table class="ttd-pejabat-container" style="margin-top: 15px; margin-bottom: 15px;">
+        <tr>
+            <td style="vertical-align: top; padding-left: 0;">
+                <p style="margin:0">Ketua Jurusan Teknik Industri</p>
+            </td>
+            <td style="padding-left: 5%; vertical-align: top;">
+                <p style="margin:0">Koordinator Prodi Teknik Industri</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top; padding-left: 0;">
+                <div style="height: 70px;"></div>
+                <p style="margin:0; font-weight: bold;" class="nowrap">{{ $kajur->nama ?? '-' }}</p>
+                <p style="margin:0">NIP. {{ formatNip($kajur->nip ?? '-') }}</p>
+            </td>
+            <td style="padding-left: 5%; vertical-align: top;">
+                <div style="height: 70px;"></div>
+                <p style="margin:0; font-weight: bold;" class="nowrap">{{ $koordinator->nama ?? '-' }}</p>
+                <p style="margin:0">NIP. {{ formatNip($koordinator->nip ?? '-') }}</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Dosen Pembimbing -->
+    <div class="section-title bold underline">Dosen Pembimbing</div>
+    <table class="table-ttd-detail">
+        <tr class="data-row">
+            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 45%;">1....................</td>
+        </tr>
+    </table>
+
+    <!-- Ketua Sidang -->
+    <div class="section-title bold underline">Ketua Sidang</div>
+    <table class="table-ttd-detail">
+        <tr class="data-row">
+            <td style="width: 55%;">1. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 45%;">1....................</td>
+        </tr>
+    </table>
+
+    <!-- Dosen Penguji -->
+    <div class="section-title bold underline">Dosen Penguji</div>
+    <table class="table-ttd-detail">
+        <tr class="data-row">
+            <td style="width: 55%;">1. {{ $sidang->penguji1->nama ?? '-' }}</td>
+            <td style="width: 45%;">1....................</td>
+        </tr>
+        <tr class="data-row">
+            <td style="width: 55%;">2. {{ $sidang->penguji2->nama ?? '-' }}</td>
+            <td style="width: 45%; padding-left: 150px;">2....................</td>
+        </tr>
+        @if($sidang->penguji3)
+        <tr class="data-row">
+            <td style="width: 55%;">3. {{ $sidang->penguji3->nama }}</td>
+            <td style="width: 45%;">3....................</td>
+        </tr>
+        @endif
+        @if($sidang->penguji4)
+        <tr class="data-row">
+            <td style="width: 55%;">4. {{ $sidang->penguji4->nama }}</td>
+            <td style="width: 45%; padding-left: 150px;">4....................</td>
+        </tr>
+        @endif
+    </table>
+
+    <!-- ==================== LEMBAR REVISI ==================== -->
+    <div style="page-break-before: always;"></div>
+    
+    <div class="judul text-center bold underline" style="margin-bottom: 25px;">LEMBAR REVISI<br>{{ strtoupper($jenisSidangLabel) }}</div>
+    
+    <table class="table-data" style="margin-bottom: 20px;">
+        <tr><td style="width: 150px;">Nama Mahasiswa</td><td style="width: 15px;">:</td><td class="uppercase">{{ $mhs->nama ?? '-' }}</td></tr>
+        <tr><td>Nomor Mahasiswa</td><td>:</td><td>{{ $mhs->nim ?? '-' }}</td></tr>
+        <tr><td>Judul Tugas Akhir</td><td>:</td><td class="uppercase">{{ $mhs->judul_ta ?? '-' }}</td></tr>
+    </table>
+
+    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <tr class="bold text-center">
+            <td style="padding: 10px; width: 85%;">Catatan/Revisi</td>
+            <td style="padding: 10px; width: 15%;">Hal</td>
+        </tr>
+        @for($i=0; $i<17; $i++)
+        <tr>
+            <td style="padding: 13px;"></td>
+            <td style="padding: 13px;"></td>
+        </tr>
+        @endfor
+    </table>
+
+    <table style="width: 100%; margin-top: 20px;">
+        <tr>
+            <td style="width: 60%;"></td>
+            <td style="width: 40%; text-align: left;">
+                <p style="margin:0">Yogyakarta, {{ $dt->translatedFormat('j F Y') }}</p>
+                <p style="margin:0">Penguji,</p>
+                <div style="height: 80px;"></div>
+                <p style="margin:0">(...................................................)</p>
+            </td>
+        </tr>
+    </table>
+
 </body>
 </html>

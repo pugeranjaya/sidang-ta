@@ -151,7 +151,8 @@ class ListSidang extends ListRecords
 
                         // Tambahkan Berita Acara tiap mahasiswa
                         foreach ($sidangs as $s) {
-                            $pdfBA = Pdf::loadView('pdf.berita-acara', [
+                            $viewBA = $s->jenis_sidang === 'Seminar TA 2' ? 'pdf.berita-acara-ta2' : 'pdf.berita-acara-ta1';
+                            $pdfBA = Pdf::loadView($viewBA, [
                                 'sidang' => $s,
                                 'kajur' => $kajur,
                                 'koordinator' => $koordinator,
