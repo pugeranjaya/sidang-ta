@@ -205,7 +205,7 @@ class SidangScheduler
         if ($jenisSidang === 'Seminar TA 2') {
             $historyTa1 = Sidang::where('mahasiswa_id', $mahasiswaId)
                 ->where('jenis_sidang', 'Seminar TA 1')
-                ->whereIn('status', ['selesai', 'disetujui'])
+                ->where('status', 'lulus')
                 ->latest()
                 ->first();
 
@@ -255,7 +255,7 @@ class SidangScheduler
                 $options[] = array_merge($schedule, [
                     'mahasiswa_id' => $mahasiswaId,
                     'jenis_sidang' => $jenisSidang,
-                    'status' => 'pending',
+                    'status' => 'belum lulus',
                     'ruangan' => $this->pilihRuangan($schedule['tanggal'], $schedule['jam_mulai'], $schedule['jam_selesai']),
                     'score_ahp' => 'N/A',
                 ]);
@@ -287,7 +287,7 @@ class SidangScheduler
             $options[] = array_merge($schedule, [
                 'mahasiswa_id' => $mahasiswaId,
                 'jenis_sidang' => $jenisSidang,
-                'status' => 'pending',
+                'status' => 'belum lulus',
                 'ruangan' => $this->pilihRuangan($schedule['tanggal'], $schedule['jam_mulai'], $schedule['jam_selesai']),
                 'score_ahp' => number_format($schedule['total_score'], 3),
             ]);
@@ -504,7 +504,7 @@ class SidangScheduler
         if ($jenisSidang === 'Seminar TA 2') {
             $historyTa1 = Sidang::where('mahasiswa_id', $mahasiswaId)
                 ->where('jenis_sidang', 'Seminar TA 1')
-                ->whereIn('status', ['selesai', 'disetujui'])
+                ->where('status', 'lulus')
                 ->latest()->first();
 
             if (!$historyTa1) {
@@ -534,7 +534,7 @@ class SidangScheduler
                 $options[] = array_merge($slot, [
                     'mahasiswa_id' => $mahasiswaId,
                     'jenis_sidang' => $jenisSidang,
-                    'status' => 'pending',
+                    'status' => 'belum lulus',
                     'ruangan' => $this->pilihRuangan($slot['tanggal'], $slot['jam_mulai'], $slot['jam_selesai']),
                     'pembimbing_nama' => $pembimbing->nama,
                     'ketua_nama' => $ketuaSidang->nama,
@@ -696,7 +696,7 @@ class SidangScheduler
                     ->orWhere('penguji3_id', $dosen->id)
                     ->orWhere('penguji4_id', $dosen->id)
                     ->orWhere('ketua_sidang_id', $dosen->id);
-            })->where('status', 'selesai')->count();
+            })->where('status', 'lulus')->count();
 
             $this->dosenPengalamanCache[$dosen->id] = min(round($count / 5, 6), 1.0);
         }

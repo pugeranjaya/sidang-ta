@@ -45,8 +45,8 @@ class SidangForm
                     ])
                     ->required(),
                 Select::make('status')
-                    ->options(['pending' => 'Pending', 'disetujui' => 'Disetujui', 'selesai' => 'Selesai'])
-                    ->default('pending')
+                    ->options(['belum lulus' => 'Belum Lulus', 'lulus' => 'Lulus'])
+                    ->default('belum lulus')
                     ->required(),
                 Select::make('ketua_sidang_id')
                     ->label('Ketua Sidang')

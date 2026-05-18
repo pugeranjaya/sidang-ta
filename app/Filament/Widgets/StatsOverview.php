@@ -31,7 +31,7 @@ class StatsOverview extends StatsOverviewWidget
                 ->url(\App\Filament\Resources\Sidang\SidangResource::getUrl('index')),
 
             Stat::make('Tingkat Kelulusan', function () {
-                $totalSelesai = \App\Models\Sidang::where('status', 'selesai')->count();
+                $totalSelesai = \App\Models\Sidang::where('status', 'lulus')->count();
                 $totalMahasiswa = \App\Models\Mahasiswa::count();
                 if ($totalMahasiswa === 0)
                     return '0%';

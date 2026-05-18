@@ -161,7 +161,7 @@ class GenerateJadwalSidang extends Page
                 'penguji1_id' => $selected['penguji1_id'],
                 'penguji2_id' => $selected['penguji2_id'],
                 'ketua_sidang_id' => $selected['ketua_sidang_id'],
-                'status' => 'pending',
+                'status' => 'belum lulus',
             ];
 
             if ($selected['jenis_sidang'] === 'Seminar TA 2') {

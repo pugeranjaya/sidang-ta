@@ -81,17 +81,13 @@ class SidangTable
                     ])
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
-                        'pending' => 'danger',
-                        'disetujui' => 'success',
+                        'belum lulus' => 'danger',
                         'lulus' => 'success',
-                        'selesai' => 'info',
                         default => 'gray',
                     })
                     ->icon(fn(string $state): string => match ($state) {
-                        'pending' => 'heroicon-o-clock',
-                        'disetujui' => 'heroicon-o-check-circle',
+                        'belum lulus' => 'heroicon-o-clock',
                         'lulus' => 'heroicon-o-academic-cap',
-                        'selesai' => 'heroicon-o-check-badge',
                         default => 'heroicon-o-question-mark-circle',
                     }),
                 TextColumn::make('mahasiswa.pembimbing.nama')
@@ -176,6 +172,18 @@ class SidangTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->visible(fn() => auth()->user()?->isAdmin()),
+                    BulkAction::make('tandaiBelumLulus')
+                        ->label('Tandai Belum Lulus')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update(['status' => 'belum lulus']);
+                            });
+                        })
+                        ->visible(fn() => auth()->user()?->isAdmin())
+                        ->deselectRecordsAfterCompletion(),
                     BulkAction::make('tandaiLulus')
                         ->label('Tandai Lulus')
                         ->icon('heroicon-o-academic-cap')
