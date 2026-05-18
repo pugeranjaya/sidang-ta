@@ -439,38 +439,40 @@
         <span class="bold">FORM REVISI <span class="uppercase">{{ $jenisSidangLabel }}</span></span>
     </div>
     
-    <table class="table-data-top" style="margin-bottom: 20px;">
-        <tr><td style="width: 150px;">Nama Pemakalah</td><td style="width: 15px;">:</td><td class="bold uppercase">{{ $mhs->nama ?? '-' }}</td></tr>
-        <tr><td>No. Mahasiswa</td><td>:</td><td class="bold">{{ $mhs->nim ?? '-' }}</td></tr>
-        <tr><td>Judul Skripsi</td><td>:</td><td class="bold uppercase text-justify">{{ $mhs->judul_ta ?? '-' }}</td></tr>
+    <table class="table-data-top" style="margin-bottom: 10px;">
+        <tr><td style="width: 150px;">Nama Pemakalah</td><td style="width: 15px;">:</td><td class="uppercase">{{ $mhs->nama ?? '-' }}</td></tr>
+        <tr><td>No. Mahasiswa</td><td>:</td><td>{{ $mhs->nim ?? '-' }}</td></tr>
+        <tr><td>Judul Skripsi</td><td>:</td><td class="uppercase text-justify">{{ $mhs->judul_ta ?? '-' }}</td></tr>
     </table>
 
-    <div class="bold" style="margin-bottom: 5px;">REVISI/CATATAN PENGUJI</div>
-    <table class="table-form-revisi">
+    <hr style="border: 0; border-bottom: 2px solid #000; margin-bottom: 20px;">
+
+    <div class="bold underline text-center" style="margin-bottom: 15px;">REVISI/CATATAN PENGUJI</div>
+    <table class="table-form-revisi" style="margin-bottom: 10px;">
         <tr>
-            <th style="width: 10%; text-align: center;">No.</th>
-            <th style="width: 90%; text-align: center;">U r a i a n</th>
+            <th style="width: 10%; text-align: center; background-color: #e5e5e5;">No.</th>
+            <th style="width: 90%; text-align: center; background-color: #e5e5e5;">U r a i a n</th>
         </tr>
-        @for($i=0; $i<13; $i++)
+        @for($i=0; $i<22; $i++)
         <tr>
-            <td style="padding: 13px;"></td>
-            <td style="padding: 13px;"></td>
+            <td style="padding: 13.5px;"></td>
+            <td style="padding: 13.5px;"></td>
         </tr>
         @endfor
     </table>
 
-    <table style="width: 100%; margin-top: 15px;">
+    <table style="width: 100%; margin-top: 10px;">
         <tr>
             <td style="width: 60%; vertical-align: top;">
-                <p style="margin:0">Catatan :</p>
+                <p style="margin:0"><span class="underline">Catatan</span> :</p>
                 <p style="margin:0">Lembar ini harus ditunjukkan</p>
                 <p style="margin:0">kepada dosen saat melaksanakan revisi.</p>
             </td>
-            <td style="width: 40%; text-align: left; vertical-align: top;">
-                <p style="margin:0">Yogyakarta, {{ $dt->translatedFormat('j F Y') }}</p>
+            <td style="width: 40%; text-align: center; vertical-align: top;">
+                <p style="margin:0; padding-bottom: 15px;">Yogyakarta, {{ $dt->translatedFormat('j F Y') }}</p>
                 <p style="margin:0">Penguji</p>
                 <div style="height: 60px;"></div>
-                <p style="margin:0">{{ $pengujiName }}</p>
+                <div class="nowrap" style="font-size: 9pt;">{{ $pengujiName }}</div>
             </td>
         </tr>
     </table>
@@ -530,10 +532,10 @@
 
     <table class="table-sk-revisi">
         <tr>
-            <th style="width: 5%; text-align: center;">No</th>
-            <th style="width: 45%; text-align: center;">N a m a</th>
-            <th style="width: 20%; text-align: center;">Jabatan</th>
-            <th style="width: 30%; text-align: center;">Tanda Tangan</th>
+            <th style="width: 5%; text-align: center; font-weight: normal;">No</th>
+            <th style="width: 45%; text-align: center; font-weight: normal;">N a m a</th>
+            <th style="width: 20%; text-align: center; font-weight: normal;">Jabatan</th>
+            <th style="width: 30%; text-align: center; font-weight: normal;">Tanda Tangan</th>
         </tr>
         @foreach($pengujis as $index => $pengujiName)
         <tr>
