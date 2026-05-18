@@ -20,7 +20,6 @@
                                 <x-filament::badge color="info" size="lg">
                                     Opsi #{{ $index + 1 }}
                                 </x-filament::badge>
-                                <span style="font-size: 1rem; font-weight: 500; color: #4b5563;">Skor AHP: <span style="font-weight: 800; color: #f59e0b;">{{ $option['score_ahp'] }}</span></span>
                             </div>
                             <x-filament::button wire:click="simpanJadwal({{ $index }})" color="success" size="sm" icon="heroicon-m-check-circle">
                                 Pilih & Simpan Jadwal Ini
