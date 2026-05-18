@@ -39,7 +39,7 @@ class SidangTable
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'Seminar TA 1' => 'info',
-                        'Seminar TA 2' => 'success',
+                        'Sidang TA 2' => 'success',
                         default => 'gray',
                     })
                     ->sortable()

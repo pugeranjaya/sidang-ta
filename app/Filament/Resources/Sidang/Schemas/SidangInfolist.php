@@ -21,7 +21,7 @@ class SidangInfolist
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'Seminar TA 1' => 'info',
-                        'Seminar TA 2' => 'success',
+                        'Sidang TA 2' => 'success',
                         default => 'gray',
                     }),
                 TextEntry::make('tanggal')
@@ -41,10 +41,10 @@ class SidangInfolist
                     ->label('Penguji 2'),
                 TextEntry::make('penguji3.nama')
                     ->label('Penguji 3')
-                    ->visible(fn($record) => $record?->jenis_sidang === 'Seminar TA 2'),
+                    ->visible(fn($record) => $record?->jenis_sidang === 'Sidang TA 2'),
                 TextEntry::make('penguji4.nama')
                     ->label('Penguji 4')
-                    ->visible(fn($record) => $record?->jenis_sidang === 'Seminar TA 2'),
+                    ->visible(fn($record) => $record?->jenis_sidang === 'Sidang TA 2'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),

@@ -58,7 +58,7 @@
                                 <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 2</div>
                                 <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji2_nama'] }}</div>
                             </div>
-                            @if($option['jenis_sidang'] === 'Seminar TA 2')
+                            @if($option['jenis_sidang'] === 'Sidang TA 2')
                             <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
                                 <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 3</div>
                                 <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji3_nama'] }}</div>

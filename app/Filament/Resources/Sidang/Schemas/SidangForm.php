@@ -25,7 +25,7 @@ class SidangForm
                     ->label('Jenis Sidang')
                     ->options([
                         'Seminar TA 1' => 'Seminar TA 1',
-                        'Seminar TA 2' => 'Seminar TA 2',
+                        'Sidang TA 2' => 'Sidang TA 2',
                     ])
                     ->default('Seminar TA 1')
                     ->live()
@@ -71,15 +71,15 @@ class SidangForm
                     ->relationship('penguji3', 'nama')
                     ->searchable()
                     ->preload()
-                    ->visible(fn($get) => $get('jenis_sidang') === 'Seminar TA 2')
-                    ->required(fn($get) => $get('jenis_sidang') === 'Seminar TA 2'),
+                    ->visible(fn($get) => $get('jenis_sidang') === 'Sidang TA 2')
+                    ->required(fn($get) => $get('jenis_sidang') === 'Sidang TA 2'),
                 Select::make('penguji4_id')
                     ->label('Penguji 4')
                     ->relationship('penguji4', 'nama')
                     ->searchable()
                     ->preload()
-                    ->visible(fn($get) => $get('jenis_sidang') === 'Seminar TA 2')
-                    ->required(fn($get) => $get('jenis_sidang') === 'Seminar TA 2'),
+                    ->visible(fn($get) => $get('jenis_sidang') === 'Sidang TA 2')
+                    ->required(fn($get) => $get('jenis_sidang') === 'Sidang TA 2'),
             ]);
     }
 }

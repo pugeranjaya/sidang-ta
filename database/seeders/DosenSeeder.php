@@ -17,7 +17,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['SPOI'],
             ],
             [
-                'nama' => 'Dr. Apriani Soepardi, S.T.P., M.T.',
+                'nama' => 'Dr. Ir. Apriani Soepardi, S.T.P., M.T.',
                 'nip' => '19731118 202121 2 005',
                 'rumpun_keahlian' => ['SPOI'],
             ],
@@ -54,7 +54,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['PSIE'],
             ],
             [
-                'nama' => 'Intan Berlianty, S.T., M.T.',
+                'nama' => 'Ir. Intan Berlianty, S.T., M.T.',
                 'nip' => '19761019 200501 2 001',
                 'rumpun_keahlian' => ['PSIE'],
             ],
@@ -66,22 +66,22 @@ class DosenSeeder extends Seeder
 
             // ========== KPDP ==========
             [
-                'nama' => 'Dr. Sadi, S.T., M.T.',
+                'nama' => 'Dr. Ir. Sadi, S.T., M.T.',
                 'nip' => '19710313 202121 1 002',
                 'rumpun_keahlian' => ['KPDP'],
             ],
             [
-                'nama' => 'Dr. Tri Wibawa, S.T., M.T.',
+                'nama' => 'Dr. Ir. Tri Wibawa, S.T., M.T.',
                 'nip' => '19730216 202121 1 003',
                 'rumpun_keahlian' => ['KPDP'],
             ],
             [
-                'nama' => 'Gunawan Madyono Putro, S.T., M.T.',
+                'nama' => 'Ir. Gunawan Madyono Putro, S.T., M.T.',
                 'nip' => '19690914 199103 1 004',
                 'rumpun_keahlian' => ['KPDP'],
             ],
             [
-                'nama' => 'Andreas Mahendra Kuncoro, S.T., M.Sc., M.Sc., Ph.D',
+                'nama' => 'Ir. Andreas Mahendro Kuncoro, S.T., M.Sc., M.Sc., Ph.D',
                 'nip' => '19811117 202203 1 001',
                 'rumpun_keahlian' => ['KPDP'],
             ],
@@ -93,7 +93,7 @@ class DosenSeeder extends Seeder
 
             // ========== RPTE ==========
             [
-                'nama' => 'Laila Nafisah, S.T., M.T.',
+                'nama' => 'Ir. Laila Nafisah, S.T., M.T.',
                 'nip' => '19710520 202121 2 002',
                 'rumpun_keahlian' => ['RPTE'],
             ],
@@ -103,7 +103,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['RPTE'],
             ],
             [
-                'nama' => 'Eko Nursubiyantoro, S.T., M.T.',
+                'nama' => 'Ir. Eko Nursubiyantoro, S.T., M.T.',
                 'nip' => '19680921 199103 1 001',
                 'rumpun_keahlian' => ['RPTE'],
             ],
@@ -118,7 +118,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['RPTE'],
             ],
             [
-                'nama' => 'R. Achmad Chairdino Leuveano, S.T., M.Sc., Ph.D',
+                'nama' => 'Ir. R. Achmad Chairdino Leuveano, S.T., M.Sc., Ph.D',
                 'nip' => '19890212 202203 1 009',
                 'rumpun_keahlian' => ['RPTE'],
             ],

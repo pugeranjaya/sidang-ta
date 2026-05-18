@@ -29,10 +29,10 @@ class ListSidang extends ListRecords
     {
         return [
             'semua' => Tab::make('Semua Sidang'),
-            'seminar_ta_1' => Tab::make('Sidang TA 1')
+            'seminar_ta_1' => Tab::make('Seminar TA 1')
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('jenis_sidang', 'Seminar TA 1')),
             'seminar_ta_2' => Tab::make('Sidang TA 2')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('jenis_sidang', 'Seminar TA 2')),
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('jenis_sidang', 'Sidang TA 2')),
         ];
     }
 
@@ -66,7 +66,7 @@ class ListSidang extends ListRecords
                         ->label('Jenis Sidang')
                         ->options([
                             'Seminar TA 1' => 'Seminar TA 1',
-                            'Seminar TA 2' => 'Seminar TA 2',
+                            'Sidang TA 2' => 'Sidang TA 2',
                         ])
                         ->required(),
                     Select::make('kajur_id')
@@ -100,7 +100,7 @@ class ListSidang extends ListRecords
                         ->orderBy('ruangan')
                         ->orderBy('jam_mulai');
 
-                    if ($jenis_sidang === 'Seminar TA 2') {
+                    if ($jenis_sidang === 'Sidang TA 2') {
                         $query->with(['penguji3', 'penguji4']);
                     }
 
@@ -130,7 +130,7 @@ class ListSidang extends ListRecords
                     Carbon::setLocale('id');
 
                     // 1. Generate Jadwal PDF
-                    $viewTemplate = $jenis_sidang === 'Seminar TA 2' ? 'pdf.jadwal-seminar-ta2' : 'pdf.jadwal-seminar-ta1';
+                    $viewTemplate = $jenis_sidang === 'Sidang TA 2' ? 'pdf.jadwal-seminar-ta2' : 'pdf.jadwal-seminar-ta1';
                     $pdfJadwal = Pdf::loadView($viewTemplate, [
                         'groupedSidang' => $groupedSidang,
                         'bulan_nama' => $bulanNama,
@@ -151,7 +151,7 @@ class ListSidang extends ListRecords
 
                         // Tambahkan Berita Acara tiap mahasiswa
                         foreach ($sidangs as $s) {
-                            $viewBA = $s->jenis_sidang === 'Seminar TA 2' ? 'pdf.berita-acara-ta2' : 'pdf.berita-acara-ta1';
+                            $viewBA = $s->jenis_sidang === 'Sidang TA 2' ? 'pdf.berita-acara-ta2' : 'pdf.berita-acara-ta1';
                             $pdfBA = Pdf::loadView($viewBA, [
                                 'sidang' => $s,
                                 'kajur' => $kajur,

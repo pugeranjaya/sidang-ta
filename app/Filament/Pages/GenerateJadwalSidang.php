@@ -68,8 +68,8 @@ class GenerateJadwalSidang extends Page
                 Select::make('jenis_sidang')
                     ->label('Jenis Sidang')
                     ->options([
-                        'Seminar TA 1' => 'Sidang TA 1',
-                        'Seminar TA 2' => 'Sidang TA 2',
+                        'Seminar TA 1' => 'Seminar TA 1',
+                        'Sidang TA 2' => 'Sidang TA 2',
                     ])
                     ->default('Seminar TA 1')
                     ->required(),
@@ -164,7 +164,7 @@ class GenerateJadwalSidang extends Page
                 'status' => 'belum lulus',
             ];
 
-            if ($selected['jenis_sidang'] === 'Seminar TA 2') {
+            if ($selected['jenis_sidang'] === 'Sidang TA 2') {
                 $dbData['penguji3_id'] = $selected['penguji3_id'];
                 $dbData['penguji4_id'] = $selected['penguji4_id'];
             }

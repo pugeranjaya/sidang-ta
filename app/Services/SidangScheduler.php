@@ -46,7 +46,7 @@ class SidangScheduler
             10 => '2026-10-09',
             11 => '2026-11-13',
         ],
-        'Seminar TA 2' => [
+        'Sidang TA 2' => [
             1 => '2026-01-09',
             2 => '2026-02-06',
             3 => '2026-03-06',
@@ -202,7 +202,7 @@ class SidangScheduler
         }
 
         // ========== LOGIKA SEMINAR TA 2 ==========
-        if ($jenisSidang === 'Seminar TA 2') {
+        if ($jenisSidang === 'Sidang TA 2') {
             $historyTa1 = Sidang::where('mahasiswa_id', $mahasiswaId)
                 ->where('jenis_sidang', 'Seminar TA 1')
                 ->where('status', 'lulus')
@@ -488,7 +488,7 @@ class SidangScheduler
         int $mahasiswaId,
         string $tanggalMulai,
         string $tanggalSelesai,
-        string $jenisSidang = 'Seminar TA 2',
+        string $jenisSidang = 'Sidang TA 2',
         int $numOptions = 3
     ): array {
         $this->debugLog = [];
@@ -501,7 +501,7 @@ class SidangScheduler
             return ['options' => [], 'error' => 'Tidak ada slot waktu tersedia.', '_debug' => $this->debugLog];
         }
 
-        if ($jenisSidang === 'Seminar TA 2') {
+        if ($jenisSidang === 'Sidang TA 2') {
             $historyTa1 = Sidang::where('mahasiswa_id', $mahasiswaId)
                 ->where('jenis_sidang', 'Seminar TA 1')
                 ->where('status', 'lulus')
@@ -711,7 +711,7 @@ class SidangScheduler
         $endDate = Carbon::parse($end);
         $hariMap = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat'];
         
-        if ($jenisSidang === 'Seminar TA 2') {
+        if ($jenisSidang === 'Sidang TA 2') {
             // Slot waktu 2 jam
             $sesiList = [
                 ['07:30', '09:30'],

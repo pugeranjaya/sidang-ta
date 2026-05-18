@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Jadwal Seminar TA 2</title>
+    <title>Jadwal Sidang TA 2</title>
     <style>
         body {
             font-family: "Times New Roman", Times, serif;
