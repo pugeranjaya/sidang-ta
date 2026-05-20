@@ -189,10 +189,10 @@
         $jenisSidangLabel = 'Ujian Pendadaran Tugas Akhir II';
 
         $pengujis = [
-            $mhs->pembimbing->nama ?? '-',
-            $sidang->ketuaSidang->nama ?? '-',
             $sidang->penguji1->nama ?? '-',
-            $sidang->penguji2->nama ?? '-'
+            $sidang->penguji2->nama ?? '-',
+            $sidang->penguji3->nama ?? '-',
+            $sidang->penguji4->nama ?? '-'
         ];
     @endphp
 
@@ -300,19 +300,19 @@
     <div class="section-title underline">Dosen Penguji</div>
     <table class="table-ttd-detail">
         <tr>
-            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 55%;">1. {{ $sidang->penguji1->nama ?? '-' }}</td>
             <td style="width: 45%;">1. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">2. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 55%;">2. {{ $sidang->penguji2->nama ?? '-' }}</td>
             <td style="width: 45%; padding-left: 100px;">2. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">3. {{ $sidang->penguji1->nama ?? '-' }}</td>
+            <td style="width: 55%;">3. {{ $sidang->penguji3->nama ?? '-' }}</td>
             <td style="width: 45%;">3. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">4. {{ $sidang->penguji2->nama ?? '-' }}</td>
+            <td style="width: 55%;">4. {{ $sidang->penguji4->nama ?? '-' }}</td>
             <td style="width: 45%; padding-left: 100px;">4. ....................</td>
         </tr>
     </table>
@@ -407,19 +407,19 @@
     <div class="section-title-hadir underline">Dosen Penguji</div>
     <table class="table-ttd-hadir">
         <tr>
-            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 55%;">1. {{ $sidang->penguji1->nama ?? '-' }}</td>
             <td style="width: 45%;">1. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">2. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 55%;">2. {{ $sidang->penguji2->nama ?? '-' }}</td>
             <td style="width: 45%; padding-left: 100px;">2. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">3. {{ $sidang->penguji1->nama ?? '-' }}</td>
+            <td style="width: 55%;">3. {{ $sidang->penguji3->nama ?? '-' }}</td>
             <td style="width: 45%;">3. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">4. {{ $sidang->penguji2->nama ?? '-' }}</td>
+            <td style="width: 55%;">4. {{ $sidang->penguji4->nama ?? '-' }}</td>
             <td style="width: 45%; padding-left: 100px;">4. ....................</td>
         </tr>
     </table>

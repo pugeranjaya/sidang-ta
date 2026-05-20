@@ -76,10 +76,19 @@ class StatistikDosenResource extends Resource
                 ->searchable(),
         ];
 
+        // Filter: tidak menghitung jika dosen = pembimbing mahasiswa tersebut
+        $filterBukanPembimbing = function($q) {
+            $q->whereHas('mahasiswa', function($mq) {
+                $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+            });
+        };
+
         $withCountMap = [
-            'penguji1Sidangs',
-            'penguji2Sidangs',
-            'ketuaSidangs'
+            'penguji1Sidangs' => $filterBukanPembimbing,
+            'penguji2Sidangs' => $filterBukanPembimbing,
+            'penguji3Sidangs' => $filterBukanPembimbing,
+            'penguji4Sidangs' => $filterBukanPembimbing,
+            'ketuaSidangs' => $filterBukanPembimbing,
         ];
 
         $monthColumns = [];
@@ -91,17 +100,42 @@ class StatistikDosenResource extends Resource
             $withCountMap["penguji1Sidangs as p1_{$aliasBulan}"] = function($q) use ($bulan) {
                 $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
                 $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereBetween('tanggal', [$startDate, $endDate])
+                  ->whereHas('mahasiswa', function($mq) {
+                      $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+                  });
             };
             $withCountMap["penguji2Sidangs as p2_{$aliasBulan}"] = function($q) use ($bulan) {
                 $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
                 $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereBetween('tanggal', [$startDate, $endDate])
+                  ->whereHas('mahasiswa', function($mq) {
+                      $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+                  });
+            };
+            $withCountMap["penguji3Sidangs as p3_{$aliasBulan}"] = function($q) use ($bulan) {
+                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
+                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
+                $q->whereBetween('tanggal', [$startDate, $endDate])
+                  ->whereHas('mahasiswa', function($mq) {
+                      $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+                  });
+            };
+            $withCountMap["penguji4Sidangs as p4_{$aliasBulan}"] = function($q) use ($bulan) {
+                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
+                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
+                $q->whereBetween('tanggal', [$startDate, $endDate])
+                  ->whereHas('mahasiswa', function($mq) {
+                      $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+                  });
             };
             $withCountMap["ketuaSidangs as ketua_{$aliasBulan}"] = function($q) use ($bulan) {
                 $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
                 $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereBetween('tanggal', [$startDate, $endDate])
+                  ->whereHas('mahasiswa', function($mq) {
+                      $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+                  });
             };
 
             $monthColumns[] = TextColumn::make("total_{$aliasBulan}")
@@ -110,6 +144,8 @@ class StatistikDosenResource extends Resource
                 ->getStateUsing(fn($record) => 
                     ($record->{"p1_{$aliasBulan}"} ?? 0) + 
                     ($record->{"p2_{$aliasBulan}"} ?? 0) + 
+                    ($record->{"p3_{$aliasBulan}"} ?? 0) + 
+                    ($record->{"p4_{$aliasBulan}"} ?? 0) + 
                     ($record->{"ketua_{$aliasBulan}"} ?? 0)
                 );
         }
@@ -125,10 +161,12 @@ class StatistikDosenResource extends Resource
             ->getStateUsing(fn($record) => 
                 ($record->penguji1_sidangs_count ?? 0) + 
                 ($record->penguji2_sidangs_count ?? 0) + 
+                ($record->penguji3_sidangs_count ?? 0) + 
+                ($record->penguji4_sidangs_count ?? 0) + 
                 ($record->ketua_sidangs_count ?? 0)
             )
             ->sortable(query: function (Builder $query, string $direction): Builder {
-                return $query->orderByRaw('(penguji1_sidangs_count + penguji2_sidangs_count + ketua_sidangs_count) ' . $direction);
+                return $query->orderByRaw('(penguji1_sidangs_count + penguji2_sidangs_count + penguji3_sidangs_count + penguji4_sidangs_count + ketua_sidangs_count) ' . $direction);
             });
 
         return $table
