@@ -30,21 +30,7 @@ class SidangTable
                     ->description(fn($record) => $record->mahasiswa?->nim)
                     ->searchable(['nama', 'nim'])
                     ->sortable(),
-                TextColumn::make('jenis_sidang')
-                    ->label('Jenis Sidang')
-                    ->alignCenter()
-                    ->extraAttributes([
-                        'style' => 'text-align: center !important; justify-content: center !important;',
-                    ])
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'Seminar TA 1' => 'info',
-                        'Sidang TA 2' => 'success',
-                        default => 'gray',
-                    })
-                    ->sortable()
-                    ->searchable()
-                    ->toggleable(),
+
                 TextColumn::make('tanggal')
                     ->alignCenter()
                     ->extraAttributes([
@@ -138,7 +124,7 @@ class SidangTable
                     ->searchable()
                     ->sortable()
                     ->placeholder('-')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->visible(fn ($livewire) => ($livewire->activeTab ?? '') === 'seminar_ta_2'),
                 TextColumn::make('penguji4.nama')
                     ->label('Penguji 4')
                     ->alignCenter()
@@ -148,7 +134,7 @@ class SidangTable
                     ->searchable()
                     ->sortable()
                     ->placeholder('-')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->visible(fn ($livewire) => ($livewire->activeTab ?? '') === 'seminar_ta_2'),
                 TextColumn::make('created_at')
                     ->label('Dibuat pada')
                     ->dateTime()
