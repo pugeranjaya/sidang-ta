@@ -14,14 +14,19 @@ nixPkgs = [
     "php82Extensions.zip",
     "php82Extensions.gd",
     "php82Extensions.intl",
-    "php82Extensions.opcache"
+    "php82Extensions.opcache",
+    "nodejs_20"
 ]
 
 [phases.install]
-cmds = ["composer install --optimize-autoloader"]
+cmds = [
+    "composer install --optimize-autoloader --no-dev",
+    "npm install"
+]
 
 [phases.build]
 cmds = [
+    "npm run build",
     "php artisan storage:link --force"
 ]
 
