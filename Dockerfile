@@ -1,5 +1,8 @@
 FROM php:8.2-cli
 
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install system dependencies (termasuk libicu-dev untuk intl)
 RUN apt-get update && apt-get install -y \
     libzip-dev \
@@ -30,9 +33,11 @@ RUN composer install --optimize-autoloader --no-dev --no-scripts
 # Copy all project files
 COPY . .
 
-# Clear bootstrap cache, regenerate autoload, and discover packages
-RUN rm -f bootstrap/cache/*.php \
-    && composer dump-autoload --optimize --no-dev \
+# Pastikan bootstrap/cache ada dan writable, lalu discover packages
+RUN mkdir -p bootstrap/cache \
+    && chmod -R 777 bootstrap/cache \
+    && rm -f bootstrap/cache/*.php \
+    && composer dump-autoload --optimize --no-dev --no-scripts \
     && php artisan package:discover --ansi
 
 # Install Node dependencies and build assets (Vite/Tailwind)
