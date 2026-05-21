@@ -18,7 +18,7 @@ class DosenRankings extends BaseWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return false;
     }
 
     public function table(Table $table): Table

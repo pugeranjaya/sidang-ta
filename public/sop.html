@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP Sistem Penjadwalan Sidang Tugas Akhir</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 1.8;
+            color: #000;
+            background: #fff;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 25mm 30mm;
+        }
+
+        @media print {
+            body {
+                padding: 20mm 25mm;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        /* Print button */
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
+        .print-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            text-align: center;
+            padding-top: 60mm;
+            min-height: 250mm;
+        }
+        .cover-page .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .cover-page h1 {
+            font-size: 22pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .cover-page h2 {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .cover-page .subtitle {
+            font-size: 13pt;
+            margin-bottom: 5px;
+        }
+        .cover-page .line {
+            border-top: 3px double #000;
+            width: 60%;
+            margin: 20px auto;
+        }
+        .cover-page .info {
+            font-size: 12pt;
+            margin-top: 40px;
+            line-height: 2;
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+        h4 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        /* Paragraphs */
+        p {
+            text-align: justify;
+            margin-bottom: 10px;
+            text-indent: 1.27cm;
+        }
+        p.no-indent {
+            text-indent: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 11pt;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th {
+            background-color: #e5e7eb;
+            padding: 8px 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        td {
+            padding: 6px 10px;
+            vertical-align: top;
+        }
+
+        /* Ordered list */
+        ol {
+            margin-left: 1cm;
+            margin-bottom: 10px;
+        }
+        ol li {
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        ul {
+            margin-left: 1cm;
+            margin-bottom: 10px;
+        }
+        ul li {
+            margin-bottom: 4px;
+            text-align: justify;
+        }
+
+        /* Image placeholder */
+        .img-placeholder {
+            border: 2px dashed #9ca3af;
+            background: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            margin: 12px auto;
+            max-width: 90%;
+            border-radius: 4px;
+        }
+        .img-placeholder p {
+            text-indent: 0;
+            font-style: italic;
+            color: #6b7280;
+            margin: 0;
+        }
+        .img-caption {
+            text-align: center;
+            font-size: 10pt;
+            font-style: italic;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        /* Section numbering */
+        .section-title {
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+
+        /* Step box */
+        .step-box {
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            padding: 10px 14px;
+            margin: 8px 0;
+        }
+        .step-box p {
+            text-indent: 0;
+            margin-bottom: 4px;
+        }
+
+        /* Feature table */
+        .feature-table td:first-child {
+            width: 30%;
+            font-weight: bold;
+        }
+
+        /* Daftar isi */
+        .toc {
+            margin: 20px 0;
+        }
+        .toc a {
+            color: #000;
+            text-decoration: none;
+        }
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            border-bottom: 1px dotted #999;
+        }
+        .toc-item span:last-child {
+            min-width: 30px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+
+<!-- ========== COVER PAGE ========== -->
+<div class="cover-page">
+    <h1>STANDAR OPERASIONAL PROSEDUR<br>(SOP)</h1>
+    <div class="line"></div>
+    <h2>Sistem Penjadwalan Sidang Tugas Akhir<br>Berbasis Web dengan Metode AHP</h2>
+    <div class="line"></div>
+    <p class="subtitle" style="text-indent:0;">Jurusan Teknik Industri</p>
+    <p class="subtitle" style="text-indent:0;">Universitas Pembangunan Nasional "Veteran" Yogyakarta</p>
+    
+    <div class="info">
+        <p style="text-indent:0;">Versi Dokumen: 1.0</p>
+        <p style="text-indent:0;">Tanggal: Mei 2026</p>
+    </div>
+</div>
+
+<!-- ========== DAFTAR ISI ========== -->
+<div class="page-break"></div>
+<h1>DAFTAR ISI</h1>
+
+<div class="toc">
+    <div class="toc-item"><span><strong>BAB I – PENDAHULUAN</strong></span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>1.1 Tujuan</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>1.2 Ruang Lingkup</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>1.3 Peran Pengguna</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>1.4 Akses Sistem</span></div>
+    <br>
+    <div class="toc-item"><span><strong>BAB II – SOP ADMIN</strong></span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.1 Login ke Sistem</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.2 Halaman Dashboard Admin</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.3 Mengelola Data Dosen</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.4 Mengelola Data Mahasiswa</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.5 Mengelola Data Jadwal Mengajar</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.6 Membuat Jadwal Sidang (Generate Otomatis)</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.7 Mengelola Data Sidang</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.8 Melihat Statistik Dosen</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.9 Mengelola Data User</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.10 Ekspor Jadwal Sidang ke PDF</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.11 Edit Profil</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>2.12 Logout</span></div>
+    <br>
+    <div class="toc-item"><span><strong>BAB III – SOP DOSEN</strong></span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>3.1 Login ke Sistem</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>3.2 Halaman Dashboard Dosen</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>3.3 Melihat Jadwal Mengajar</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>3.4 Melihat Jadwal Sidang</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>3.5 Edit Profil</span></div>
+    <div class="toc-item" style="padding-left:1cm;"><span>3.6 Logout</span></div>
+</div>
+
+<!-- ========== BAB I ========== -->
+<div class="page-break"></div>
+<h1 class="section-title">BAB I – PENDAHULUAN</h1>
+
+<h2>1.1 Tujuan</h2>
+<p>Dokumen Standar Operasional Prosedur (SOP) ini disusun sebagai panduan resmi penggunaan Sistem Penjadwalan Sidang Tugas Akhir berbasis web yang dikembangkan untuk Jurusan Teknik Industri, Universitas Pembangunan Nasional "Veteran" Yogyakarta. SOP ini bertujuan untuk memberikan petunjuk langkah demi langkah kepada setiap pengguna sistem agar dapat memanfaatkan seluruh fitur yang tersedia secara optimal dan konsisten.</p>
+
+<h2>1.2 Ruang Lingkup</h2>
+<p>SOP ini mencakup seluruh prosedur penggunaan sistem, mulai dari proses login, pengelolaan data master (dosen, mahasiswa, jadwal mengajar), proses pembuatan jadwal sidang secara otomatis menggunakan metode AHP (<i>Analytical Hierarchy Process</i>), pengelolaan data sidang, hingga ekspor laporan dalam format PDF. Dokumen ini berlaku untuk dua peran pengguna, yaitu <b>Admin</b> dan <b>Dosen</b>.</p>
+
+<h2>1.3 Peran Pengguna</h2>
+<p>Sistem ini memiliki dua peran pengguna dengan hak akses yang berbeda, sebagaimana dijelaskan pada tabel berikut:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width:15%;">Peran</th>
+            <th>Hak Akses</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align:center;"><b>Admin</b></td>
+            <td>
+                Memiliki akses penuh terhadap seluruh fitur sistem, meliputi:
+                <ul style="margin:4px 0;">
+                    <li>Mengelola data dosen (tambah, edit, hapus, lihat)</li>
+                    <li>Mengelola data mahasiswa (tambah, edit, hapus, lihat)</li>
+                    <li>Mengelola data jadwal mengajar (tambah, edit, hapus, lihat)</li>
+                    <li>Membuat jadwal sidang secara otomatis (generate)</li>
+                    <li>Mengelola data sidang (tambah, edit, hapus, lihat, ubah status)</li>
+                    <li>Melihat statistik dosen penguji</li>
+                    <li>Mengelola data user</li>
+                    <li>Mengekspor jadwal sidang dan berita acara ke PDF</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center;"><b>Dosen</b></td>
+            <td>
+                Memiliki akses terbatas untuk melihat informasi terkait dirinya, meliputi:
+                <ul style="margin:4px 0;">
+                    <li>Melihat dashboard ringkasan (statistik mahasiswa, dosen, sidang)</li>
+                    <li>Melihat jadwal menguji pada dashboard</li>
+                    <li>Melihat data jadwal mengajar (hanya lihat, tidak dapat mengedit)</li>
+                    <li>Melihat data jadwal sidang (hanya lihat, tidak dapat mengedit)</li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>1.4 Akses Sistem</h2>
+<p>Sistem dapat diakses melalui <i>web browser</i> (Google Chrome, Mozilla Firefox, Microsoft Edge, dll.) dengan mengakses URL yang telah ditentukan. Setiap pengguna harus memiliki akun yang terdaftar untuk dapat login ke dalam sistem. Akun pengguna dibuat oleh Admin melalui menu pengelolaan User.</p>
+
+<!-- ========== BAB II ========== -->
+<div class="page-break"></div>
+<h1 class="section-title">BAB II – SOP ADMIN</h1>
+
+<p class="no-indent">Bagian ini menjelaskan seluruh prosedur yang dapat dilakukan oleh pengguna dengan peran <b>Admin</b>.</p>
+
+<!-- 2.1 Login -->
+<h2>2.1 Login ke Sistem</h2>
+<p>Proses login merupakan langkah awal yang harus dilakukan admin untuk mengakses seluruh fitur sistem. Berikut adalah langkah-langkahnya:</p>
+<ol>
+    <li>Buka <i>web browser</i> dan masukkan URL sistem pada kolom alamat.</li>
+    <li>Halaman login akan tampil. Masukkan <b>alamat email</b> yang terdaftar (format: <i>nama@upnyk.ac.id</i>) pada kolom "Email".</li>
+    <li>Masukkan <b>password</b> pada kolom "Password".</li>
+    <li>Klik tombol <b>"Sign in"</b> untuk masuk ke dalam sistem.</li>
+    <li>Jika email dan password benar, sistem akan mengarahkan ke halaman <b>Dashboard</b>. Jika salah, sistem akan menampilkan pesan kesalahan dan meminta pengguna untuk memasukkan ulang kredensial.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Login ]</p>
+</div>
+<p class="img-caption">Gambar 2.1 – Tampilan Halaman Login Sistem</p>
+
+<!-- 2.2 Dashboard -->
+<h2>2.2 Halaman Dashboard Admin</h2>
+<p>Setelah berhasil login, admin akan diarahkan ke halaman Dashboard yang menampilkan ringkasan informasi penting terkait sistem. Dashboard admin menampilkan beberapa komponen sebagai berikut:</p>
+
+<table class="feature-table">
+    <thead>
+        <tr>
+            <th>Komponen</th>
+            <th>Deskripsi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Widget Greeting</td>
+            <td>Menampilkan ucapan selamat datang kepada pengguna yang sedang login.</td>
+        </tr>
+        <tr>
+            <td>Total Mahasiswa</td>
+            <td>Menampilkan jumlah total data mahasiswa yang terdaftar di sistem. Dapat diklik untuk langsung menuju halaman data mahasiswa.</td>
+        </tr>
+        <tr>
+            <td>Total Dosen</td>
+            <td>Menampilkan jumlah total data dosen yang terdaftar di sistem. Dapat diklik untuk langsung menuju halaman data dosen.</td>
+        </tr>
+        <tr>
+            <td>Sidang Bulan Ini</td>
+            <td>Menampilkan jumlah jadwal sidang yang terdaftar pada bulan berjalan. Dapat diklik untuk menuju halaman data sidang.</td>
+        </tr>
+        <tr>
+            <td>Tingkat Kelulusan</td>
+            <td>Menampilkan persentase mahasiswa yang telah lulus sidang dari total mahasiswa yang terdaftar.</td>
+        </tr>
+        <tr>
+            <td>Distribusi Rumpun Dosen</td>
+            <td>Grafik <i>doughnut</i> yang menampilkan sebaran rumpun keahlian dosen (SPOI, PSIE, KPDP, RPTE).</td>
+        </tr>
+        <tr>
+            <td>Aktivitas Sidang</td>
+            <td>Grafik garis (<i>line chart</i>) yang menampilkan tren jumlah sidang terdaftar dan sidang selesai per bulan dalam satu tahun.</td>
+        </tr>
+        <tr>
+            <td>Statistik Dosen</td>
+            <td>Tabel rangkuman jumlah menguji setiap dosen per bulan beserta total keseluruhan.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Dashboard Admin ]</p>
+</div>
+<p class="img-caption">Gambar 2.2 – Tampilan Dashboard Admin</p>
+
+<p class="no-indent"><b>Navigasi Sidebar:</b> Di sisi kiri halaman terdapat sidebar navigasi yang memuat menu-menu berikut:</p>
+<ul>
+    <li><b>Dashboard</b> – Kembali ke halaman utama dashboard</li>
+    <li><b>Dosen</b> – Mengelola data dosen</li>
+    <li><b>Jadwal Mengajar</b> – Mengelola data jadwal mengajar dosen</li>
+    <li><b>Mahasiswa</b> – Mengelola data mahasiswa</li>
+    <li><b>Buat Jadwal Sidang</b> – Membuat jadwal sidang secara otomatis</li>
+    <li><b>Sidang</b> – Melihat dan mengelola data sidang</li>
+    <li><b>Statistik Dosen</b> – Melihat statistik pemerataan beban dosen penguji</li>
+    <li><b>User</b> – Mengelola akun pengguna</li>
+</ul>
+
+<!-- 2.3 Kelola Dosen -->
+<div class="page-break"></div>
+<h2>2.3 Mengelola Data Dosen</h2>
+<p>Menu Dosen digunakan untuk mengelola data dosen yang terlibat dalam proses sidang Tugas Akhir. Data dosen ini akan digunakan sebagai acuan dalam proses penentuan dosen penguji oleh algoritma AHP.</p>
+
+<h3>A. Melihat Daftar Dosen</h3>
+<ol>
+    <li>Klik menu <b>"Dosen"</b> pada sidebar navigasi.</li>
+    <li>Sistem akan menampilkan tabel daftar seluruh dosen yang terdaftar, dengan kolom: <b>Nama</b>, <b>NIP</b>, dan <b>Rumpun Keahlian</b>.</li>
+    <li>Gunakan kolom <b>pencarian</b> di bagian atas tabel untuk mencari dosen berdasarkan nama atau NIP.</li>
+    <li>Badge angka di samping menu menunjukkan jumlah total dosen yang terdaftar.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Daftar Dosen ]</p>
+</div>
+<p class="img-caption">Gambar 2.3a – Tampilan Halaman Daftar Dosen</p>
+
+<h3>B. Menambah Data Dosen Baru</h3>
+<ol>
+    <li>Pada halaman daftar dosen, klik tombol <b>"New Dosen"</b> di pojok kanan atas.</li>
+    <li>Form tambah dosen akan tampil dengan kolom-kolom berikut:
+        <ul>
+            <li><b>Nama Lengkap</b> – Masukkan nama lengkap beserta gelar akademik dosen (contoh: Dr. Budi Santoso, S.T., M.T.).</li>
+            <li><b>NIP</b> – Masukkan Nomor Induk Pegawai dosen. NIP harus unik dan tidak boleh sama dengan dosen lain.</li>
+            <li><b>Rumpun Keahlian</b> – Pilih satu atau lebih rumpun keahlian dosen dari opsi yang tersedia:
+                <ul>
+                    <li>SPOI – Rekayasa Sistem Produksi dan Optimasi Industri</li>
+                    <li>PSIE – Rekayasa Perancangan Sistem Industri dan Ergonomi</li>
+                    <li>KPDP – Rekayasa Kualitas Proses dan Desain Produk</li>
+                    <li>RPTE – Rekayasa Rantai Pasok dan Tekno Ekonomi</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Klik tombol <b>"Create"</b> untuk menyimpan data dosen baru ke database.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Form Tambah Dosen ]</p>
+</div>
+<p class="img-caption">Gambar 2.3b – Tampilan Form Tambah Data Dosen</p>
+
+<h3>C. Mengedit Data Dosen</h3>
+<ol>
+    <li>Pada halaman daftar dosen, klik ikon <b>edit (pensil)</b> pada baris dosen yang ingin diubah.</li>
+    <li>Form edit akan tampil dengan data yang sudah terisi.</li>
+    <li>Ubah data yang diperlukan, kemudian klik tombol <b>"Save changes"</b> untuk menyimpan perubahan.</li>
+</ol>
+
+<h3>D. Menghapus Data Dosen</h3>
+<ol>
+    <li>Pada halaman daftar dosen, klik ikon <b>hapus (tempat sampah)</b> pada baris dosen yang ingin dihapus.</li>
+    <li>Sistem akan menampilkan konfirmasi penghapusan. Klik <b>"Delete"</b> untuk mengonfirmasi atau <b>"Cancel"</b> untuk membatalkan.</li>
+    <li>Untuk menghapus beberapa dosen sekaligus, centang checkbox pada baris yang diinginkan, lalu gunakan <b>Bulk Action &gt; Delete</b>.</li>
+</ol>
+
+<!-- 2.4 Kelola Mahasiswa -->
+<div class="page-break"></div>
+<h2>2.4 Mengelola Data Mahasiswa</h2>
+<p>Menu Mahasiswa digunakan untuk mengelola data mahasiswa yang akan dijadwalkan sidang Tugas Akhirnya. Data mahasiswa meliputi identitas, judul TA, rumpun TA, dan dosen pembimbing.</p>
+
+<h3>A. Melihat Daftar Mahasiswa</h3>
+<ol>
+    <li>Klik menu <b>"Mahasiswa"</b> pada sidebar navigasi.</li>
+    <li>Sistem akan menampilkan tabel daftar mahasiswa dengan kolom: <b>Nama</b>, <b>NIM</b>, <b>Judul TA</b>, <b>Rumpun TA</b>, dan <b>Pembimbing</b>.</li>
+    <li>Gunakan kolom pencarian untuk mencari berdasarkan nama, NIM, atau nama pembimbing.</li>
+    <li>Atur jumlah data per halaman melalui opsi pagination (10, 50, 70, 100, 150, 200).</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Daftar Mahasiswa ]</p>
+</div>
+<p class="img-caption">Gambar 2.4a – Tampilan Halaman Daftar Mahasiswa</p>
+
+<h3>B. Menambah Data Mahasiswa Baru</h3>
+<ol>
+    <li>Klik tombol <b>"New Mahasiswa"</b> di pojok kanan atas.</li>
+    <li>Isi form dengan data berikut:
+        <ul>
+            <li><b>Nama Mahasiswa</b> – Nama lengkap mahasiswa.</li>
+            <li><b>NIM</b> – Nomor Induk Mahasiswa (harus unik).</li>
+            <li><b>Judul TA</b> – Judul Tugas Akhir yang akan disidangkan.</li>
+            <li><b>Pembimbing</b> – Pilih dosen pembimbing dari dropdown. Dapat dicari berdasarkan nama.</li>
+            <li><b>Rumpun TA</b> – Akan <b>terisi otomatis</b> mengikuti rumpun keahlian dosen pembimbing yang dipilih. Kolom ini bersifat <i>read-only</i> dan tidak dapat diubah secara manual.</li>
+        </ul>
+    </li>
+    <li>Klik tombol <b>"Create"</b> untuk menyimpan data.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Form Tambah Mahasiswa ]</p>
+</div>
+<p class="img-caption">Gambar 2.4b – Tampilan Form Tambah Data Mahasiswa</p>
+
+<h3>C. Mengedit Data Mahasiswa</h3>
+<ol>
+    <li>Klik ikon <b>edit</b> pada baris mahasiswa yang ingin diubah.</li>
+    <li>Ubah data yang diperlukan dan klik <b>"Save changes"</b>.</li>
+</ol>
+
+<h3>D. Menghapus Data Mahasiswa</h3>
+<ol>
+    <li>Klik ikon <b>hapus</b> pada baris mahasiswa yang ingin dihapus.</li>
+    <li>Konfirmasi penghapusan melalui dialog yang muncul.</li>
+</ol>
+
+<!-- 2.5 Kelola Jadwal Mengajar -->
+<div class="page-break"></div>
+<h2>2.5 Mengelola Data Jadwal Mengajar</h2>
+<p>Menu Jadwal Mengajar digunakan untuk menginputkan jadwal perkuliahan dosen. Data ini menjadi acuan bagi sistem untuk menghindari bentrok jadwal saat proses penjadwalan sidang otomatis. Algoritma akan memastikan bahwa dosen penguji yang dipilih tidak memiliki jadwal mengajar pada waktu sidang yang direncanakan.</p>
+
+<h3>A. Melihat Daftar Jadwal Mengajar</h3>
+<ol>
+    <li>Klik menu <b>"Jadwal Mengajar"</b> pada sidebar navigasi.</li>
+    <li>Tabel jadwal mengajar akan tampil dengan kolom: <b>Dosen</b>, <b>Hari</b> (dalam bentuk badge berwarna), <b>Waktu</b> (jam mulai – jam selesai), dan <b>Mata Kuliah</b>.</li>
+    <li>Gunakan <b>filter</b> untuk memfilter berdasarkan:
+        <ul>
+            <li><b>Hari</b> – Memfilter jadwal berdasarkan hari tertentu (Senin–Sabtu).</li>
+            <li><b>Dosen</b> – Memfilter jadwal berdasarkan nama dosen tertentu.</li>
+        </ul>
+    </li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Jadwal Mengajar ]</p>
+</div>
+<p class="img-caption">Gambar 2.5a – Tampilan Halaman Daftar Jadwal Mengajar</p>
+
+<h3>B. Menambah Jadwal Mengajar</h3>
+<ol>
+    <li>Klik tombol <b>"New Jadwal Mengajar"</b>.</li>
+    <li>Isi form dengan data berikut:
+        <ul>
+            <li><b>Nama Dosen</b> – Pilih dosen pemilik jadwal dari dropdown.</li>
+            <li><b>Hari</b> – Pilih hari pelaksanaan perkuliahan (Senin–Sabtu).</li>
+            <li><b>Jam Mulai</b> – Tentukan waktu mulai perkuliahan.</li>
+            <li><b>Jam Selesai</b> – Tentukan waktu selesai perkuliahan.</li>
+            <li><b>Ruangan</b> – Pilih ruangan kelas dari daftar yang tersedia.</li>
+            <li><b>Mata Kuliah</b> – Masukkan nama mata kuliah yang diajarkan.</li>
+            <li><b>Tahun Akademik</b> – Masukkan periode tahun akademik (format: 2025/2026).</li>
+        </ul>
+    </li>
+    <li>Klik tombol <b>"Create"</b> untuk menyimpan jadwal.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Form Tambah Jadwal Mengajar ]</p>
+</div>
+<p class="img-caption">Gambar 2.5b – Tampilan Form Tambah Jadwal Mengajar</p>
+
+<h3>C. Mengedit & Menghapus Jadwal Mengajar</h3>
+<p>Prosedur edit dan hapus sama seperti pada menu Dosen dan Mahasiswa. Gunakan ikon aksi pada masing-masing baris data.</p>
+
+<!-- 2.6 Generate Jadwal Sidang -->
+<div class="page-break"></div>
+<h2>2.6 Membuat Jadwal Sidang (Generate Otomatis)</h2>
+<p>Fitur ini merupakan fitur utama sistem yang memungkinkan admin membuat jadwal sidang secara otomatis menggunakan metode AHP (<i>Analytical Hierarchy Process</i>). Sistem akan menentukan dosen penguji terbaik berdasarkan empat kriteria: ketersediaan waktu (C1), relevansi keilmuan (C2), pemerataan beban (C3), dan jumlah menguji (C4).</p>
+
+<h3>A. Langkah-langkah Generate Jadwal</h3>
+<ol>
+    <li>Klik menu <b>"Buat Jadwal Sidang"</b> pada sidebar navigasi.</li>
+    <li>Isi form parameter penjadwalan:
+        <ul>
+            <li><b>Pilih Mahasiswa</b> – Cari dan pilih mahasiswa yang akan dijadwalkan sidangnya. Pencarian dapat dilakukan berdasarkan nama atau NIM.</li>
+            <li><b>Jenis Sidang</b> – Pilih jenis sidang:
+                <ul>
+                    <li><b>Seminar TA 1</b> – Sidang seminar proposal (3 dosen penguji: 1 ketua sidang + 2 penguji).</li>
+                    <li><b>Sidang TA 2</b> – Sidang akhir (5 dosen penguji: 1 ketua sidang + 4 penguji).</li>
+                </ul>
+            </li>
+            <li><b>Tanggal Mulai</b> – Tentukan tanggal awal rentang penjadwalan.</li>
+            <li><b>Tanggal Selesai</b> – Tentukan tanggal akhir rentang penjadwalan.</li>
+        </ul>
+    </li>
+    <li>Klik tombol <b>"Generate Jadwal"</b>.</li>
+    <li>Sistem akan memproses dengan langkah-langkah berikut:
+        <ul>
+            <li>Menyaring kandidat dosen penguji berdasarkan <b>kesesuaian rumpun keahlian</b> dan memastikan <b>bukan merupakan dosen pembimbing</b> mahasiswa tersebut.</li>
+            <li>Memvalidasi bahwa jumlah kandidat mencukupi (minimal 3 dosen).</li>
+            <li>Menghitung <b>skor AHP</b> setiap kandidat dosen.</li>
+            <li>Memeriksa <b>ketersediaan slot waktu</b> yang tidak bentrok dengan jadwal mengajar dosen.</li>
+            <li>Memilih kombinasi dosen penguji terbaik berdasarkan total skor AHP tertinggi.</li>
+        </ul>
+    </li>
+    <li>Jika berhasil, sistem akan menampilkan <b>beberapa opsi jadwal</b> yang dapat dipilih. Setiap opsi menampilkan:
+        <ul>
+            <li>Tanggal, jam mulai, jam selesai, ruangan</li>
+            <li>Nama dosen penguji 1, penguji 2, dan ketua sidang (serta penguji 3 dan 4 untuk Sidang TA 2)</li>
+            <li>Skor AHP masing-masing dosen</li>
+        </ul>
+    </li>
+    <li>Klik tombol <b>"Pilih Opsi Ini"</b> pada opsi jadwal yang diinginkan untuk menyimpan jadwal ke database.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Generate Jadwal Sidang ]</p>
+</div>
+<p class="img-caption">Gambar 2.6a – Tampilan Form Buat Jadwal Sidang</p>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Hasil Opsi Jadwal Sidang ]</p>
+</div>
+<p class="img-caption">Gambar 2.6b – Tampilan Opsi Jadwal Sidang yang Dihasilkan Sistem</p>
+
+<h3>B. Penanganan Kegagalan</h3>
+<p>Proses generate jadwal dapat gagal dengan dua kemungkinan penyebab:</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width:35%;">Pesan Kegagalan</th>
+            <th>Penyebab & Solusi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>"Kandidat dosen penguji &lt; 3"</b></td>
+            <td>Jumlah dosen yang memiliki rumpun keahlian sesuai kurang dari 3. <b>Solusi:</b> Tambahkan data dosen dengan rumpun keahlian yang sesuai, atau periksa kembali rumpun TA mahasiswa.</td>
+        </tr>
+        <tr>
+            <td><b>"Tidak ada slot"</b></td>
+            <td>Tidak ditemukan slot waktu yang tersedia pada rentang tanggal yang ditentukan. <b>Solusi:</b> Perluas rentang tanggal atau periksa kembali jadwal mengajar dosen.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>C. Debug Log</h3>
+<p>Di bawah hasil generate, sistem menampilkan <b>debug log</b> yang berisi informasi detail proses penjadwalan. Log ini berguna untuk melacak alasan kegagalan atau memahami bagaimana sistem memilih dosen penguji.</p>
+
+<!-- 2.7 Kelola Sidang -->
+<div class="page-break"></div>
+<h2>2.7 Mengelola Data Sidang</h2>
+<p>Menu Sidang menampilkan seluruh data jadwal sidang yang telah dibuat, baik melalui proses generate otomatis maupun penambahan manual. Data sidang dikelompokkan dalam dua tab: <b>Seminar TA 1</b> dan <b>Sidang TA 2</b>.</p>
+
+<h3>A. Melihat Daftar Sidang</h3>
+<ol>
+    <li>Klik menu <b>"Sidang"</b> pada sidebar navigasi.</li>
+    <li>Sistem menampilkan tabel data sidang dengan tab <b>Seminar TA 1</b> (default) dan <b>Sidang TA 2</b>.</li>
+    <li>Informasi yang ditampilkan meliputi: <b>Mahasiswa</b> (nama & NIM), <b>Jenis Sidang</b>, <b>Tanggal</b>, <b>Jam Mulai</b>, <b>Jam Selesai</b>, <b>Ruangan</b>, <b>Status</b> (belum lulus/lulus), <b>Pembimbing</b>, <b>Ketua Sidang</b>, <b>Penguji 1</b>, <b>Penguji 2</b>.</li>
+    <li>Untuk tab <b>Sidang TA 2</b>, kolom tambahan <b>Penguji 3</b> dan <b>Penguji 4</b> akan ditampilkan.</li>
+    <li>Badge angka di samping menu menunjukkan jumlah sidang dengan status "belum lulus".</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Data Sidang ]</p>
+</div>
+<p class="img-caption">Gambar 2.7a – Tampilan Halaman Data Sidang</p>
+
+<h3>B. Menambah Data Sidang Manual</h3>
+<ol>
+    <li>Klik tombol <b>"Tambahkan Sidang"</b> di pojok kanan atas.</li>
+    <li>Isi form dengan data: Mahasiswa, Jenis Sidang, Tanggal, Jam Mulai, Jam Selesai, Ruangan, Status, Ketua Sidang, Penguji 1, Penguji 2 (serta Penguji 3 & 4 jika Sidang TA 2).</li>
+    <li>Klik <b>"Create"</b> untuk menyimpan.</li>
+</ol>
+
+<h3>C. Mengubah Status Sidang</h3>
+<p>Admin dapat mengubah status sidang secara massal melalui fitur <i>Bulk Action</i>:</p>
+<ol>
+    <li>Centang checkbox pada baris sidang yang ingin diubah statusnya.</li>
+    <li>Klik tombol <b>"Bulk Actions"</b> dan pilih:
+        <ul>
+            <li><b>"Tandai Lulus"</b> – Mengubah status sidang menjadi "lulus".</li>
+            <li><b>"Tandai Belum Lulus"</b> – Mengubah status sidang menjadi "belum lulus".</li>
+        </ul>
+    </li>
+    <li>Konfirmasi aksi yang dipilih.</li>
+</ol>
+
+<h3>D. Melihat Detail Sidang</h3>
+<ol>
+    <li>Klik ikon <b>mata (view)</b> pada baris sidang untuk melihat detail lengkap informasi sidang.</li>
+</ol>
+
+<!-- 2.8 Statistik Dosen -->
+<div class="page-break"></div>
+<h2>2.8 Melihat Statistik Dosen</h2>
+<p>Menu Statistik Dosen menyajikan data pemerataan beban penguji dosen. Fitur ini berguna untuk memantau apakah distribusi tugas menguji telah merata di antara seluruh dosen.</p>
+
+<ol>
+    <li>Klik menu <b>"Statistik Dosen"</b> pada sidebar navigasi.</li>
+    <li>Tabel statistik akan tampil dengan kolom: <b>Nama Dosen</b>, <b>Total TA 1</b> (jumlah menguji Seminar TA 1), <b>Total TA 2</b> (jumlah menguji Sidang TA 2), dan <b>Total Keseluruhan</b>.</li>
+    <li>Data dapat diurutkan berdasarkan total keseluruhan (ascending/descending) untuk melihat dosen dengan beban tertinggi atau terendah.</li>
+    <li>Gunakan kolom pencarian untuk mencari dosen tertentu.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Statistik Dosen ]</p>
+</div>
+<p class="img-caption">Gambar 2.8 – Tampilan Halaman Statistik Dosen</p>
+
+<!-- 2.9 Kelola User -->
+<h2>2.9 Mengelola Data User</h2>
+<p>Menu User digunakan oleh admin untuk mengelola akun pengguna yang dapat mengakses sistem. Setiap user memiliki peran (<i>role</i>) yang menentukan hak aksesnya, yaitu <b>admin</b> atau <b>dosen</b>.</p>
+
+<ol>
+    <li>Klik menu <b>"User"</b> pada sidebar navigasi.</li>
+    <li>Halaman daftar user akan tampil.</li>
+    <li>Untuk menambah user baru, klik <b>"New User"</b> dan isi:
+        <ul>
+            <li><b>Name</b> – Nama pengguna.</li>
+            <li><b>Email</b> – Alamat email (wajib format @upnyk.ac.id).</li>
+            <li><b>Password</b> – Kata sandi untuk login.</li>
+            <li><b>Role</b> – Pilih peran: admin atau dosen.</li>
+        </ul>
+    </li>
+    <li>Klik <b>"Create"</b> untuk menyimpan akun baru.</li>
+</ol>
+
+<p><b>Catatan penting:</b> Ketika user dengan role "dosen" disimpan, sistem secara otomatis akan mencocokkan nama user dengan data dosen di tabel dosen dan menyinkronkan alamat email-nya.</p>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Data User ]</p>
+</div>
+<p class="img-caption">Gambar 2.9 – Tampilan Halaman Pengelolaan User</p>
+
+<!-- 2.10 Ekspor PDF -->
+<div class="page-break"></div>
+<h2>2.10 Ekspor Jadwal Sidang ke PDF</h2>
+<p>Fitur ekspor memungkinkan admin mengunduh jadwal sidang beserta berita acara dalam format PDF yang dikemas dalam file ZIP. File ini siap dicetak untuk keperluan administrasi.</p>
+
+<ol>
+    <li>Buka halaman <b>Sidang</b> melalui sidebar navigasi.</li>
+    <li>Klik tombol <b>"Simpan Jadwal"</b> (berwarna hijau) di pojok kanan atas.</li>
+    <li>Isi form ekspor:
+        <ul>
+            <li><b>Pilih Bulan</b> – Pilih bulan jadwal sidang yang ingin diekspor.</li>
+            <li><b>Jenis Sidang</b> – Pilih Seminar TA 1 atau Sidang TA 2.</li>
+            <li><b>Ketua Jurusan</b> – Pilih nama Ketua Jurusan untuk ditampilkan pada dokumen.</li>
+            <li><b>Koordinator Prodi</b> – Pilih nama Koordinator Prodi untuk ditampilkan pada dokumen.</li>
+        </ul>
+    </li>
+    <li>Klik <b>"Simpan Jadwal"</b> untuk memproses.</li>
+    <li>Sistem akan menghasilkan file <b>ZIP</b> yang berisi:
+        <ul>
+            <li>1 file PDF <b>Jadwal Sidang</b> (format landscape A4) – berisi tabel jadwal seluruh sidang pada bulan tersebut.</li>
+            <li>Folder <b>Berita_Acara/</b> berisi file PDF berita acara individual untuk setiap mahasiswa (format portrait A4).</li>
+        </ul>
+    </li>
+    <li>File ZIP akan otomatis terunduh ke komputer.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Form Ekspor PDF ]</p>
+</div>
+<p class="img-caption">Gambar 2.10 – Tampilan Form Ekspor Jadwal Sidang ke PDF</p>
+
+<!-- 2.11 Edit Profil -->
+<h2>2.11 Edit Profil</h2>
+<ol>
+    <li>Klik ikon profil atau nama pengguna di pojok kanan atas halaman.</li>
+    <li>Pilih menu <b>"Edit Profil"</b>.</li>
+    <li>Ubah data yang diinginkan (nama, email, password). Email wajib menggunakan format <b>@upnyk.ac.id</b>.</li>
+    <li>Klik <b>"Save"</b> untuk menyimpan perubahan. Sistem akan mengarahkan kembali ke Dashboard.</li>
+</ol>
+
+<!-- 2.12 Logout -->
+<h2>2.12 Logout</h2>
+<ol>
+    <li>Klik ikon profil atau nama pengguna di pojok kanan atas halaman.</li>
+    <li>Pilih menu <b>"Sign out"</b>.</li>
+    <li>Sistem akan mengeluarkan pengguna dan mengarahkan ke halaman login.</li>
+</ol>
+
+<!-- ========== BAB III ========== -->
+<div class="page-break"></div>
+<h1 class="section-title">BAB III – SOP DOSEN</h1>
+
+<p class="no-indent">Bagian ini menjelaskan seluruh prosedur yang dapat dilakukan oleh pengguna dengan peran <b>Dosen</b>. Akses dosen bersifat terbatas dan fokus pada fitur melihat informasi (<i>read-only</i>).</p>
+
+<!-- 3.1 Login -->
+<h2>3.1 Login ke Sistem</h2>
+<p>Proses login dosen sama dengan proses login admin. Berikut langkah-langkahnya:</p>
+<ol>
+    <li>Buka <i>web browser</i> dan masukkan URL sistem.</li>
+    <li>Masukkan <b>alamat email dosen</b> yang terdaftar (format: <i>nama@upnyk.ac.id</i>) pada kolom "Email".</li>
+    <li>Masukkan <b>password</b> pada kolom "Password".</li>
+    <li>Klik tombol <b>"Sign in"</b>.</li>
+    <li>Jika berhasil, sistem akan mengarahkan ke halaman Dashboard Dosen. Jika gagal, pesan kesalahan akan ditampilkan.</li>
+</ol>
+
+<p><b>Catatan:</b> Akun dosen dibuat oleh Admin melalui menu User. Dosen tidak dapat membuat akun sendiri. Jika belum memiliki akun, hubungi admin sistem.</p>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Login – Sama dengan Gambar 2.1 ]</p>
+</div>
+<p class="img-caption">Gambar 3.1 – Tampilan Halaman Login (Dosen)</p>
+
+<!-- 3.2 Dashboard Dosen -->
+<h2>3.2 Halaman Dashboard Dosen</h2>
+<p>Setelah login, dosen akan diarahkan ke halaman Dashboard yang menampilkan informasi ringkasan dan jadwal menguji. Dashboard dosen memiliki komponen sebagai berikut:</p>
+
+<table class="feature-table">
+    <thead>
+        <tr>
+            <th>Komponen</th>
+            <th>Deskripsi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Widget Greeting</td>
+            <td>Menampilkan ucapan selamat datang dengan nama dosen yang sedang login.</td>
+        </tr>
+        <tr>
+            <td>Total Mahasiswa</td>
+            <td>Menampilkan jumlah total mahasiswa yang terdaftar (informasi umum).</td>
+        </tr>
+        <tr>
+            <td>Total Dosen</td>
+            <td>Menampilkan jumlah total dosen yang terdaftar (informasi umum).</td>
+        </tr>
+        <tr>
+            <td>Sidang Bulan Ini</td>
+            <td>Menampilkan jumlah jadwal sidang yang terdaftar pada bulan berjalan.</td>
+        </tr>
+        <tr>
+            <td>Tingkat Kelulusan</td>
+            <td>Menampilkan persentase kelulusan mahasiswa secara keseluruhan.</td>
+        </tr>
+        <tr>
+            <td><b>Jadwal Menguji</b></td>
+            <td>
+                <b>Komponen khusus dosen.</b> Menampilkan tabel jadwal sidang di mana dosen tersebut berperan sebagai penguji atau ketua sidang. Informasi yang ditampilkan:
+                <ul style="margin:4px 0;">
+                    <li><b>Mahasiswa</b> – Nama mahasiswa yang akan disidangkan.</li>
+                    <li><b>Jenis Sidang</b> – Kategori sidang (Seminar TA 1 / Sidang TA 2).</li>
+                    <li><b>Tanggal</b> – Tanggal pelaksanaan sidang.</li>
+                    <li><b>Jam Mulai</b> – Waktu mulai sidang.</li>
+                    <li><b>Ruangan</b> – Tempat pelaksanaan sidang.</li>
+                    <li><b>Peran</b> – Peran dosen dalam sidang tersebut (Ketua Sidang, Penguji 1, Penguji 2, dst.).</li>
+                </ul>
+                Jadwal yang ditampilkan adalah jadwal mulai dari hari ini hingga satu bulan ke depan, diurutkan berdasarkan tanggal dan jam mulai.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Dashboard Dosen ]</p>
+</div>
+<p class="img-caption">Gambar 3.2 – Tampilan Dashboard Dosen dengan Widget Jadwal Menguji</p>
+
+<p class="no-indent"><b>Navigasi Sidebar Dosen:</b> Sidebar navigasi dosen hanya memuat menu-menu berikut:</p>
+<ul>
+    <li><b>Dashboard</b> – Halaman utama dengan ringkasan dan jadwal menguji.</li>
+    <li><b>Jadwal Mengajar</b> – Melihat data jadwal mengajar seluruh dosen.</li>
+    <li><b>Sidang</b> – Melihat data jadwal sidang.</li>
+</ul>
+
+<p><b>Catatan:</b> Menu-menu yang hanya dapat diakses oleh admin (Dosen, Mahasiswa, Buat Jadwal Sidang, Statistik Dosen, User) <b>tidak akan tampil</b> pada sidebar dosen.</p>
+
+<!-- 3.3 Melihat Jadwal Mengajar -->
+<div class="page-break"></div>
+<h2>3.3 Melihat Jadwal Mengajar</h2>
+<p>Dosen dapat melihat data jadwal mengajar seluruh dosen melalui menu ini. Namun, dosen <b>tidak memiliki hak akses</b> untuk menambah, mengedit, atau menghapus jadwal mengajar.</p>
+
+<ol>
+    <li>Klik menu <b>"Jadwal Mengajar"</b> pada sidebar navigasi.</li>
+    <li>Tabel jadwal mengajar akan tampil dengan informasi: <b>Dosen</b>, <b>Hari</b>, <b>Waktu</b>, dan <b>Mata Kuliah</b>.</li>
+    <li>Gunakan filter <b>Hari</b> atau <b>Dosen</b> untuk mempersempit data yang ditampilkan.</li>
+    <li>Klik ikon <b>mata (view)</b> pada baris tertentu untuk melihat detail lengkap jadwal mengajar tersebut.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Jadwal Mengajar – Tampilan Dosen ]</p>
+</div>
+<p class="img-caption">Gambar 3.3 – Tampilan Halaman Jadwal Mengajar (Perspektif Dosen)</p>
+
+<p><b>Perbedaan tampilan dengan admin:</b> Pada tampilan dosen, tombol "New Jadwal Mengajar", ikon edit, dan opsi bulk delete <b>tidak ditampilkan</b> karena dosen tidak memiliki hak akses untuk operasi tersebut.</p>
+
+<!-- 3.4 Melihat Jadwal Sidang -->
+<h2>3.4 Melihat Jadwal Sidang</h2>
+<p>Dosen dapat melihat seluruh data jadwal sidang yang telah terdaftar di sistem melalui menu ini. Sama seperti jadwal mengajar, dosen hanya memiliki akses <i>read-only</i>.</p>
+
+<ol>
+    <li>Klik menu <b>"Sidang"</b> pada sidebar navigasi.</li>
+    <li>Data sidang ditampilkan dalam dua tab: <b>Seminar TA 1</b> dan <b>Sidang TA 2</b>.</li>
+    <li>Dosen dapat melihat informasi: Mahasiswa, Jenis Sidang, Tanggal, Jam Mulai, Jam Selesai, Ruangan, Status, Pembimbing, Ketua Sidang, dan daftar Penguji.</li>
+    <li>Klik ikon <b>mata (view)</b> pada baris sidang untuk melihat detail lengkap, termasuk susunan dosen penguji.</li>
+    <li>Gunakan kolom pencarian untuk mencari sidang berdasarkan nama mahasiswa, NIM, atau ruangan.</li>
+</ol>
+
+<div class="img-placeholder">
+    <p>[ Screenshot Halaman Sidang – Tampilan Dosen ]</p>
+</div>
+<p class="img-caption">Gambar 3.4 – Tampilan Halaman Sidang (Perspektif Dosen)</p>
+
+<p><b>Perbedaan tampilan dengan admin:</b> Pada tampilan dosen, tombol "Tambahkan Sidang", tombol "Simpan Jadwal" (ekspor PDF), ikon edit, dan opsi bulk action (tandai lulus/belum lulus, hapus) <b>tidak ditampilkan</b>.</p>
+
+<!-- 3.5 Edit Profil -->
+<h2>3.5 Edit Profil</h2>
+<ol>
+    <li>Klik ikon profil atau nama pengguna di pojok kanan atas.</li>
+    <li>Pilih menu <b>"Edit Profil"</b>.</li>
+    <li>Ubah data yang diinginkan (nama, email, password). Email wajib menggunakan format <b>@upnyk.ac.id</b>.</li>
+    <li>Klik <b>"Save"</b> untuk menyimpan perubahan.</li>
+</ol>
+
+<p><b>Catatan:</b> Perubahan email dosen melalui edit profil akan secara otomatis disinkronkan ke tabel data dosen oleh sistem.</p>
+
+<!-- 3.6 Logout -->
+<h2>3.6 Logout</h2>
+<ol>
+    <li>Klik ikon profil atau nama pengguna di pojok kanan atas.</li>
+    <li>Pilih menu <b>"Sign out"</b>.</li>
+    <li>Sistem akan mengeluarkan dosen dari sistem dan mengarahkan ke halaman login.</li>
+</ol>
+
+<br>
+<hr style="border-top: 3px double #000;">
+<p style="text-align:center; font-style:italic; text-indent:0;">— Akhir Dokumen SOP —</p>
+<hr style="border-top: 3px double #000;">
+
+</body>
+</html>

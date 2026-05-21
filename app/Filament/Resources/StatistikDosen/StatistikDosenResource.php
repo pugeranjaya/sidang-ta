@@ -50,13 +50,14 @@ class StatistikDosenResource extends Resource
         return $schema->components([]);
     }
 
-    public static function getWithCountMap(?string $bulan = null): array
+    public static function getWithCountMap(?string $bulan = null, ?string $tahun = null): array
     {
-        $filterBukanPembimbing = function($q) use ($bulan) {
+        $filterBukanPembimbing = function($q) use ($bulan, $tahun) {
             if ($bulan) {
-                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
-                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereMonth('tanggal', $bulan);
+            }
+            if ($tahun) {
+                $q->whereYear('tanggal', $tahun);
             }
             $q->whereHas('mahasiswa', function($mq) {
                 $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
@@ -127,7 +128,18 @@ class StatistikDosenResource extends Resource
                         return $query->orderByRaw('(IFNULL(p1_ta1_count,0) + IFNULL(p2_ta1_count,0) + IFNULL(ketua_ta1_count,0) + IFNULL(p1_ta2_count,0) + IFNULL(p2_ta2_count,0) + IFNULL(p3_ta2_count,0) + IFNULL(p4_ta2_count,0)) ' . $direction);
                     })
             ])
+            ->modifyQueryUsing(function (Builder $query, \Filament\Tables\Table $table) {
+                $livewire = $table->getLivewire();
+                $bulan = $livewire->filterBulan ?? 'semua';
+                $tahun = $livewire->filterTahun ?? 'semua';
+                
+                $bulan = $bulan === 'semua' ? null : $bulan;
+                $tahun = $tahun === 'semua' ? null : $tahun;
+
+                return $query->withCount(self::getWithCountMap($bulan, $tahun));
+            })
             ->filters([])
+            ->header(view('filament.custom-statistik-filters'))
             ->recordActions([])
             ->toolbarActions([])
             ->paginated([10, 25, 50, 100])
