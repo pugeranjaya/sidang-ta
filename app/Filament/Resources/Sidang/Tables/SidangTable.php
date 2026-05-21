@@ -44,7 +44,7 @@ class SidangTable
                     })
                     ->sortable()
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('tanggal')
                     ->alignCenter()
                     ->extraAttributes([
@@ -138,7 +138,7 @@ class SidangTable
                     ->searchable()
                     ->sortable()
                     ->placeholder('-')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->visible(fn ($livewire) => $livewire->activeTab === 'seminar_ta_2'),
                 TextColumn::make('penguji4.nama')
                     ->label('Penguji 4')
                     ->alignCenter()
@@ -148,7 +148,7 @@ class SidangTable
                     ->searchable()
                     ->sortable()
                     ->placeholder('-')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->visible(fn ($livewire) => $livewire->activeTab === 'seminar_ta_2'),
                 TextColumn::make('created_at')
                     ->label('Dibuat pada')
                     ->dateTime()

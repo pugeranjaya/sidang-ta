@@ -25,10 +25,14 @@ class ListSidang extends ListRecords
         return [];
     }
 
+    public function getDefaultActiveTab(): string | int | null
+    {
+        return 'seminar_ta_1';
+    }
+
     public function getTabs(): array
     {
         return [
-            'semua' => Tab::make('Semua Sidang'),
             'seminar_ta_1' => Tab::make('Seminar TA 1')
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('jenis_sidang', 'Seminar TA 1')),
             'seminar_ta_2' => Tab::make('Sidang TA 2')
