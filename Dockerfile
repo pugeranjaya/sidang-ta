@@ -49,5 +49,14 @@ RUN chmod -R 777 storage bootstrap/cache
 # Expose port
 EXPOSE 8000
 
-# Start: migrate (allow failure), then serve
-CMD sh -c "rm -f bootstrap/cache/*.php && php artisan migrate --force || echo 'Migration failed, continuing...' && php artisan serve --host=0.0.0.0 --port=\${PORT:-8000}"
+# Create startup script
+RUN echo '#!/bin/sh\n\
+echo "=== Starting Application ==="\n\
+echo "PORT=$PORT"\n\
+rm -f bootstrap/cache/*.php\n\
+php artisan migrate --force || echo "Migration failed, skipping..."\n\
+echo "=== Starting PHP Server ==="\n\
+exec php artisan serve --host=0.0.0.0 --port=${PORT:-8000}\n'\
+> /app/start.sh && chmod +x /app/start.sh
+
+CMD ["/app/start.sh"]
