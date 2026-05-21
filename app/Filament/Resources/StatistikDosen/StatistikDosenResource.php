@@ -91,6 +91,9 @@ class StatistikDosenResource extends Resource
                 TextColumn::make('ta1')
                     ->label('TA 1')
                     ->alignCenter()
+                    ->extraAttributes([
+                        'style' => 'text-align: center !important; justify-content: center !important;',
+                    ])
                     ->getStateUsing(fn($record) => 
                         ($record->p1_ta1_count ?? 0) + 
                         ($record->p2_ta1_count ?? 0) + 
@@ -103,6 +106,9 @@ class StatistikDosenResource extends Resource
                 TextColumn::make('ta2')
                     ->label('TA 2')
                     ->alignCenter()
+                    ->extraAttributes([
+                        'style' => 'text-align: center !important; justify-content: center !important;',
+                    ])
                     ->getStateUsing(fn($record) => 
                         ($record->p1_ta2_count ?? 0) + 
                         ($record->p2_ta2_count ?? 0) + 
