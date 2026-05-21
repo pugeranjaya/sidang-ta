@@ -84,8 +84,7 @@ class StatistikDosenResource extends Resource
                     ->alignCenter()
                     ->html()
                     ->formatStateUsing(fn (string $state): string => '<div style="text-align: left; width: 100%; min-width: 200px;">' . e($state) . '</div>')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 
                 TextColumn::make('ta1')
                     ->label('TA 1')
@@ -96,10 +95,7 @@ class StatistikDosenResource extends Resource
                         ($record->p1_ta1_count ?? 0) + 
                         ($record->p2_ta1_count ?? 0) + 
                         ($record->ketua_ta1_count ?? 0)
-                    )
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('(IFNULL(p1_ta1_count,0) + IFNULL(p2_ta1_count,0) + IFNULL(ketua_ta1_count,0)) ' . $direction);
-                    }),
+                    ),
                     
                 TextColumn::make('ta2')
                     ->label('TA 2')
@@ -111,10 +107,7 @@ class StatistikDosenResource extends Resource
                         ($record->p2_ta2_count ?? 0) + 
                         ($record->p3_ta2_count ?? 0) + 
                         ($record->p4_ta2_count ?? 0)
-                    )
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('(IFNULL(p1_ta2_count,0) + IFNULL(p2_ta2_count,0) + IFNULL(p3_ta2_count,0) + IFNULL(p4_ta2_count,0)) ' . $direction);
-                    }),
+                    ),
                     
                 TextColumn::make('grand_total')
                     ->label('Total Keseluruhan')
