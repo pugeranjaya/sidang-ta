@@ -20,7 +20,7 @@ class DosenForm
                     ->unique(ignoreRecord: true),
                 TextInput::make('nip')
                     ->required(),
-                \Filament\Forms\Components\CheckboxList::make('rumpun_keahlian')
+                \Filament\Forms\Components\Radio::make('rumpun_keahlian')
                     ->options([
                         'SPOI' => 'Sistem Produksi & Optimasi Industri (SPOI)',
                         'PSIE' => 'Perancangan Sistem & Inovasi Ekonomi (PSIE)',
@@ -28,6 +28,8 @@ class DosenForm
                         'RPTE' => 'Rekayasa Produk & Teknik Ergonomi (RPTE)',
                     ])
                     ->required()
+                    ->formatStateUsing(fn ($state) => is_array($state) ? ($state[0] ?? null) : $state)
+                    ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [$state])
                     ->columns(2)
                     ->columnSpanFull(),
             ]);

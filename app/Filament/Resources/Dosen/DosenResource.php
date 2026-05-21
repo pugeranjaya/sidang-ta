@@ -66,7 +66,7 @@ class DosenResource extends Resource
                     ->maxLength(20)
                     ->placeholder('Contoh: 197001011234567890'),
 
-                \Filament\Forms\Components\CheckboxList::make('rumpun_keahlian')
+                \Filament\Forms\Components\Radio::make('rumpun_keahlian')
                     ->label('Rumpun Keahlian')
                     ->options([
                         'SPOI' => 'Rekayasa Sistem Produksi dan Optimasi Industri (SPOI)',
@@ -76,7 +76,9 @@ class DosenResource extends Resource
                     ])
                     ->columns(1)
                     ->required()
-                    ->helperText('Pilih rumpun keahlian dosen (bisa lebih dari satu)')
+                    ->formatStateUsing(fn ($state) => is_array($state) ? ($state[0] ?? null) : $state)
+                    ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [$state])
+                    ->helperText('Pilih rumpun keahlian dosen')
             ]);
     }
 
