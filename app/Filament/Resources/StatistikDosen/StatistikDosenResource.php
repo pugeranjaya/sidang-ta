@@ -82,18 +82,16 @@ class StatistikDosenResource extends Resource
                 TextColumn::make('nama')
                     ->label('Nama Dosen')
                     ->alignCenter()
-                    ->extraAttributes([
-                        'style' => 'text-align: left !important; justify-content: flex-start !important;',
-                    ])
+                    ->html()
+                    ->formatStateUsing(fn (string $state): string => '<div style="text-align: left; width: 100%; min-width: 200px;">' . e($state) . '</div>')
                     ->searchable()
                     ->sortable(),
                 
                 TextColumn::make('ta1')
                     ->label('TA 1')
                     ->alignCenter()
-                    ->extraAttributes([
-                        'style' => 'text-align: center !important; justify-content: center !important;',
-                    ])
+                    ->badge()
+                    ->color('info')
                     ->getStateUsing(fn($record) => 
                         ($record->p1_ta1_count ?? 0) + 
                         ($record->p2_ta1_count ?? 0) + 
@@ -106,9 +104,8 @@ class StatistikDosenResource extends Resource
                 TextColumn::make('ta2')
                     ->label('TA 2')
                     ->alignCenter()
-                    ->extraAttributes([
-                        'style' => 'text-align: center !important; justify-content: center !important;',
-                    ])
+                    ->badge()
+                    ->color('success')
                     ->getStateUsing(fn($record) => 
                         ($record->p1_ta2_count ?? 0) + 
                         ($record->p2_ta2_count ?? 0) + 
@@ -122,8 +119,8 @@ class StatistikDosenResource extends Resource
                 TextColumn::make('grand_total')
                     ->label('Total Keseluruhan')
                     ->alignCenter()
-                    ->weight('bold')
-                    ->color('primary')
+                    ->badge()
+                    ->color('warning')
                     ->getStateUsing(fn($record) => 
                         ($record->p1_ta1_count ?? 0) + 
                         ($record->p2_ta1_count ?? 0) + 
