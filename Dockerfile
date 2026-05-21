@@ -46,17 +46,10 @@ RUN npm install && npm run build
 # Set permissions for storage and cache folders
 RUN chmod -R 777 storage bootstrap/cache
 
+# Copy and prepare startup script
+RUN chmod +x /app/start.sh && sed -i 's/\r$//' /app/start.sh
+
 # Expose port
 EXPOSE 8000
-
-# Create startup script
-RUN echo '#!/bin/sh\n\
-echo "=== Starting Application ==="\n\
-echo "PORT=$PORT"\n\
-rm -f bootstrap/cache/*.php\n\
-php artisan migrate --force || echo "Migration failed, skipping..."\n\
-echo "=== Starting PHP Server ==="\n\
-exec php artisan serve --host=0.0.0.0 --port=${PORT:-8000}\n'\
-> /app/start.sh && chmod +x /app/start.sh
 
 CMD ["/app/start.sh"]
