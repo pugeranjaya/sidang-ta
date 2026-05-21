@@ -76,10 +76,21 @@ class StatistikDosenResource extends Resource
                 ->searchable(),
         ];
 
+        $filterBukanPembimbing = function($q) {
+            $q->whereHas('mahasiswa', function($mq) {
+                $mq->whereColumn('mahasiswa.pembimbing_id', '!=', 'dosen.id');
+            });
+        };
+
         $withCountMap = [
-            'penguji1Sidangs',
-            'penguji2Sidangs',
-            'ketuaSidangs'
+            'penguji1Sidangs as p1_ta1' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Seminar TA 1'); $filterBukanPembimbing($q); },
+            'penguji2Sidangs as p2_ta1' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Seminar TA 1'); $filterBukanPembimbing($q); },
+            'ketuaSidangs as ketua_ta1' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Seminar TA 1'); $filterBukanPembimbing($q); },
+
+            'penguji1Sidangs as p1_ta2' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Sidang TA 2'); $filterBukanPembimbing($q); },
+            'penguji2Sidangs as p2_ta2' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Sidang TA 2'); $filterBukanPembimbing($q); },
+            'penguji3Sidangs as p3_ta2' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Sidang TA 2'); $filterBukanPembimbing($q); },
+            'penguji4Sidangs as p4_ta2' => function($q) use ($filterBukanPembimbing) { $q->where('jenis_sidang', 'Sidang TA 2'); $filterBukanPembimbing($q); },
         ];
 
         $monthColumns = [];
@@ -88,48 +99,127 @@ class StatistikDosenResource extends Resource
             $monthLabel = \Illuminate\Support\Carbon::parse($bulan . '-01')->translatedFormat('M-y'); // Jan-26 dll
             $aliasBulan = str_replace('-', '_', $bulan);
             
-            $withCountMap["penguji1Sidangs as p1_{$aliasBulan}"] = function($q) use ($bulan) {
+            // TA 1
+            $withCountMap["penguji1Sidangs as p1_ta1_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
                 $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
                 $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Seminar TA 1');
+                $filterBukanPembimbing($q);
             };
-            $withCountMap["penguji2Sidangs as p2_{$aliasBulan}"] = function($q) use ($bulan) {
+            $withCountMap["penguji2Sidangs as p2_ta1_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
                 $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
                 $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Seminar TA 1');
+                $filterBukanPembimbing($q);
             };
-            $withCountMap["ketuaSidangs as ketua_{$aliasBulan}"] = function($q) use ($bulan) {
+            $withCountMap["ketuaSidangs as ketua_ta1_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
                 $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
                 $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
-                $q->whereBetween('tanggal', [$startDate, $endDate]);
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Seminar TA 1');
+                $filterBukanPembimbing($q);
             };
 
-            $monthColumns[] = TextColumn::make("total_{$aliasBulan}")
-                ->label($monthLabel)
-                ->alignCenter()
-                ->getStateUsing(fn($record) => 
-                    ($record->{"p1_{$aliasBulan}"} ?? 0) + 
-                    ($record->{"p2_{$aliasBulan}"} ?? 0) + 
-                    ($record->{"ketua_{$aliasBulan}"} ?? 0)
-                );
+            // TA 2
+            $withCountMap["penguji1Sidangs as p1_ta2_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
+                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
+                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Sidang TA 2');
+                $filterBukanPembimbing($q);
+            };
+            $withCountMap["penguji2Sidangs as p2_ta2_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
+                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
+                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Sidang TA 2');
+                $filterBukanPembimbing($q);
+            };
+            $withCountMap["penguji3Sidangs as p3_ta2_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
+                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
+                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Sidang TA 2');
+                $filterBukanPembimbing($q);
+            };
+            $withCountMap["penguji4Sidangs as p4_ta2_{$aliasBulan}"] = function($q) use ($bulan, $filterBukanPembimbing) {
+                $startDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->startOfMonth()->toDateString();
+                $endDate = \Illuminate\Support\Carbon::parse($bulan . '-01')->endOfMonth()->toDateString();
+                $q->whereBetween('tanggal', [$startDate, $endDate])->where('jenis_sidang', 'Sidang TA 2');
+                $filterBukanPembimbing($q);
+            };
+
+            $monthColumns[] = \Filament\Tables\Columns\ColumnGroup::make($monthLabel, [
+                TextColumn::make("ta1_{$aliasBulan}")
+                    ->label('TA 1')
+                    ->alignCenter()
+                    ->getStateUsing(fn($record) => 
+                        ($record->{"p1_ta1_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p2_ta1_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"ketua_ta1_{$aliasBulan}"} ?? 0)
+                    ),
+                TextColumn::make("ta2_{$aliasBulan}")
+                    ->label('TA 2')
+                    ->alignCenter()
+                    ->getStateUsing(fn($record) => 
+                        ($record->{"p1_ta2_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p2_ta2_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p3_ta2_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p4_ta2_{$aliasBulan}"} ?? 0)
+                    ),
+                TextColumn::make("total_{$aliasBulan}")
+                    ->label('Total')
+                    ->alignCenter()
+                    ->weight('bold')
+                    ->color('primary')
+                    ->getStateUsing(fn($record) => 
+                        ($record->{"p1_ta1_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p2_ta1_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"ketua_ta1_{$aliasBulan}"} ?? 0) +
+                        ($record->{"p1_ta2_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p2_ta2_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p3_ta2_{$aliasBulan}"} ?? 0) + 
+                        ($record->{"p4_ta2_{$aliasBulan}"} ?? 0)
+                    ),
+            ])->alignCenter();
         }
 
         if (!empty($monthColumns)) {
-            $columns[] = \Filament\Tables\Columns\ColumnGroup::make('Total Menguji', $monthColumns)->alignCenter();
+            $columns = array_merge($columns, $monthColumns);
         }
 
-        $columns[] = TextColumn::make('grand_total')
-            ->label('Total Keseluruhan')
-            ->alignCenter()
-            ->weight('bold')
-            ->getStateUsing(fn($record) => 
-                ($record->penguji1_sidangs_count ?? 0) + 
-                ($record->penguji2_sidangs_count ?? 0) + 
-                ($record->ketua_sidangs_count ?? 0)
-            )
-            ->sortable(query: function (Builder $query, string $direction): Builder {
-                return $query->orderByRaw('(penguji1_sidangs_count + penguji2_sidangs_count + ketua_sidangs_count) ' . $direction);
-            });
+        $columns[] = \Filament\Tables\Columns\ColumnGroup::make('Total Keseluruhan', [
+            TextColumn::make('grand_total_ta1')
+                ->label('Total TA 1')
+                ->alignCenter()
+                ->getStateUsing(fn($record) => 
+                    ($record->p1_ta1 ?? 0) + 
+                    ($record->p2_ta1 ?? 0) + 
+                    ($record->ketua_ta1 ?? 0)
+                ),
+            TextColumn::make('grand_total_ta2')
+                ->label('Total TA 2')
+                ->alignCenter()
+                ->getStateUsing(fn($record) => 
+                    ($record->p1_ta2 ?? 0) + 
+                    ($record->p2_ta2 ?? 0) + 
+                    ($record->p3_ta2 ?? 0) + 
+                    ($record->p4_ta2 ?? 0)
+                ),
+            TextColumn::make('grand_total')
+                ->label('Total Semua')
+                ->alignCenter()
+                ->weight('bold')
+                ->color('success')
+                ->getStateUsing(fn($record) => 
+                    ($record->p1_ta1 ?? 0) + 
+                    ($record->p2_ta1 ?? 0) + 
+                    ($record->ketua_ta1 ?? 0) +
+                    ($record->p1_ta2 ?? 0) + 
+                    ($record->p2_ta2 ?? 0) + 
+                    ($record->p3_ta2 ?? 0) + 
+                    ($record->p4_ta2 ?? 0)
+                )
+                ->sortable(query: function (Builder $query, string $direction): Builder {
+                    return $query->orderByRaw('(IFNULL(p1_ta1,0) + IFNULL(p2_ta1,0) + IFNULL(ketua_ta1,0) + IFNULL(p1_ta2,0) + IFNULL(p2_ta2,0) + IFNULL(p3_ta2,0) + IFNULL(p4_ta2,0)) ' . $direction);
+                })
+        ])->alignCenter();
 
         return $table
             ->modifyQueryUsing(function (Builder $query) use ($withCountMap) {
