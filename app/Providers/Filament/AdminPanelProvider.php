@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile(\App\Filament\Pages\EditProfile::class)
             ->brandName('Penjadwalan Sidang Jurusan Teknik Industri')
-            ->favicon(secure_asset('images/logo-website.png') . '?v=3')
+            ->favicon(asset('images/logo-website.png') . '?v=3')
             ->globalSearch(false)
             ->darkMode(false)
             ->sidebarCollapsibleOnDesktop()
