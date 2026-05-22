@@ -58,6 +58,38 @@ class SidangResource extends Resource
         return ['mahasiswa.nama', 'mahasiswa.nim', 'tanggal'];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        if ($user?->isAdmin()) {
+            return $query;
+        }
+
+        $dosen = \App\Models\Dosen::where('email', $user->email)->first();
+
+        if ($dosen) {
+            $dosenId = $dosen->id;
+            
+            $query->where(function ($q) use ($dosenId) {
+                $q->where('penguji1_id', $dosenId)
+                  ->orWhere('penguji2_id', $dosenId)
+                  ->orWhere('penguji3_id', $dosenId)
+                  ->orWhere('penguji4_id', $dosenId)
+                  ->orWhere('ketua_sidang_id', $dosenId)
+                  ->orWhereHas('mahasiswa', function ($sub) use ($dosenId) {
+                      $sub->where('pembimbing_id', $dosenId);
+                  });
+            });
+        } else {
+            // If the user is not an admin and no Dosen record matches their email, show nothing.
+            $query->whereRaw('1 = 0');
+        }
+
+        return $query;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return SidangForm::configure($schema);
