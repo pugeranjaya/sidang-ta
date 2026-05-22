@@ -15,4 +15,13 @@ class CreateDosen extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (isset($data['rumpun_keahlian'])) {
+            $data['rumpun_keahlian'] = (array) $data['rumpun_keahlian'];
+        }
+
+        return $data;
+    }
 }

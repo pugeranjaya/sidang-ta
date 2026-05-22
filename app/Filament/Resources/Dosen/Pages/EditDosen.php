@@ -16,4 +16,22 @@ class EditDosen extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        if (isset($data['rumpun_keahlian']) && is_array($data['rumpun_keahlian'])) {
+            $data['rumpun_keahlian'] = $data['rumpun_keahlian'][0] ?? null;
+        }
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['rumpun_keahlian'])) {
+            $data['rumpun_keahlian'] = (array) $data['rumpun_keahlian'];
+        }
+
+        return $data;
+    }
 }

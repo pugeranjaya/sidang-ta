@@ -76,8 +76,6 @@ class DosenResource extends Resource
                     ])
                     ->columns(1)
                     ->required()
-                    ->formatStateUsing(fn ($state) => is_array($state) ? ($state[0] ?? null) : $state)
-                    ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [$state])
                     ->helperText('Pilih rumpun keahlian dosen')
             ]);
     }

@@ -28,8 +28,6 @@ class DosenForm
                         'RPTE' => 'Rekayasa Produk & Teknik Ergonomi (RPTE)',
                     ])
                     ->required()
-                    ->formatStateUsing(fn ($state) => is_array($state) ? ($state[0] ?? null) : $state)
-                    ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [$state])
                     ->columns(2)
                     ->columnSpanFull(),
             ]);
