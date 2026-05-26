@@ -11,8 +11,10 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Toggle;
 
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\BulkActionGroup;
@@ -76,7 +78,14 @@ class DosenResource extends Resource
                     ])
                     ->columns(1)
                     ->required()
-                    ->helperText('Pilih rumpun keahlian dosen')
+                    ->helperText('Pilih rumpun keahlian dosen'),
+
+                Toggle::make('status')
+                    ->label('Status Aktif')
+                    ->default(true)
+                    ->helperText('Nonaktifkan jika dosen tidak bisa menguji di periode ini')
+                    ->onColor('success')
+                    ->offColor('danger'),
             ]);
     }
 
@@ -104,9 +113,20 @@ class DosenResource extends Resource
                     ->alignCenter()
                     ->badge()
                     ->separator(','),
+
+                ToggleColumn::make('status')
+                    ->label('Status')
+                    ->alignCenter()
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->sortable(),
             ])
             ->filters([
-                //
+                \Filament\Tables\Filters\TernaryFilter::make('status')
+                    ->label('Status Dosen')
+                    ->trueLabel('Aktif')
+                    ->falseLabel('Nonaktif')
+                    ->placeholder('Semua'),
             ])
             ->recordActions([
                 \Filament\Actions\EditAction::make(),

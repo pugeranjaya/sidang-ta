@@ -17,7 +17,11 @@ class JadwalMengajar extends Model
         'ruangan',
         'mata_kuliah',       // ← PASTIKAN ADA INI
         'tahun_akademik',    // ← PASTIKAN ADA INI
-        // kalau ada field lain di form, tambahin juga
+        'abaikan_bentrok',   // untuk kasus tim teaching
+    ];
+
+    protected $casts = [
+        'abaikan_bentrok' => 'boolean',
     ];
 
     // Relasi dosen (harus ada biar relationship('dosen', 'nama') jalan)

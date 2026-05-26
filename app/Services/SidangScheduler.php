@@ -299,7 +299,7 @@ class SidangScheduler
     private function calculateDosenWorkloads(): void
     {
         if (empty($this->dosenCounts)) {
-            $dosens = Dosen::all();
+            $dosens = Dosen::where('status', true)->get();
             $this->dosenCounts = [];
 
             foreach ($dosens as $d) {
@@ -339,7 +339,7 @@ class SidangScheduler
         $toleransiSelisih = $this->dynamicTolerance;
         $maxAllowedMisi = $this->minCount + $toleransiSelisih;
 
-        $allCandidates = Dosen::whereNotIn('id', $allExcludeIds)->get();
+        $allCandidates = Dosen::where('status', true)->whereNotIn('id', $allExcludeIds)->get();
 
         // Ambil dosen yang bebannya dalam batas toleransi
         $candidates = $allCandidates->filter(function ($dosen) use ($maxAllowedMisi) {
@@ -767,8 +767,8 @@ class SidangScheduler
         if ($this->isBentrokCacheLoaded)
             return;
 
-        // Fetch all JadwalMengajar once
-        $allJadwal = JadwalMengajar::all();
+        // Fetch all JadwalMengajar once — skip jadwal yang ditandai abaikan_bentrok (tim teaching)
+        $allJadwal = JadwalMengajar::where('abaikan_bentrok', false)->get();
         foreach ($allJadwal as $j) {
             $this->jadwalMengajarMapCache[$j->dosen_id][$j->hari][] = [
                 'mulai' => strtotime($j->jam_mulai),

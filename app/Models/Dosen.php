@@ -12,11 +12,13 @@ class Dosen extends Model
         'email',
         'nip',
         'rumpun_keahlian',  // ini penting untuk array/json
+        'status',
     ];
 
     // Opsional: cast rumpun_keahlian jadi array supaya Laravel handle otomatis
     protected $casts = [
         'rumpun_keahlian' => 'array',  // atau 'json' kalau pakai json
+        'status' => 'boolean',
     ];
 
     public function penguji1Sidangs()

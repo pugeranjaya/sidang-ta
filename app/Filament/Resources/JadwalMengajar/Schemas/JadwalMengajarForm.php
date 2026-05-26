@@ -75,6 +75,13 @@ class JadwalMengajarForm
                 ->maxLength(20)
                 ->placeholder('Contoh: 2025/2026')
                 ->helperText('Format: Tahun mulai / Tahun akhir'),
+
+            \Filament\Forms\Components\Toggle::make('abaikan_bentrok')
+                ->label('Abaikan Bentrok (Tim Teaching)')
+                ->default(false)
+                ->helperText('Aktifkan jika jadwal ini bersifat tim teaching / gantian, sehingga dosen tetap bisa dijadwalkan sebagai penguji di jam ini')
+                ->onColor('warning')
+                ->offColor('gray'),
         ]);
     }
 }
