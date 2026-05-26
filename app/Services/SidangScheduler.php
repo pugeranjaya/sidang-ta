@@ -398,9 +398,9 @@ class SidangScheduler
             return [];
 
         $sorted = collect($scheduleOptions)->sortByDesc('total_score')->take(10)->values();
-        
+
         $results = [];
-        foreach($sorted as $winner) {
+        foreach ($sorted as $winner) {
             $results[] = [
                 'penguji1_id' => $winner['penguji1']->id,
                 'penguji1_nama' => $winner['penguji1']->nama,
@@ -414,7 +414,7 @@ class SidangScheduler
                 'total_score' => $winner['total_score'],
             ];
         }
-        
+
         return $results;
     }
 
@@ -454,13 +454,18 @@ class SidangScheduler
                     'jam_mulai' => $slot['jam_mulai'],
                     'jam_selesai' => $slot['jam_selesai'],
                 ];
-                
-                if (count($validSlots) >= 10) break;
+
+                if (count($validSlots) >= 10)
+                    break;
             } else {
-                if ($isPembimbingBentrok) $unavailableReasons[$pembimbing->nama] = ($unavailableReasons[$pembimbing->nama] ?? 0) + 1;
-                if ($isKetuaBentrok) $unavailableReasons[$ketuaSidang->nama] = ($unavailableReasons[$ketuaSidang->nama] ?? 0) + 1;
-                if ($isPenguji1Bentrok) $unavailableReasons[$penguji1TA1->nama] = ($unavailableReasons[$penguji1TA1->nama] ?? 0) + 1;
-                if ($isPenguji2Bentrok) $unavailableReasons[$penguji2TA1->nama] = ($unavailableReasons[$penguji2TA1->nama] ?? 0) + 1;
+                if ($isPembimbingBentrok)
+                    $unavailableReasons[$pembimbing->nama] = ($unavailableReasons[$pembimbing->nama] ?? 0) + 1;
+                if ($isKetuaBentrok)
+                    $unavailableReasons[$ketuaSidang->nama] = ($unavailableReasons[$ketuaSidang->nama] ?? 0) + 1;
+                if ($isPenguji1Bentrok)
+                    $unavailableReasons[$penguji1TA1->nama] = ($unavailableReasons[$penguji1TA1->nama] ?? 0) + 1;
+                if ($isPenguji2Bentrok)
+                    $unavailableReasons[$penguji2TA1->nama] = ($unavailableReasons[$penguji2TA1->nama] ?? 0) + 1;
             }
         }
 
@@ -710,7 +715,7 @@ class SidangScheduler
         $current = Carbon::parse($start);
         $endDate = Carbon::parse($end);
         $hariMap = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat'];
-        
+
         if ($jenisSidang === 'Sidang TA 2') {
             // Slot waktu 2 jam
             $sesiList = [
@@ -721,9 +726,9 @@ class SidangScheduler
         } else {
             // Slot waktu 1,5 jam (TA 1)
             $sesiList = [
-                ['07:30', '09:00'], 
-                ['09:00', '10:30'], 
-                ['10:30', '12:00'], 
+                ['07:30', '09:00'],
+                ['09:00', '10:30'],
+                ['10:30', '12:00'],
                 ['13:00', '14:30']
             ];
         }
