@@ -499,6 +499,7 @@ class SidangScheduler
         $allMahasiswa = Mahasiswa::findMany($mahasiswaIds)->keyBy('id');
         $results = []; // hasil akhir per mahasiswa
         $usedDosenPerSlot = []; // track dosen yang dipakai per slot agar tidak dobel lintas ruangan
+        $usedRuanganPerSlot = []; // track ruangan yang dipakai per slot di memori
 
         foreach ($mahasiswaIds as $mhsId) {
             $mahasiswa = $allMahasiswa[$mhsId] ?? null;
@@ -544,14 +545,16 @@ class SidangScheduler
                     $k1 = $scoredUmum[1];
 
                     // Cari ruangan kosong di slot ini
-                    $ruangan = $this->pilihRuanganBatch($slot['tanggal'], $slot['jam_mulai'], $slot['jam_selesai'], $usedInThisSlot);
+                    $usedRuanganInThisSlot = $usedRuanganPerSlot[$slotKey] ?? [];
+                    $ruangan = $this->pilihRuanganBatch($slot['tanggal'], $slot['jam_mulai'], $slot['jam_selesai'], $usedRuanganInThisSlot);
                     if (!$ruangan)
                         continue; // semua ruangan penuh di slot ini
 
-                    // Catat dosen yang dipakai di slot ini
+                    // Catat dosen dan ruangan yang dipakai di slot ini
                     $usedDosenPerSlot[$slotKey][] = $p1['dosen']->id;
                     $usedDosenPerSlot[$slotKey][] = $p2['dosen']->id;
                     $usedDosenPerSlot[$slotKey][] = $k1['dosen']->id;
+                    $usedRuanganPerSlot[$slotKey][] = $ruangan;
 
                     $results[$mhsId] = [
                         'success' => true,
@@ -597,9 +600,13 @@ class SidangScheduler
      * Pilih ruangan kosong di slot tertentu, memperhitungkan dosen batch yang sedang dipakai.
      * Ruangan dikunci per-slot jika sudah ada 1 sidang (1 sidang = 1 sesi = 1 ruangan).
      */
-    private function pilihRuanganBatch(string $tanggal, string $jamMulai, string $jamSelesai, array $usedDosenIds): ?string
+    private function pilihRuanganBatch(string $tanggal, string $jamMulai, string $jamSelesai, array $usedRuanganInThisSlot = []): ?string
     {
         foreach (self::RUANGAN as $ruangan) {
+            // Cek apakah di memori (batch saat ini) ruangan ini sudah diklaim
+            if (in_array($ruangan, $usedRuanganInThisSlot)) {
+                continue;
+            }
             $terpakai = Sidang::where('ruangan', $ruangan)
                 ->where('tanggal', $tanggal)
                 ->where(function ($q) use ($jamMulai, $jamSelesai) {
