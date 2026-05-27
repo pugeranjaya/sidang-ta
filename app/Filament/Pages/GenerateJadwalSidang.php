@@ -75,22 +75,11 @@ class GenerateJadwalSidang extends Page
                 // ── Mode Single: 1 mahasiswa ────────────────────────────────
                 Select::make('mahasiswa_id')
                     ->label('Pilih Mahasiswa')
+                    ->options(Mahasiswa::all()->mapWithKeys(fn($m) => [
+                        $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
+                    ]))
                     ->searchable()
-                    ->getSearchResultsUsing(
-                        fn(string $search): array =>
-                        Mahasiswa::where('nama', 'like', "%{$search}%")
-                            ->orWhere('nim', 'like', "%{$search}%")
-                            ->limit(20)
-                            ->get()
-                            ->mapWithKeys(fn($m) => [
-                                $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
-                            ])
-                            ->toArray()
-                    )
-                    ->getOptionLabelUsing(
-                        fn($value): ?string =>
-                        Mahasiswa::find($value) ? Mahasiswa::find($value)->nama . ' (' . Mahasiswa::find($value)->nim . ')' : null
-                    )
+                    ->preload()
                     ->visible(fn(Get $get) => !$get('mode_batch'))
                     ->required(fn(Get $get) => !$get('mode_batch')),
 
@@ -99,26 +88,11 @@ class GenerateJadwalSidang extends Page
                     ->label('Pilih Mahasiswa (Multi)')
                     ->helperText('Pilih 1–15 mahasiswa. Sistem akan otomatis mendistribusikan ke 3 ruangan (maks 5 per ruangan).')
                     ->multiple()
+                    ->options(Mahasiswa::all()->mapWithKeys(fn($m) => [
+                        $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
+                    ]))
                     ->searchable()
-                    ->getSearchResultsUsing(
-                        fn(string $search): array =>
-                        Mahasiswa::where('nama', 'like', "%{$search}%")
-                            ->orWhere('nim', 'like', "%{$search}%")
-                            ->limit(30)
-                            ->get()
-                            ->mapWithKeys(fn($m) => [
-                                $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
-                            ])
-                            ->toArray()
-                    )
-                    ->getOptionLabelsUsing(
-                        fn(array $values): array =>
-                        Mahasiswa::findMany($values)
-                            ->mapWithKeys(fn($m) => [
-                                $m->id => "{$m->nama} ({$m->nim})"
-                            ])
-                            ->toArray()
-                    )
+                    ->preload()
                     ->visible(fn(Get $get) => (bool) $get('mode_batch'))
                     ->required(fn(Get $get) => (bool) $get('mode_batch')),
 

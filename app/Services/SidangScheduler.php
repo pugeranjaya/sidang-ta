@@ -926,10 +926,12 @@ class SidangScheduler
             $sesiSore = [
                 ['14:30', '16:30'],
             ];
-            // Jumat: hanya pagi (hindari sholat Jumat dan waktu sore)
+            // Jumat: istirahat sholat Jumat dari 11:30 sampai 13:30
             $sesiJumat = [
                 ['07:30', '09:30'],
                 ['09:30', '11:30'],
+                ['13:30', '15:30'], // Mulai lagi setelah Jum'atan
+                ['15:30', '17:30'], // Sesi sore Jumat
             ];
         } else {
             // Slot 1.5 jam (TA 1) — Senin s/d Kamis
@@ -941,14 +943,16 @@ class SidangScheduler
                 ['14:00', '15:30'],
             ];
             // Sore diminimalisir
-            $sesiSore = [
-                ['15:30', '17:00'],
-            ];
-            // Jumat: pagi saja (hindari sholat Jumat — skip 12:30 ke atas)
+            // $sesiSore = [
+            // ['15:30', '17:00'],
+            // ];
+            // Jumat: istirahat sholat Jumat 10:30 sampai 13:30
             $sesiJumat = [
                 ['07:30', '09:00'],
                 ['09:00', '10:30'],
-                ['10:30', '12:00'],
+                // 10:30 - 13:30 istirahat/jum'atan (karena kalau dipaksakan sampai jam 12 nanggung)
+                ['13:30', '15:00'],
+                ['15:00', '16:30'], // Sesi sore Jumat
             ];
         }
 

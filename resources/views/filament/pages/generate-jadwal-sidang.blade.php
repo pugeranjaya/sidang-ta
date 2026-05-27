@@ -54,7 +54,7 @@
                                 <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['ketua_sidang_nama'] }}</div>
                             </div>
                             <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
-                                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 1 <span style="font-weight:400;font-size:0.7rem;">(Sesuai Rumpun)</span></div>
+                                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 1</div>
                                 <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji1_nama'] }}</div>
                             </div>
                             <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
@@ -128,12 +128,6 @@
                                 <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; font-weight: 600;">Ruangan</div>
                                 <div style="font-weight: bold; color: #111827;">{{ $result['ruangan'] }}</div>
                             </div>
-                            @if(isset($result['score_ahp']))
-                            <div>
-                                <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; font-weight: 600;">Skor AHP</div>
-                                <div style="font-weight: bold; color: #059669;">{{ $result['score_ahp'] }}</div>
-                            </div>
-                            @endif
                         </div>
 
                         {{-- Dosen --}}
@@ -143,7 +137,7 @@
                                 <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['ketua_sidang_nama'] }}</div>
                             </div>
                             <div style="min-width: 180px; background-color: #eff6ff; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #3b82f6;">
-                                <div style="font-size: 0.7rem; color: #2563eb; font-weight: 800; text-transform: uppercase;">Penguji 1 <span style="font-weight:400">(Rumpun)</span></div>
+                                <div style="font-size: 0.7rem; color: #2563eb; font-weight: 800; text-transform: uppercase;">Penguji 1</div>
                                 <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['penguji1_nama'] }}</div>
                             </div>
                             <div style="min-width: 180px; background-color: #eff6ff; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #3b82f6;">
