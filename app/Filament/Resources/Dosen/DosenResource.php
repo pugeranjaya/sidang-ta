@@ -59,6 +59,11 @@ class DosenResource extends Resource
                     ->label('Nama Lengkap')
                     ->required()
                     ->maxLength(255)
+                    ->regex('/^[a-zA-Z\s.,\'-]+$/')
+                    ->validationMessages([
+                        'regex' => 'Nama hanya boleh berisi huruf, spasi, titik, koma, tanda kutip, dan strip.',
+                    ])
+                    ->extraInputAttributes(['oninput' => "this.value = this.value.replace(/[^a-zA-Z\s.,\'-]/g, '')"])
                     ->placeholder('Contoh: Dr. Budi Santoso, S.T., M.T.'),
 
                 TextInput::make('nip')
@@ -66,9 +71,14 @@ class DosenResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(20)
+                    ->regex('/^[0-9]+$/')
+                    ->validationMessages([
+                        'regex' => 'NIP hanya boleh berisi angka.',
+                    ])
+                    ->extraInputAttributes(['oninput' => "this.value = this.value.replace(/[^0-9]/g, '')"])
                     ->placeholder('Contoh: 197001011234567890'),
 
-                \Filament\Forms\Components\Radio::make('rumpun_keahlian')
+                CheckboxList::make('rumpun_keahlian')
                     ->label('Rumpun Keahlian')
                     ->options([
                         'SPOI' => 'Rekayasa Sistem Produksi dan Optimasi Industri (SPOI)',
@@ -78,7 +88,7 @@ class DosenResource extends Resource
                     ])
                     ->columns(1)
                     ->required()
-                    ->helperText('Pilih rumpun keahlian dosen'),
+                    ->helperText('Pilih satu atau lebih rumpun keahlian dosen'),
 
                 Toggle::make('status')
                     ->label('Status Aktif')

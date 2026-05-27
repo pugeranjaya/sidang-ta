@@ -359,39 +359,79 @@ class SidangScheduler
     }
 
     /**
-     * TA 1: Cari slot terbaik dengan 2 penguji + 1 ketua sidang
+     * Cek apakah seorang dosen memiliki rumpun keahlian yang sesuai dengan rumpun TA mahasiswa.
+     * Mendukung dosen dengan lebih dari 1 rumpun keahlian (disimpan sebagai JSON array).
+     */
+    private function dosenMatchRumpun(Dosen $dosen, string $rumpunTA): bool
+    {
+        if (empty($dosen->rumpun_keahlian)) {
+            return false;
+        }
+
+        $rumpunList = is_array($dosen->rumpun_keahlian)
+            ? $dosen->rumpun_keahlian
+            : (json_decode((string) $dosen->rumpun_keahlian, true) ?? []);
+
+        return in_array($rumpunTA, $rumpunList, true);
+    }
+
+    /**
+     * TA 1: Cari slot terbaik dengan 2 penguji + 1 ketua sidang.
+     * Aturan: Penguji 1 WAJIB sesuai rumpun TA mahasiswa.
+     *         Penguji 2 dan Ketua Sidang boleh siapapun (merata).
      */
     private function findBestSlotAndPenguji(array $slots, Collection $candidates, Mahasiswa $mahasiswa): array
     {
         $scheduleOptions = [];
+        $rumpunTA = $mahasiswa->rumpun_ta;
 
         foreach ($slots as $slot) {
             $availableInSlot = $candidates->filter(function ($dosen) use ($slot) {
                 return !$this->isBentrokMengajar($dosen, $slot) && !$this->isBentrokSidang($dosen, $slot);
             });
 
-            if ($availableInSlot->count() >= 3) {
-                $shuffled = $availableInSlot->shuffle();
+            // Pool Penguji 1: wajib sesuai rumpun TA
+            $poolP1 = $availableInSlot->filter(function ($dosen) use ($rumpunTA) {
+                return $this->dosenMatchRumpun($dosen, $rumpunTA);
+            })->values();
 
-                $scored = $shuffled->map(function ($dosen) use ($mahasiswa) {
-                    $score = $this->calculateAHPScore($dosen, $mahasiswa);
-                    return ['dosen' => $dosen, 'score' => $score];
-                })->sortByDesc('score')->values();
+            // Pool Penguji 2 & Ketua: siapapun yang tersedia (termasuk yang sesuai rumpun)
+            $poolUmum = $availableInSlot->values();
 
-                $p1 = $scored[0];
-                $p2 = $scored[1];
-                $k1 = $scored[2];
-
-                $totalSlotScore = $p1['score'] + $p2['score'] + $k1['score'];
-
-                $scheduleOptions[] = [
-                    'slot' => $slot,
-                    'penguji1' => $p1['dosen'],
-                    'penguji2' => $p2['dosen'],
-                    'ketua_sidang' => $k1['dosen'],
-                    'total_score' => $totalSlotScore,
-                ];
+            // Butuh minimal 1 dosen sesuai rumpun (P1) + 2 dosen lain (P2 & Ketua)
+            if ($poolP1->isEmpty() || $poolUmum->count() < 3) {
+                continue;
             }
+
+            // Scoring semua kandidat
+            $scored = $availableInSlot->shuffle()->map(function ($dosen) use ($mahasiswa) {
+                $score = $this->calculateAHPScore($dosen, $mahasiswa);
+                return ['dosen' => $dosen, 'score' => $score];
+            })->sortByDesc('score')->values();
+
+            $scoredById = $scored->keyBy(fn($item) => $item['dosen']->id);
+
+            // Pilih P1: dosen rumpun cocok dengan skor AHP tertinggi
+            $scoredP1 = $poolP1->map(fn($d) => $scoredById[$d->id])->sortByDesc('score')->values();
+            $p1 = $scoredP1->first();
+
+            // Pilih P2 & Ketua dari sisa dosen (exclude P1)
+            $scoredUmum = $scored->filter(fn($item) => $item['dosen']->id !== $p1['dosen']->id)->values();
+            if ($scoredUmum->count() < 2) {
+                continue;
+            }
+            $p2 = $scoredUmum[0];
+            $k1 = $scoredUmum[1];
+
+            $totalSlotScore = $p1['score'] + $p2['score'] + $k1['score'];
+
+            $scheduleOptions[] = [
+                'slot' => $slot,
+                'penguji1' => $p1['dosen'],
+                'penguji2' => $p2['dosen'],
+                'ketua_sidang' => $k1['dosen'],
+                'total_score' => $totalSlotScore,
+            ];
         }
 
         if (empty($scheduleOptions))
@@ -419,6 +459,162 @@ class SidangScheduler
     }
 
     /**
+     * Batch scheduling: jadwalkan hingga $maxPerRuangan mahasiswa per ruangan,
+     * untuk 3 ruangan sekaligus (total maks 15 mahasiswa dalam 1x generate).
+     *
+     * @param  array  $mahasiswaIds  Array of mahasiswa IDs (maks 15 total)
+     * @param  string $tanggalMulai
+     * @param  string $tanggalSelesai
+     * @param  string $jenisSidang
+     * @param  int    $maxPerRuangan Maks mahasiswa per ruangan per sesi (default 5)
+     * @return array  ['results' => [...], '_debug' => [...]]
+     */
+    public function generateBatch(
+        array $mahasiswaIds,
+        string $tanggalMulai,
+        string $tanggalSelesai,
+        string $jenisSidang = 'Seminar TA 1',
+        int $maxPerRuangan = 5
+    ): array {
+        $this->debugLog = [];
+        $this->calculateDosenWorkloads();
+
+        $maxTotal = count(self::RUANGAN) * $maxPerRuangan;
+        if (count($mahasiswaIds) > $maxTotal) {
+            return [
+                'success' => false,
+                'error' => "Maksimal {$maxTotal} mahasiswa per batch ({$maxPerRuangan} per ruangan × " . count(self::RUANGAN) . " ruangan).",
+                '_debug' => $this->debugLog,
+            ];
+        }
+
+        $this->log("=== Batch Scheduling {$jenisSidang}: " . count($mahasiswaIds) . " mahasiswa ===");
+
+        $possibleSlots = $this->generatePossibleSlots($tanggalMulai, $tanggalSelesai, $jenisSidang);
+        if (empty($possibleSlots)) {
+            return ['success' => false, 'error' => 'Tidak ada slot waktu tersedia.', '_debug' => $this->debugLog];
+        }
+
+        // Muat data semua mahasiswa
+        $allMahasiswa = Mahasiswa::findMany($mahasiswaIds)->keyBy('id');
+        $results = []; // hasil akhir per mahasiswa
+        $usedDosenPerSlot = []; // track dosen yang dipakai per slot agar tidak dobel lintas ruangan
+
+        foreach ($mahasiswaIds as $mhsId) {
+            $mahasiswa = $allMahasiswa[$mhsId] ?? null;
+            if (!$mahasiswa) {
+                $results[$mhsId] = ['success' => false, 'error' => 'Mahasiswa tidak ditemukan.'];
+                continue;
+            }
+
+            if ($jenisSidang === 'Seminar TA 1') {
+                $candidates = $this->getFilteredDosenCandidates($mahasiswa);
+                $found = false;
+
+                foreach ($possibleSlots as $slotKey => $slot) {
+                    // Tandai dosen yang sudah dipakai di slot ini (batch-aware)
+                    $usedInThisSlot = $usedDosenPerSlot[$slotKey] ?? [];
+
+                    $availableInSlot = $candidates->filter(function ($dosen) use ($slot, $usedInThisSlot) {
+                        return !in_array($dosen->id, $usedInThisSlot)
+                            && !$this->isBentrokMengajar($dosen, $slot)
+                            && !$this->isBentrokSidang($dosen, $slot);
+                    });
+
+                    $rumpunTA = $mahasiswa->rumpun_ta;
+                    $poolP1 = $availableInSlot->filter(fn($d) => $this->dosenMatchRumpun($d, $rumpunTA))->values();
+                    $poolUmum = $availableInSlot->values();
+
+                    if ($poolP1->isEmpty() || $poolUmum->count() < 3) {
+                        continue;
+                    }
+
+                    $scored = $availableInSlot->shuffle()->map(function ($dosen) use ($mahasiswa) {
+                        return ['dosen' => $dosen, 'score' => $this->calculateAHPScore($dosen, $mahasiswa)];
+                    })->sortByDesc('score')->values();
+
+                    $scoredById = $scored->keyBy(fn($item) => $item['dosen']->id);
+                    $p1 = $poolP1->map(fn($d) => $scoredById[$d->id])->sortByDesc('score')->first();
+                    $scoredUmum = $scored->filter(fn($item) => $item['dosen']->id !== $p1['dosen']->id)->values();
+
+                    if ($scoredUmum->count() < 2)
+                        continue;
+
+                    $p2 = $scoredUmum[0];
+                    $k1 = $scoredUmum[1];
+
+                    // Cari ruangan kosong di slot ini
+                    $ruangan = $this->pilihRuanganBatch($slot['tanggal'], $slot['jam_mulai'], $slot['jam_selesai'], $usedInThisSlot);
+                    if (!$ruangan)
+                        continue; // semua ruangan penuh di slot ini
+
+                    // Catat dosen yang dipakai di slot ini
+                    $usedDosenPerSlot[$slotKey][] = $p1['dosen']->id;
+                    $usedDosenPerSlot[$slotKey][] = $p2['dosen']->id;
+                    $usedDosenPerSlot[$slotKey][] = $k1['dosen']->id;
+
+                    $results[$mhsId] = [
+                        'success' => true,
+                        'mahasiswa_id' => $mhsId,
+                        'mahasiswa_nama' => $mahasiswa->nama,
+                        'jenis_sidang' => $jenisSidang,
+                        'tanggal' => $slot['tanggal'],
+                        'jam_mulai' => $slot['jam_mulai'],
+                        'jam_selesai' => $slot['jam_selesai'],
+                        'ruangan' => $ruangan,
+                        'penguji1_id' => $p1['dosen']->id,
+                        'penguji1_nama' => $p1['dosen']->nama,
+                        'penguji2_id' => $p2['dosen']->id,
+                        'penguji2_nama' => $p2['dosen']->nama,
+                        'ketua_sidang_id' => $k1['dosen']->id,
+                        'ketua_sidang_nama' => $k1['dosen']->nama,
+                        'status' => 'belum lulus',
+                        'score_ahp' => number_format($p1['score'] + $p2['score'] + $k1['score'], 3),
+                    ];
+                    $found = true;
+                    break;
+                }
+
+                if (!$found) {
+                    $results[$mhsId] = [
+                        'success' => false,
+                        'mahasiswa_id' => $mhsId,
+                        'mahasiswa_nama' => $mahasiswa->nama,
+                        'error' => 'Tidak ada slot dan dosen yang tersedia untuk mahasiswa ini.',
+                    ];
+                }
+            } else {
+                // Untuk TA 2, fallback ke single generate (formasi penguji sudah tetap)
+                $single = $this->generateForMahasiswa($mhsId, $tanggalMulai, $tanggalSelesai, $jenisSidang);
+                $results[$mhsId] = $single;
+            }
+        }
+
+        return ['success' => true, 'results' => $results, '_debug' => $this->debugLog];
+    }
+
+    /**
+     * Pilih ruangan kosong di slot tertentu, memperhitungkan dosen batch yang sedang dipakai.
+     * Ruangan dikunci per-slot jika sudah ada 1 sidang (1 sidang = 1 sesi = 1 ruangan).
+     */
+    private function pilihRuanganBatch(string $tanggal, string $jamMulai, string $jamSelesai, array $usedDosenIds): ?string
+    {
+        foreach (self::RUANGAN as $ruangan) {
+            $terpakai = Sidang::where('ruangan', $ruangan)
+                ->where('tanggal', $tanggal)
+                ->where(function ($q) use ($jamMulai, $jamSelesai) {
+                    $q->whereTime('jam_mulai', '<', $jamSelesai)
+                        ->whereTime('jam_selesai', '>', $jamMulai);
+                })->exists();
+
+            if (!$terpakai) {
+                return $ruangan;
+            }
+        }
+        return null; // semua ruangan penuh
+    }
+
+    /**
      * TA 2: Cari slot di mana 4 dosen spesifik semuanya tersedia
      */
     private function findSlotForFixedPengujiTA2(
@@ -427,7 +623,7 @@ class SidangScheduler
         Dosen $ketuaSidang,
         Dosen $penguji1TA1,
         Dosen $penguji2TA1,
-        string &$bentrokInfo = null
+        ?string &$bentrokInfo = null
     ): array {
         $unavailableReasons = [];
         $validSlots = [];
@@ -632,7 +828,7 @@ class SidangScheduler
     /**
      * REVISED C2: Relevansi Keilmuan
      * Menggabungkan dua sub-kriteria:
-     * - Kecocokan rumpun keahlian (bobot 40%)
+     * - Kecocokan rumpun keahlian (bobot 40%) — mendukung multi-rumpun per dosen
      * - Riwayat mengajar MK yang relevan (bobot 60%) ← sesuai arahan dosbing
      */
     private function getRelevansiScore(Dosen $dosen, Mahasiswa $mahasiswa): float
@@ -640,14 +836,8 @@ class SidangScheduler
         $rumpun = $mahasiswa->rumpun_ta;
         $mkList = self::RELEVANSI_MATA_KULIAH[$rumpun] ?? [];
 
-        // Sub-score 1: Rumpun keahlian (0 or 1)
-        $rumpunScore = 0.0;
-        if ($dosen->rumpun_keahlian) {
-            $rumpunList = is_array($dosen->rumpun_keahlian)
-                ? $dosen->rumpun_keahlian
-                : (json_decode((string) $dosen->rumpun_keahlian, true) ?? []);
-            $rumpunScore = in_array($rumpun, $rumpunList) ? 1.0 : 0.0;
-        }
+        // Sub-score 1: Rumpun keahlian — dosen bisa punya >1 rumpun keahlian
+        $rumpunScore = $this->dosenMatchRumpun($dosen, $rumpun) ? 1.0 : 0.0;
 
         // Sub-score 2: Riwayat mengajar MK relevan
         if (!isset($this->dosenMkCache[$dosen->id])) {
@@ -716,27 +906,51 @@ class SidangScheduler
         $endDate = Carbon::parse($end);
         $hariMap = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat'];
 
+        // Sesi pagi-siang (prioritas utama)
+        // Sesi sore (diminimalisir — ditaruh belakangan agar dipakai terakhir)
         if ($jenisSidang === 'Sidang TA 2') {
-            // Slot waktu 2 jam
-            $sesiList = [
+            // Slot 2 jam — Senin s/d Kamis
+            $sesiPagiSiang = [
                 ['07:30', '09:30'],
                 ['09:30', '11:30'],
-                ['13:00', '15:00'],
+                ['12:30', '14:30'],
+            ];
+            // Sore diminimalisir (tapi tetap tersedia jika dibutuhkan)
+            $sesiSore = [
+                ['14:30', '16:30'],
+            ];
+            // Jumat: hanya pagi (hindari sholat Jumat dan waktu sore)
+            $sesiJumat = [
+                ['07:30', '09:30'],
+                ['09:30', '11:30'],
             ];
         } else {
-            // Slot waktu 1,5 jam (TA 1)
-            $sesiList = [
+            // Slot 1.5 jam (TA 1) — Senin s/d Kamis
+            $sesiPagiSiang = [
                 ['07:30', '09:00'],
                 ['09:00', '10:30'],
                 ['10:30', '12:00'],
-                ['13:00', '14:30']
+                ['12:30', '14:00'],
+                ['14:00', '15:30'],
+            ];
+            // Sore diminimalisir
+            $sesiSore = [
+                ['15:30', '17:00'],
+            ];
+            // Jumat: pagi saja (hindari sholat Jumat — skip 12:30 ke atas)
+            $sesiJumat = [
+                ['07:30', '09:00'],
+                ['09:00', '10:30'],
+                ['10:30', '12:00'],
             ];
         }
 
         $jadwalResmi = self::JADWAL_RESMI[$jenisSidang] ?? [];
+        $now = Carbon::now();
 
         while ($current->lte($endDate)) {
-            if ($current->dayOfWeekIso >= 1 && $current->dayOfWeekIso <= 5) {
+            $dayOfWeek = $current->dayOfWeekIso;
+            if ($dayOfWeek >= 1 && $dayOfWeek <= 5) {
                 $bulan = (int) $current->format('n');
                 $tanggalMinimal = isset($jadwalResmi[$bulan])
                     ? Carbon::parse($jadwalResmi[$bulan])
@@ -745,10 +959,21 @@ class SidangScheduler
                 $boleh = $tanggalMinimal === null || $current->gte($tanggalMinimal);
 
                 if ($boleh) {
-                    foreach ($sesiList as $sesi) {
+                    $isFriday = ($dayOfWeek === 5);
+                    $sesiHariIni = $isFriday
+                        ? $sesiJumat
+                        : array_merge($sesiPagiSiang, $sesiSore);
+
+                    foreach ($sesiHariIni as $sesi) {
+                        // Filter: jangan tampilkan slot yang sudah lewat (hari & jam sudah berlalu)
+                        $slotDateTime = Carbon::parse($current->format('Y-m-d') . ' ' . $sesi[0]);
+                        if ($slotDateTime->lte($now)) {
+                            continue;
+                        }
+
                         $slots[] = [
                             'tanggal' => $current->format('Y-m-d'),
-                            'hari' => $hariMap[$current->dayOfWeekIso],
+                            'hari' => $hariMap[$dayOfWeek],
                             'jam_mulai' => $sesi[0],
                             'jam_selesai' => $sesi[1],
                         ];
@@ -758,7 +983,7 @@ class SidangScheduler
             $current->addDay();
         }
 
-        $this->log('[Slot] Total slot valid setelah filter jadwal resmi: ' . count($slots));
+        $this->log('[Slot] Total slot valid setelah filter jadwal resmi & waktu sekarang: ' . count($slots));
         return $slots;
     }
 
