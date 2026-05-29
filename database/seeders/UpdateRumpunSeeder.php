@@ -16,7 +16,7 @@ class UpdateRumpunSeeder extends Seeder
                 'Mochammad Chaeron',
                 'Puryani',
                 'Sutrisno',
-                'Muhammad Shodiq Abdul Khannan',
+                'Shodiq Abdul Khannan',
             ],
             'PSIE' => [
                 'Dyah Rachmawati Lucitasari',
@@ -28,7 +28,7 @@ class UpdateRumpunSeeder extends Seeder
                 'Sadi',
                 'Tri Wibawa',
                 'Gunawan Madyono Putro',
-                'Andreas Mahendra Kuncoro',
+                'Andreas Mahendro Kuncoro',
                 'Eric Ohara',
             ],
             'RPTE' => [
@@ -37,7 +37,7 @@ class UpdateRumpunSeeder extends Seeder
                 'Eko Nursubiyantoro',
                 'Trismi Ristyowati',
                 'Puji Handayani Kasih',
-                'R. Achmad Chairdino Leuveano',
+                'Achmad Chairdino Leuveano',
             ],
         ];
 

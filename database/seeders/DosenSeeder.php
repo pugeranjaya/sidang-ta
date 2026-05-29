@@ -27,7 +27,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['SPOI'],
             ],
             [
-                'nama' => 'Puryani, S.T., M.T.',
+                'nama' => 'Ir. Puryani, S.T., M.T.',
                 'nip' => '19720208 202121 2 005',
                 'rumpun_keahlian' => ['SPOI'],
             ],
@@ -37,7 +37,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['SPOI'],
             ],
             [
-                'nama' => 'Muhammad Shodiq Abdul Khannan, S.T., M.T.',
+                'nama' => 'Dr. M. Shodiq Abdul Khannan, S.T., M.T.',
                 'nip' => '19821010 200501 1 003',
                 'rumpun_keahlian' => ['SPOI'],
             ],
@@ -81,7 +81,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['KPDP'],
             ],
             [
-                'nama' => 'Ir. Andreas Mahendro Kuncoro, S.T., M.Sc., M.Sc., Ph.D',
+                'nama' => 'Ir. Andreas  Mahendro Kuncoro, S.T., M.Sc., M.Sc., Ph.D',
                 'nip' => '19811117 202203 1 001',
                 'rumpun_keahlian' => ['KPDP'],
             ],
@@ -118,7 +118,7 @@ class DosenSeeder extends Seeder
                 'rumpun_keahlian' => ['RPTE'],
             ],
             [
-                'nama' => 'Ir. R. Achmad Chairdino Leuveano, S.T., M.Sc., Ph.D',
+                'nama' => 'Ir. Raden Achmad Chairdino Leuveano, S.T., M.Sc., Ph.D.',
                 'nip' => '19890212 202203 1 009',
                 'rumpun_keahlian' => ['RPTE'],
             ],
