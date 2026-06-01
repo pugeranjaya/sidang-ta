@@ -942,10 +942,8 @@ class SidangScheduler
                 ['12:30', '14:00'],
                 ['14:00', '15:30'],
             ];
-            // Sore diminimalisir
-            // $sesiSore = [
-            // ['15:30', '17:00'],
-            // ];
+            // Sore diminimalisir (array kosong agar tidak error di array_merge)
+            $sesiSore = [];
             // Jumat: istirahat sholat Jumat 10:30 sampai 13:30
             $sesiJumat = [
                 ['07:30', '09:00'],
