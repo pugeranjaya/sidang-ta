@@ -61,7 +61,8 @@ class JadwalMengajarTable
                     ->alignCenter()
                     ->onColor('warning')
                     ->offColor('gray')
-                    ->tooltip('Aktifkan untuk kasus Tim Teaching — jadwal ini akan diabaikan saat pengecekan bentrok penjadwalan sidang'),
+                    ->tooltip('Aktifkan untuk kasus Tim Teaching — jadwal ini akan diabaikan saat pengecekan bentrok penjadwalan sidang')
+                    ->visible(fn() => auth()->user()?->isAdmin()),
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('hari')
@@ -81,7 +82,8 @@ class JadwalMengajarTable
                     ->label('Abaikan Bentrok')
                     ->trueLabel('Yang diabaikan')
                     ->falseLabel('Yang dihitung')
-                    ->placeholder('Semua'),
+                    ->placeholder('Semua')
+                    ->visible(fn() => auth()->user()?->isAdmin()),
             ])
             ->actions([
                 ViewAction::make(),
