@@ -33,9 +33,17 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile(\App\Filament\Pages\EditProfile::class)
             ->brandName('Penjadwalan Sidang Jurusan Teknik Industri')
-            ->favicon(asset('images/logo-website.png') . '?v=3')
+            ->favicon(asset('images/logo-website.png') . '?v=4')
             ->globalSearch(false)
             ->darkMode(false)
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn(): HtmlString => new HtmlString('
+                    <link rel="icon" type="image/png" href="' . asset('images/logo-website.png') . '?v=4">
+                    <link rel="shortcut icon" type="image/png" href="' . asset('images/logo-website.png') . '?v=4">
+                    <link rel="apple-touch-icon" href="' . asset('images/logo-website.png') . '?v=4">
+                ')
+            )
             ->sidebarCollapsibleOnDesktop()
             ->renderHook(
                 PanelsRenderHook::BODY_START,
