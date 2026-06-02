@@ -128,6 +128,9 @@ class MahasiswaImport implements ToCollection, WithHeadingRow
             //   "Nama Pembimbing TA (lengkap dengan gelar)"
 
             $nama = $this->getField($rowArr, [
+                'Nama Lengkap (HURUF BALOK)',
+                'nama_lengkap_huruf_balok',
+                'nama lengkap (huruf balok)',
                 'Nama Mahasiswa (Huruf Balok)',
                 'nama_mahasiswa_huruf_balok',
                 'nama mahasiswa (huruf balok)',
@@ -143,6 +146,8 @@ class MahasiswaImport implements ToCollection, WithHeadingRow
             ]);
 
             $judulTa = $this->getField($rowArr, [
+                'Judul',
+                'judul',
                 'Judul TA-1 (Huruf Balok)',
                 'judul_ta_1_huruf_balok',
                 'judul ta-1 (huruf balok)',
@@ -151,6 +156,9 @@ class MahasiswaImport implements ToCollection, WithHeadingRow
             ]);
 
             $namaPembimbing = $this->getField($rowArr, [
+                'DOSEN PEMBIMBING',
+                'dosen_pembimbing',
+                'dosen pembimbing',
                 'Nama Pembimbing TA (lengkap dengan gelar)',
                 'nama_pembimbing_ta_lengkap_dengan_gelar',
                 'nama pembimbing ta (lengkap dengan gelar)',
