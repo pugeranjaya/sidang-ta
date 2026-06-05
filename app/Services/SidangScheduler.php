@@ -595,7 +595,7 @@ class SidangScheduler
                         $bestOption['success'] = true;
                         $bestOption['mahasiswa_nama'] = $mahasiswa->nama;
                         $results[$mhsId] = $bestOption;
-                        
+
                         // Tandai ruangan terpakai
                         $slotKey = $bestOption['tanggal'] . '_' . $bestOption['jam_mulai'];
                         $usedRuanganPerSlot[$slotKey][] = $bestOption['ruangan'];
@@ -1013,7 +1013,7 @@ class SidangScheduler
                         $sMulai = strtotime($sesi[0]);
                         $sSelesai = strtotime($sesi[1]);
                         $tgl = $current->format('Y-m-d');
-                        
+
                         $isDiblokir = false;
                         if (isset($pengecualianMap[$tgl])) {
                             foreach ($pengecualianMap[$tgl] as $blok) {
