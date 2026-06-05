@@ -56,13 +56,6 @@ class JadwalMengajarTable
                     ->wrap()
                     ->searchable(),
 
-                ToggleColumn::make('abaikan_bentrok')
-                    ->label('Abaikan Bentrok')
-                    ->alignCenter()
-                    ->onColor('warning')
-                    ->offColor('gray')
-                    ->tooltip('Aktifkan untuk kasus Tim Teaching — jadwal ini akan diabaikan saat pengecekan bentrok penjadwalan sidang')
-                    ->visible(fn() => auth()->user()?->isAdmin()),
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('hari')
@@ -78,12 +71,6 @@ class JadwalMengajarTable
                     ->relationship('dosen', 'nama')
                     ->searchable()
                     ->preload(),
-                \Filament\Tables\Filters\TernaryFilter::make('abaikan_bentrok')
-                    ->label('Abaikan Bentrok')
-                    ->trueLabel('Yang diabaikan')
-                    ->falseLabel('Yang dihitung')
-                    ->placeholder('Semua')
-                    ->visible(fn() => auth()->user()?->isAdmin()),
             ])
             ->actions([
                 ViewAction::make(),

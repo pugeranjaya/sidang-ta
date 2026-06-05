@@ -96,6 +96,13 @@ class DosenResource extends Resource
                     ->helperText('Nonaktifkan jika dosen tidak bisa menguji di periode ini')
                     ->onColor('success')
                     ->offColor('danger'),
+
+                Toggle::make('abaikan_bentrok')
+                    ->label('Abaikan Bentrok Jadwal')
+                    ->default(false)
+                    ->helperText('Aktifkan agar jadwal mengajar dosen ini DIABAIKAN saat pengecekan bentrok. Berguna jika dosen bersedia hadir meski ada kelas di waktu yang sama.')
+                    ->onColor('warning')
+                    ->offColor('gray'),
             ]);
     }
 
@@ -125,10 +132,17 @@ class DosenResource extends Resource
                     ->separator(','),
 
                 ToggleColumn::make('status')
-                    ->label('Status')
+                    ->label('Aktif')
                     ->alignCenter()
                     ->onColor('success')
                     ->offColor('danger')
+                    ->sortable(),
+
+                ToggleColumn::make('abaikan_bentrok')
+                    ->label('Abaikan Bentrok')
+                    ->alignCenter()
+                    ->onColor('warning')
+                    ->offColor('gray')
                     ->sortable(),
             ])
             ->filters([

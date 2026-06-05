@@ -589,7 +589,26 @@ class SidangScheduler
             } else {
                 // Untuk TA 2, fallback ke single generate (formasi penguji sudah tetap)
                 $single = $this->generateForMahasiswa($mhsId, $tanggalMulai, $tanggalSelesai, $jenisSidang);
-                $results[$mhsId] = $single;
+                if ($single['success'] ?? false) {
+                    $bestOption = $single['options'][0] ?? null;
+                    if ($bestOption) {
+                        $bestOption['success'] = true;
+                        $bestOption['mahasiswa_nama'] = $mahasiswa->nama;
+                        $results[$mhsId] = $bestOption;
+                        
+                        // Tandai ruangan terpakai
+                        $slotKey = $bestOption['tanggal'] . '_' . $bestOption['jam_mulai'];
+                        $usedRuanganPerSlot[$slotKey][] = $bestOption['ruangan'];
+                    } else {
+                        $results[$mhsId] = ['success' => false, 'error' => 'Tidak ada opsi jadwal tersedia.', 'mahasiswa_nama' => $mahasiswa->nama];
+                    }
+                } else {
+                    $results[$mhsId] = [
+                        'success' => false,
+                        'error' => 'Gagal membuat opsi jadwal TA 2.',
+                        'mahasiswa_nama' => $mahasiswa->nama
+                    ];
+                }
             }
         }
 
@@ -906,11 +925,21 @@ class SidangScheduler
         return $this->dosenPengalamanCache[$dosen->id];
     }
 
-    private function generatePossibleSlots(string $start, string $end, string $jenisSidang = 'Seminar TA 1'): array
+    private function generatePossibleSlots(string $tanggalMulai, string $tanggalSelesai, string $jenisSidang = 'Seminar TA 1'): array
     {
         $slots = [];
-        $current = Carbon::parse($start);
-        $endDate = Carbon::parse($end);
+        $current = Carbon::parse($tanggalMulai);
+        $endDate = Carbon::parse($tanggalSelesai);
+
+        $pengecualianData = \App\Models\PengecualianJadwal::whereBetween('tanggal', [$tanggalMulai, $tanggalSelesai])->get();
+        $pengecualianMap = [];
+        foreach ($pengecualianData as $p) {
+            $pengecualianMap[$p->tanggal][] = [
+                'mulai' => strtotime($p->jam_mulai_diblokir),
+                'selesai' => strtotime($p->jam_selesai_diblokir)
+            ];
+        }
+
         $hariMap = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat'];
 
         // Sesi pagi-siang (prioritas utama)
@@ -980,6 +1009,24 @@ class SidangScheduler
                             continue;
                         }
 
+                        // Filter: cek pengecualian jadwal dari database
+                        $sMulai = strtotime($sesi[0]);
+                        $sSelesai = strtotime($sesi[1]);
+                        $tgl = $current->format('Y-m-d');
+                        
+                        $isDiblokir = false;
+                        if (isset($pengecualianMap[$tgl])) {
+                            foreach ($pengecualianMap[$tgl] as $blok) {
+                                if ($blok['mulai'] < $sSelesai && $blok['selesai'] > $sMulai) {
+                                    $isDiblokir = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if ($isDiblokir) {
+                            continue;
+                        }
+
                         $slots[] = [
                             'tanggal' => $current->format('Y-m-d'),
                             'hari' => $hariMap[$dayOfWeek],
@@ -1001,8 +1048,8 @@ class SidangScheduler
         if ($this->isBentrokCacheLoaded)
             return;
 
-        // Fetch all JadwalMengajar once — skip jadwal yang ditandai abaikan_bentrok (tim teaching)
-        $allJadwal = JadwalMengajar::where('abaikan_bentrok', false)->get();
+        // Fetch all JadwalMengajar once — bentrok per jadwal sudah dipindah ke level dosen (dosen.abaikan_bentrok)
+        $allJadwal = JadwalMengajar::all();
         foreach ($allJadwal as $j) {
             $this->jadwalMengajarMapCache[$j->dosen_id][$j->hari][] = [
                 'mulai' => strtotime($j->jam_mulai),
@@ -1030,6 +1077,11 @@ class SidangScheduler
 
     private function isBentrokMengajar($dosen, $slot): bool
     {
+        // Jika dosen ini diset abaikan_bentrok, lewati cek jadwal mengajar
+        if ($dosen->abaikan_bentrok) {
+            return false;
+        }
+
         $this->initBentrokCache();
 
         $hari = $slot['hari'];
