@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('/admin'); 
-    // <-- Ganti jadi /admin
 });
 
 Route::get('/seed-db', function() {
@@ -12,7 +11,7 @@ Route::get('/seed-db', function() {
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
         return 'Database migrated and seeded perfectly!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
+    } catch (\Throwable $e) {
+        return 'Error: ' . $e->getMessage() . "\n\nFile: " . $e->getFile() . ':' . $e->getLine() . "\n\nTrace: " . $e->getTraceAsString();
     }
 });

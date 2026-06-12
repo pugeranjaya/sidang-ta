@@ -41,8 +41,7 @@ class JadwalMengajarSeeder extends Seeder
         // 2. Baca file teks
         $filePath = base_path('../jadwal dosen.txt');
         if (!file_exists($filePath)) {
-            $this->command->error("File jadwal dosen.txt tidak ditemukan di: " . $filePath);
-            return;
+            return; // File not found, skip silently
         }
 
         $content = file_get_contents($filePath);
