@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class PengecualianJadwalResource extends Resource
 {
@@ -26,6 +27,11 @@ class PengecualianJadwalResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-no-symbol';
 
     protected static ?string $recordTitleAttribute = 'tanggal';
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()?->role === 'admin';
+    }
 
     public static function form(Schema $schema): Schema
     {
