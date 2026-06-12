@@ -8,6 +8,10 @@ Route::get('/', function () {
 });
 
 Route::get('/seed-db', function() {
-    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    return 'Database seeded!';
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return 'Database seeded!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
+    }
 });
