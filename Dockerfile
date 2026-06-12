@@ -3,7 +3,7 @@ FROM php:8.2-cli
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Install system dependencies (termasuk libicu-dev untuk intl)
+# Install system dependencies (termasuk libicu-dev untuk intl, libpq-dev untuk postgres)
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
@@ -12,10 +12,11 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libxml2-dev \
     libicu-dev \
+    libpq-dev \
     curl \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl \
+    && docker-php-ext-install pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
