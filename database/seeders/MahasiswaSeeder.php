@@ -5,13 +5,40 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
-use Faker\Factory as Faker;
 
 class MahasiswaSeeder extends Seeder
 {
+    private array $namaDepan = [
+        'Andi', 'Budi', 'Citra', 'Dewi', 'Eko', 'Fitri', 'Gilang', 'Hana', 'Ivan', 'Julia',
+        'Kurnia', 'Lestari', 'Muhammad', 'Nanda', 'Oscar', 'Putri', 'Rizki', 'Sari', 'Toni', 'Umar',
+        'Vina', 'Wahyu', 'Xena', 'Yusuf', 'Zahra', 'Agus', 'Bagas', 'Candra', 'Dian', 'Erna',
+        'Fajar', 'Gita', 'Hamdan', 'Indah', 'Joko', 'Kartini', 'Lukman', 'Maya', 'Nabil', 'Okta',
+    ];
+
+    private array $namaBelakang = [
+        'Pratama', 'Santoso', 'Wijaya', 'Rahayu', 'Kurniawan', 'Setiawan', 'Susanto', 'Wibowo',
+        'Hidayat', 'Nugroho', 'Purnama', 'Saputra', 'Yuliani', 'Laksono', 'Firmansyah', 'Hakim',
+        'Ramadhan', 'Handoko', 'Permana', 'Kusuma', 'Siregar', 'Hasibuan', 'Lubis', 'Nainggolan',
+        'Simbolon', 'Manurung', 'Purba', 'Sinaga', 'Situmorang', 'Tambunan',
+    ];
+
+    private array $judulPrefixes = [
+        'Analisis dan Perancangan', 'Implementasi', 'Optimasi', 'Pengembangan Sistem',
+        'Perancangan Model', 'Evaluasi Kinerja', 'Pemodelan dan Simulasi', 'Rancang Bangun',
+        'Penerapan Metode', 'Kajian Teknis',
+    ];
+
+    private array $judulTopics = [
+        'Manajemen Rantai Pasok', 'Sistem Produksi', 'Penjadwalan Mesin', 'Tata Letak Fasilitas',
+        'Pengendalian Kualitas', 'Ergonomi Kerja', 'Keselamatan dan Kesehatan Kerja',
+        'Manajemen Persediaan', 'Pengukuran Kerja', 'Analisis Keputusan Multikriteria',
+        'Sistem Informasi Manufaktur', 'Lean Manufacturing', 'Six Sigma', 'Perawatan Mesin',
+        'Manajemen Proyek', 'Kapasitas Produksi', 'Pengendalian Persediaan Spare Part',
+        'Perencanaan Aggregate', 'Rekayasa Nilai', 'Manajemen Risiko Operasional',
+    ];
+
     public function run(): void
     {
-        // Kosongkan tabel mahasiswa terlebih dahulu
         Mahasiswa::query()->delete();
 
         $dosenIds = Dosen::pluck('id')->toArray();
@@ -19,24 +46,33 @@ class MahasiswaSeeder extends Seeder
             return;
         }
 
-        $faker = Faker::create('id_ID');
         $dosenCount = count($dosenIds);
         $rumpunList = ['SPOI', 'PSIE', 'KPDP', 'RPTE'];
+        $namaDepanCount = count($this->namaDepan);
+        $namaBelakangCount = count($this->namaBelakang);
+        $prefixCount = count($this->judulPrefixes);
+        $topicCount = count($this->judulTopics);
 
-        // Buat 200 mahasiswa dengan pembagian dosen pembimbing yang merata
+        $mahasiswas = [];
         for ($i = 0; $i < 200; $i++) {
-            // Sequential distribution untuk pemerataan:
-            // Mahasiswa 1 ke Dosen 1, Mahasiswa 2 ke Dosen 2...
-            // Hasilnya: 200 / 21 = ~9-10 mahasiswa per dosen
             $pembimbingId = $dosenIds[$i % $dosenCount];
+            $nama = $this->namaDepan[$i % $namaDepanCount] . ' ' . $this->namaBelakang[$i % $namaBelakangCount];
+            $judul = $this->judulPrefixes[$i % $prefixCount] . ' ' . $this->judulTopics[$i % $topicCount];
 
-            Mahasiswa::create([
-                'nim' => '210' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
-                'nama' => $faker->name(),
-                'judul_ta' => ucfirst($faker->words(3, true)) . ' pada Sistem ' . ucfirst($faker->word()),
-                'rumpun_ta' => $rumpunList[array_rand($rumpunList)],
+            $mahasiswas[] = [
+                'nim'           => '210' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
+                'nama'          => $nama,
+                'judul_ta'      => $judul,
+                'rumpun_ta'     => $rumpunList[$i % 4],
                 'pembimbing_id' => $pembimbingId,
-            ]);
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ];
+        }
+
+        // Insert in chunks of 50 for efficiency
+        foreach (array_chunk($mahasiswas, 50) as $chunk) {
+            Mahasiswa::insert($chunk);
         }
     }
 }
