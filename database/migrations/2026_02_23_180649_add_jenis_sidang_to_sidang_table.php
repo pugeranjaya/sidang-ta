@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('sidang', function (Blueprint $table) {
-            $table->enum('jenis_sidang', ['Seminar TA 1', 'Seminar TA 2'])->default('Seminar TA 1')->after('ruangan');
+            $table->string('jenis_sidang')->default('Seminar TA 1');
         });
     }
 

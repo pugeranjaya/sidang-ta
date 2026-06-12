@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->time('jam_mulai');
             $table->time('jam_selesai');
             $table->string('ruangan');
-            $table->enum('status', ['pending', 'disetujui', 'selesai'])->default('pending');
+            $table->string('status')->default('pending');
             $table->foreignId('penguji1_id')->constrained('dosen');
             $table->foreignId('penguji2_id')->constrained('dosen');
             $table->timestamps();

@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('dosen', function (Blueprint $table) {
-            $table->enum('jabatan_fungsional', ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar'])->default('Asisten Ahli');
+            $table->string('jabatan_fungsional')->default('Asisten Ahli');
         });
     }
 
