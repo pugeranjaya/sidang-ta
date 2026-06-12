@@ -10,9 +10,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE sidang MODIFY COLUMN jenis_sidang ENUM('Seminar TA 1', 'Seminar TA 2', 'Sidang TA 2') DEFAULT 'Seminar TA 1'");
+        Schema::table('sidang', function (Blueprint $table) {
+            $table->string('jenis_sidang')->default('Seminar TA 1')->change();
+        });
         DB::statement("UPDATE sidang SET jenis_sidang = 'Sidang TA 2' WHERE jenis_sidang = 'Seminar TA 2'");
-        DB::statement("ALTER TABLE sidang MODIFY COLUMN jenis_sidang ENUM('Seminar TA 1', 'Sidang TA 2') DEFAULT 'Seminar TA 1'");
     }
 
     /**
@@ -20,8 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sidang_ta2', function (Blueprint $table) {
-            //
+        Schema::table('sidang', function (Blueprint $table) {
+            $table->string('jenis_sidang')->default('Seminar TA 1')->change();
         });
+        DB::statement("UPDATE sidang SET jenis_sidang = 'Seminar TA 2' WHERE jenis_sidang = 'Sidang TA 2'");
     }
 };

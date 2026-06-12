@@ -6,12 +6,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        DB::statement("ALTER TABLE jadwal_mengajar MODIFY COLUMN hari ENUM('Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu')");
+        Schema::table('jadwal_mengajar', function (Blueprint $table) {
+            $table->string('hari')->change();
+        });
     }
 
     /**
@@ -19,6 +18,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE jadwal_mengajar MODIFY COLUMN hari ENUM('Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')");
+        Schema::table('jadwal_mengajar', function (Blueprint $table) {
+            $table->string('hari')->change();
+        });
     }
 };
