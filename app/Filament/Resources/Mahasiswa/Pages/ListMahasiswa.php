@@ -33,6 +33,11 @@ class ListMahasiswa extends ListRecords
                 ->modalDescription('Upload file Excel (.xlsx/.xls)')
                 ->modalWidth('xl')
                 ->form([
+                    \Filament\Forms\Components\TextInput::make('sheet_name')
+                        ->label('Nama Sheet (Opsional)')
+                        ->placeholder('Contoh: Matriks mulai Mei 2024')
+                        ->helperText('Kosongkan jika ingin mengimpor sheet pertama saja.'),
+
                     FileUpload::make('file')
                         ->label('File Excel Google Form')
                         ->acceptedFileTypes([
@@ -50,28 +55,29 @@ class ListMahasiswa extends ListRecords
                 ->action(function (array $data): void {
                     $filePath = Storage::disk('local')->path($data['file']);
 
-                    $importer = new MahasiswaImport();
+                    $importer = new MahasiswaImport($data['sheet_name'] ?? null);
 
                     try {
                         Excel::import($importer, $filePath);
 
+                        $sheet = $importer->sheetImport;
                         $lines = [];
 
-                        if ($importer->imported > 0) {
-                            $lines[] = "✅ {$importer->imported} mahasiswa baru berhasil ditambahkan.";
+                        if ($sheet->imported > 0) {
+                            $lines[] = "✅ {$sheet->imported} mahasiswa baru berhasil ditambahkan.";
                         }
-                        if ($importer->updated > 0) {
-                            $lines[] = "🔄 {$importer->updated} data mahasiswa diperbarui.";
+                        if ($sheet->updated > 0) {
+                            $lines[] = "🔄 {$sheet->updated} data mahasiswa diperbarui.";
                         }
-                        if ($importer->skipped > 0) {
-                            $lines[] = "⚠️ {$importer->skipped} baris dilewati karena error.";
+                        if ($sheet->skipped > 0) {
+                            $lines[] = "⚠️ {$sheet->skipped} baris dilewati karena error.";
                         }
-                        if (!empty($importer->notFound)) {
+                        if (!empty($sheet->notFound)) {
                             $lines[] = "❌ Pembimbing tidak ditemukan di database:\n• " .
-                                implode("\n• ", $importer->notFound);
+                                implode("\n• ", $sheet->notFound);
                         }
 
-                        $total = $importer->imported + $importer->updated;
+                        $total = $sheet->imported + $sheet->updated;
 
                         if ($total > 0) {
                             Notification::make()

@@ -27,8 +27,8 @@
     }
 
     .custom-select-elegant:focus {
-        border-color: #f59e0b; /* Warna Amber default Filament */
-        box-shadow: 0 0 0 1px #f59e0b;
+        border-color: #292C40; /* Warna Navy primary */
+        box-shadow: 0 0 0 1px #292C40;
     }
 
     /* Support Dark Mode untuk Dropdown tersinkronisasi dengan Filament Theme (bukan OS) */
@@ -42,26 +42,23 @@
         color: #f3f4f6;
     }
     :is(.dark) .custom-select-elegant:focus {
-        border-color: #f59e0b;
-        box-shadow: 0 0 0 1px #f59e0b;
+        border-color: #4A5078;
+        box-shadow: 0 0 0 1px #4A5078;
     }
 </style>
 
-<!-- Menggunakan Alpine.js untuk Inject langsung ke Toolbar Filament secara presisi -->
-<div x-data="{ bulan: @entangle('filterBulan').live, tahun: @entangle('filterTahun').live }" x-init="
-    $nextTick(() => {
-        let target = document.querySelector('.fi-ta-header-toolbar > div:last-child');
-        if (target && !target.contains($refs.filters)) {
-            // Memindahkan elemen filters persis ke sebelah kiri search bar
-            target.insertBefore($refs.filters, target.firstChild);
-        }
-    })
-">
-    <!-- Elemen ini akan di-teleport ke toolbar -->
-    <div x-ref="filters" style="display: flex; align-items: center; gap: 0.75rem; margin-right: 0.75rem;">
+<div x-data="{ jenisPeriode: @entangle('filterJenisPeriode').live, bulan: @entangle('filterBulan').live, minggu: @entangle('filterMinggu').live, tahun: @entangle('filterTahun').live }">
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-right: 0.75rem;">
         
         <div style="position: relative;">
-            <select x-model="bulan" class="custom-select-elegant">
+            <select x-model="jenisPeriode" class="custom-select-elegant" style="width: 140px;">
+                <option value="bulanan">Bulanan</option>
+                <option value="mingguan">Mingguan</option>
+            </select>
+        </div>
+
+        <div style="position: relative;">
+            <select x-model="bulan" class="custom-select-elegant" style="width: 140px;">
                 <option value="semua">Semua Bulan</option>
                 <option value="01">Januari</option>
                 <option value="02">Februari</option>
@@ -78,9 +75,20 @@
             </select>
         </div>
         
+        <div style="position: relative;" x-show="jenisPeriode === 'mingguan'" style="display: none;">
+            <select x-model="minggu" class="custom-select-elegant" style="width: 140px;">
+                <option value="semua">Semua Mgu</option>
+                <option value="1">Minggu Ke-1</option>
+                <option value="2">Minggu Ke-2</option>
+                <option value="3">Minggu Ke-3</option>
+                <option value="4">Minggu Ke-4</option>
+                <option value="5">Minggu Ke-5</option>
+            </select>
+        </div>
+
         <div style="position: relative;">
-            <select x-model="tahun" class="custom-select-elegant">
-                <option value="semua">Semua Tahun</option>
+            <select x-model="tahun" class="custom-select-elegant" style="width: 140px;">
+                <option value="semua">Semua Thn</option>
                 @php
                     // Ambil murni hanya tahun yang ada jadwal sidangnya di database
                     $years = \App\Models\Sidang::selectRaw('DISTINCT YEAR(tanggal) as tahun')
@@ -94,6 +102,4 @@
                 @endforeach
             </select>
         </div>
-        
-    </div>
 </div>

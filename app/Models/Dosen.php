@@ -13,6 +13,7 @@ class Dosen extends Model
         'nip',
         'rumpun_keahlian',  // ini penting untuk array/json
         'status',
+        'alasan_nonaktif',
         'abaikan_bentrok',
     ];
 
@@ -22,6 +23,14 @@ class Dosen extends Model
         'status' => 'boolean',
         'abaikan_bentrok' => 'boolean',
     ];
+
+    /**
+     * Relasi: Mahasiswa yang dibimbing oleh dosen ini
+     */
+    public function pembimbingMahasiswas()
+    {
+        return $this->hasMany(\App\Models\Mahasiswa::class, 'pembimbing_id');
+    }
 
     public function penguji1Sidangs()
     {

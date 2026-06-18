@@ -63,6 +63,12 @@ class MahasiswaResource extends Resource
                     ->maxLength(20)
                     ->placeholder('Contoh: 2110012345'),
 
+                TextInput::make('no_hp')
+                    ->label('No. HP / WA')
+                    ->tel()
+                    ->maxLength(20)
+                    ->placeholder('Contoh: 081234567890'),
+
                 TextInput::make('judul_ta')
                     ->label('Judul TA')
                     ->required()

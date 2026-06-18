@@ -12,6 +12,8 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Get;
 
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -63,7 +65,7 @@ class DosenResource extends Resource
                     ->validationMessages([
                         'regex' => 'Nama hanya boleh berisi huruf, spasi, titik, koma, tanda kutip, dan strip.',
                     ])
-                    ->extraInputAttributes(['oninput' => "this.value = this.value.replace(/[^a-zA-Z\s.,\'-]/g, '')"])
+                    ->extraInputAttributes(['oninput' => "this.value = this.value.replace(/[^a-zA-Z\\s.,\\'-]/g, '')"])
                     ->placeholder('Contoh: Dr. Budi Santoso, S.T., M.T.'),
 
                 TextInput::make('nip')
@@ -95,7 +97,17 @@ class DosenResource extends Resource
                     ->default(true)
                     ->helperText('Nonaktifkan jika dosen tidak bisa menguji di periode ini')
                     ->onColor('success')
-                    ->offColor('danger'),
+                    ->offColor('danger')
+                    ->live(),
+
+                Textarea::make('alasan_nonaktif')
+                    ->label('Catatan Alasan Nonaktif')
+                    ->placeholder('Contoh: Cuti akademik, tugas belajar S3, sakit, dll.')
+                    ->helperText('Isi alasan mengapa dosen ini dinonaktifkan')
+                    ->rows(3)
+                    ->maxLength(500)
+                    ->visible(fn ($get): bool => !$get('status'))
+                    ->columnSpanFull(),
 
                 Toggle::make('abaikan_bentrok')
                     ->label('Abaikan Bentrok Jadwal')
@@ -131,19 +143,8 @@ class DosenResource extends Resource
                     ->badge()
                     ->separator(','),
 
-                ToggleColumn::make('status')
-                    ->label('Aktif')
-                    ->alignCenter()
-                    ->onColor('success')
-                    ->offColor('danger')
-                    ->sortable(),
-
-                ToggleColumn::make('abaikan_bentrok')
-                    ->label('Abaikan Bentrok')
-                    ->alignCenter()
-                    ->onColor('warning')
-                    ->offColor('gray')
-                    ->sortable(),
+                // Kolom Aktif, Abaikan Bentrok, dan Catatan Nonaktif disembunyikan dari tabel
+                // dan hanya muncul di halaman form edit/create.
             ])
             ->filters([
                 \Filament\Tables\Filters\TernaryFilter::make('status')

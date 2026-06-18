@@ -33,15 +33,15 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile(\App\Filament\Pages\EditProfile::class)
             ->brandName('Penjadwalan Sidang Jurusan Teknik Industri')
-            ->favicon(asset('images/logo-website.png') . '?v=4')
+            ->favicon(asset('images/logo-ti.png') . '?v=5')
             ->globalSearch(false)
             ->darkMode(false)
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn(): HtmlString => new HtmlString('
-                    <link rel="icon" type="image/png" href="' . asset('images/logo-website.png') . '?v=4">
-                    <link rel="shortcut icon" type="image/png" href="' . asset('images/logo-website.png') . '?v=4">
-                    <link rel="apple-touch-icon" href="' . asset('images/logo-website.png') . '?v=4">
+                    <link rel="icon" type="image/png" href="' . asset('images/logo-ti.png') . '?v=5">
+                    <link rel="shortcut icon" type="image/png" href="' . asset('images/logo-ti.png') . '?v=5">
+                    <link rel="apple-touch-icon" href="' . asset('images/logo-ti.png') . '?v=5">
                 ')
             )
             ->sidebarCollapsibleOnDesktop()
@@ -49,9 +49,10 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::BODY_START,
                 fn(): HtmlString => new HtmlString(
                     (request()->route() && request()->route()->getName() === 'filament.admin.auth.login') ? '
-                        <div style="background: #f59e0b; padding: 16px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #d97706;">
+                        <div style="background: #292C40; padding: 16px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #1E2033;">
+                            <img src="' . asset('images/logo-ti.png') . '" alt="Logo TI" style="height: 70px; width: auto; object-fit: contain;">
                             <img src="' . asset('images/upn-logo.png') . '" alt="Logo UPN" style="height: 70px; width: auto; object-fit: contain;">
-                            <div style="color: #000000ff; font-weight: 800; font-size: 18px; line-height: 1.3; font-family: sans-serif;">
+                            <div style="color: #ffffff; font-weight: 800; font-size: 18px; line-height: 1.3; font-family: sans-serif;">
                                 UNIVERSITAS PEMBANGUNAN<br>
                                 NASIONAL &ldquo;VETERAN&rdquo;<br>
                                 YOGYAKARTA
@@ -63,16 +64,17 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::TOPBAR_START,
                 fn(): HtmlString => new HtmlString('
-                    <div class="topbar-logo-mobile" style="align-items: center; gap: 12px; margin-left: 10px;">
+                    <div class="topbar-logo-mobile" style="align-items: center; gap: 8px; margin-left: 10px;">
+                        <img src="' . asset('images/logo-ti.png') . '" style="height: 32px; width: auto; object-fit: contain;">
                         <img src="' . asset('images/upn-logo.png') . '" style="height: 32px; width: auto; object-fit: contain;">
                         <div style="line-height: 1.1;">
-                            <p style="color: #92400e; font-weight: 800; font-size: 12px; margin: 0; font-family: sans-serif;">TEKNIK INDUSTRI</p>
-                            <p style="color: #d97706; font-weight: 600; font-size: 10px; margin: 0; font-family: sans-serif;">UPN &ldquo;VETERAN&rdquo; YOGYAKARTA</p>
+                            <p style="color: #292C40; font-weight: 800; font-size: 12px; margin: 0; font-family: sans-serif;">TEKNIK INDUSTRI</p>
+                            <p style="color: #4A5078; font-weight: 600; font-size: 10px; margin: 0; font-family: sans-serif;">UPN &ldquo;VETERAN&rdquo; YOGYAKARTA</p>
                         </div>
                     </div>
                     <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
-                        <p class="topbar-title-desktop" style="color: #000000; font-weight: 700; font-size: 18px; margin: 0; font-family: sans-serif; letter-spacing: 0.5px;">Sistem Informasi Penjadwalan Sidang Tugas Akhir</p>
-                        <p class="topbar-title-mobile" style="color: #000000; font-weight: 700; font-size: 14px; margin: 0; font-family: sans-serif; line-height: 1.2; text-align: center;">Sistem Penjadwalan Sidang</p>
+                        <p class="topbar-title-desktop" style="color: #ffffff; font-weight: 800; font-size: 18px; margin: 0; font-family: sans-serif; letter-spacing: 0.5px;">Sistem Informasi Penjadwalan Sidang Tugas Akhir</p>
+                        <p class="topbar-title-mobile" style="color: #ffffff; font-weight: 800; font-size: 14px; margin: 0; font-family: sans-serif; line-height: 1.2; text-align: center;">Sistem Penjadwalan Sidang</p>
                     </div>
                 ')
             )
@@ -80,10 +82,11 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_NAV_START,
                 fn(): HtmlString => new HtmlString('
                     <div class="sidebar-upn-logo">
+                        <img src="' . asset('images/logo-ti.png') . '" style="height: 38px; width: auto; object-fit: contain; flex-shrink: 0;">
                         <img src="' . asset('images/upn-logo.png') . '" style="height: 38px; width: auto; object-fit: contain; flex-shrink: 0;">
-                        <div style="line-height: 1.2;">
-                            <p style="color: #92400e; font-weight: 800; font-size: 15px; margin: 0 0 4px 0; font-family: sans-serif; white-space: nowrap;">TEKNIK INDUSTRI</p>
-                            <p style="color: #d97706; font-weight: 600; font-size: 11px; margin: 0; font-family: sans-serif; white-space: nowrap;">UPN &ldquo;VETERAN&rdquo; YOGYAKARTA</p>
+                        <div style="line-height: 1.2; padding-right: 12px; word-break: break-word;">
+                            <p style="color: #ffffff; font-weight: 800; font-size: 14px; margin: 0 0 2px 0; font-family: sans-serif; white-space: normal;">TEKNIK INDUSTRI</p>
+                            <p style="color: #B1B5CB; font-weight: 700; font-size: 10px; margin: 0; font-family: sans-serif; white-space: normal;">UPN &ldquo;VETERAN&rdquo; YOGYAKARTA</p>
                         </div>
                     </div>
                 ')
@@ -105,17 +108,89 @@ class AdminPanelProvider extends PanelProvider
                         }
 
                         /* ===== PAGE & LOGIN STYLES ===== */
-                        body.fi-body { background: #faf7f2 !important; }
-                        .fi-simple-page { background: #ffffff !important; }
+                        body.fi-body { background: #ECEDF2 !important; }
+                        
+                        /* Background image specifically for login/simple pages */
+                        body:has(.fi-simple-main) {
+                            background-image: url("' . asset('images/foto-jurusan.jpg') . '") !important;
+                            background-size: cover !important;
+                            background-position: center !important;
+                            background-repeat: no-repeat !important;
+                            background-attachment: fixed !important;
+                            overflow: hidden !important;
+                        }
+                        
+                        /* Overlay gelap untuk background login agar form terbaca */
+                        body:has(.fi-simple-main)::before {
+                            content: "";
+                            position: fixed;
+                            top: 0; left: 0; right: 0; bottom: 0;
+                            background: rgba(41, 44, 64, 0.6) !important;
+                            z-index: -1;
+                        }
+
                         .fi-simple-main {
                             background: #ffffff !important;
-                            border: 1px solid #e5e7eb !important;
+                            border: 1px solid #D8DAE5 !important;
                             border-radius: 16px !important;
-                            box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;
+                            box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
                         }
 
                         /* Branding di Topbar */
                         .fi-logo { display: none !important; } /* Hide default logo */
+
+                        /* ===== TAB STYLES (Filter) ===== */
+                        .fi-tabs {
+                            background-color: #ECEDF2 !important;
+                            border: 1px solid #D8DAE5 !important;
+                            border-radius: 12px !important;
+                            padding: 6px !important;
+                        }
+
+                        .fi-tabs-item {
+                            border-radius: 8px !important;
+                            font-weight: 600 !important;
+                            transition: all 0.2s ease !important;
+                            padding: 8px 16px !important;
+                        }
+
+                        /* Warna font untuk tab yang tidak aktif */
+                        .fi-tabs-item *, .fi-tabs-item span {
+                            color: #4A5078 !important;
+                        }
+
+                        .fi-tabs-item:hover {
+                            background-color: #D8DAE5 !important;
+                        }
+
+                        /* Background biru navy untuk tab aktif */
+                        .fi-tabs-item[aria-selected="true"],
+                        .fi-tabs-item.fi-active,
+                        .fi-tabs-item-active {
+                            background-color: #292C40 !important;
+                            box-shadow: 0 4px 12px rgba(41, 44, 64, 0.2) !important;
+                        }
+
+                        /* Warna font putih solid untuk tab aktif */
+                        .fi-tabs-item[aria-selected="true"] *,
+                        .fi-tabs-item.fi-active *,
+                        .fi-tabs-item-active *,
+                        .fi-tabs-item[aria-selected="true"] span,
+                        .fi-tabs-item.fi-active span {
+                            color: #ffffff !important;
+                        }
+
+                        /* Warna badge khusus saat aktif */
+                        .fi-tabs-item[aria-selected="true"] .fi-badge *,
+                        .fi-tabs-item.fi-active .fi-badge *,
+                        .fi-tabs-item-active .fi-badge * {
+                            color: #292C40 !important;
+                        }
+                        .fi-tabs-item[aria-selected="true"] .fi-badge,
+                        .fi-tabs-item.fi-active .fi-badge,
+                        .fi-tabs-item-active .fi-badge {
+                            background-color: #ffffff !important;
+                        }
 
                         /* MATIKAN TOOLTIP MELAYANG */
                         [role="tooltip"], .tippy-box {
@@ -149,8 +224,8 @@ class AdminPanelProvider extends PanelProvider
                                 transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
                                 overflow-x: hidden !important;
                                 z-index: 40 !important;
-                                background: #ffffff !important;
-                                border-right: 1px solid #e5e7eb !important;
+                                background: #292C40 !important;
+                                border-right: 1px solid #1E2033 !important;
                                 position: fixed !important;
                                 left: 0 !important;
                                 top: 0 !important;
@@ -162,7 +237,7 @@ class AdminPanelProvider extends PanelProvider
 
                             .fi-sidebar:hover {
                                 width: 18rem !important;
-                                box-shadow: 10px 0 30px rgba(0,0,0,0.05) !important;
+                                box-shadow: 10px 0 30px rgba(41,44,64,0.08) !important;
                             }
 
                             .sidebar-upn-logo {
@@ -171,7 +246,7 @@ class AdminPanelProvider extends PanelProvider
                                 left: 20px !important;
                                 display: flex !important;
                                 align-items: center !important;
-                                gap: 16px !important;
+                                gap: 8px !important;
                                 z-index: 60 !important;
                                 opacity: 0 !important;
                                 visibility: hidden !important;
@@ -195,10 +270,16 @@ class AdminPanelProvider extends PanelProvider
                             }
 
                             .fi-sidebar-nav {
-                                padding-top: 80px !important;
+                                padding-top: 65px !important;
                                 padding-left: 0 !important;
                                 padding-right: 0 !important;
-                                background: #ffffff !important;
+                                background: transparent !important;
+                                overflow-y: hidden !important;
+                                -ms-overflow-style: none;  /* IE and Edge */
+                                scrollbar-width: none;  /* Firefox */
+                            }
+                            .fi-sidebar-nav::-webkit-scrollbar {
+                                display: none !important;
                             }
 
                             .fi-sidebar-group, .fi-sidebar-nav-groups, .fi-sidebar-group-items {
@@ -208,7 +289,7 @@ class AdminPanelProvider extends PanelProvider
 
                             .fi-sidebar-item {
                                 padding: 0 !important;
-                                margin: 4px 0 !important;
+                                margin: 0 !important;
                                 width: 100% !important;
                             }
 
@@ -216,12 +297,12 @@ class AdminPanelProvider extends PanelProvider
                                 position: relative !important;
                                 display: flex !important;
                                 align-items: center !important;
-                                margin: 4px 12px !important;
-                                padding: 12px 0 !important;
-                                border-radius: 12px !important;
+                                margin: 3px 12px !important;
+                                padding: 10px 0 !important;
+                                border-radius: 10px !important;
                                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
                                 width: 56px !important;
-                                min-height: 48px !important;
+                                min-height: 44px !important;
                                 overflow: hidden !important;
                             }
 
@@ -254,6 +335,11 @@ class AdminPanelProvider extends PanelProvider
                                 opacity: 0 !important;
                                 visibility: hidden !important;
                                 display: none !important;
+                                color: #D8DAE5 !important;
+                            }
+
+                            .fi-sidebar-item-icon {
+                                color: #D8DAE5 !important;
                             }
 
                             .fi-sidebar:hover .fi-sidebar-item-label,
@@ -264,24 +350,52 @@ class AdminPanelProvider extends PanelProvider
                                 display: block !important;
                                 width: auto !important;
                                 white-space: nowrap !important;
+                                font-weight: 700 !important;
                             }
 
-                            .fi-sidebar-item-active a {
-                                background: rgba(245, 158, 11, 0.1) !important;
+                            /* Hapus background bawaan (mencegah warna abu-abu terang) */
+                            .fi-sidebar-item a,
+                            .fi-sidebar-item button {
+                                background-color: transparent !important;
+                                background: transparent !important;
                             }
 
-                            .fi-sidebar-item-active a .fi-sidebar-item-icon,
-                            .fi-sidebar-item-active a .fi-sidebar-item-label {
-                                color: #d97706 !important;
+                            /* Background saat menu di-hover */
+                            .fi-sidebar-item a:hover,
+                            .fi-sidebar-item button:hover {
+                                background-color: rgba(255, 255, 255, 0.1) !important;
+                                background: rgba(255, 255, 255, 0.1) !important;
+                            }
+
+                            /* Background saat menu aktif */
+                            li.fi-sidebar-item-active > a,
+                            li.fi-sidebar-item-active > button,
+                            .fi-sidebar-item-active > a {
+                                background-color: rgba(255, 255, 255, 0.2) !important;
+                                background: rgba(255, 255, 255, 0.2) !important;
+                            }
+
+                            /* Pastikan teks & icon selalu putih saat aktif/hover */
+                            li.fi-sidebar-item-active > a *,
+                            .fi-sidebar-item-active > a *,
+                            .fi-sidebar-item a:hover *,
+                            .fi-sidebar-item button:hover * {
+                                color: #ffffff !important;
                             }
 
                             .fi-topbar {
-                                background: #ffffff !important;
-                                border-bottom: 1px solid #e5e7eb !important;
+                                background: #292C40 !important;
+                                border-bottom: 1px solid #1E2033 !important;
+                                color: #ffffff !important;
                                 left: 0 !important;
                                 width: 100% !important;
                                 padding-left: 5rem !important;
                                 transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                            }
+                            
+                            .fi-topbar button, 
+                            .fi-topbar .fi-icon-btn-icon {
+                                color: #ffffff !important;
                             }
                             
                             .fi-layout:has(.fi-sidebar:hover) .fi-topbar {
@@ -294,13 +408,25 @@ class AdminPanelProvider extends PanelProvider
                         }
 
                         /* UI Details */
-                        .fi-main { background-color: #faf7f2 !important; }
-                        .fi-ta-ctn { border-radius: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important; }
+                        .fi-main { background-color: #ECEDF2 !important; }
+                        .fi-ta-ctn { border-radius: 12px !important; box-shadow: 0 1px 4px rgba(41, 44, 64, 0.08) !important; border: 1px solid #D8DAE5 !important; }
                     </style>
                 ')
             )
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => [
+                    50  => '#ECEDF2',
+                    100 => '#D8DAE5',
+                    200 => '#B1B5CB',
+                    300 => '#8A90B1',
+                    400 => '#636B97',
+                    500 => '#3D4160',
+                    600 => '#292C40',
+                    700 => '#1E2033',
+                    800 => '#141526',
+                    900 => '#0A0B19',
+                    950 => '#05060D',
+                ],
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

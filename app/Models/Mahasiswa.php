@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Mahasiswa extends Model
 {
     protected $table = 'mahasiswa'; // singular
-    protected $fillable = ['nama', 'nim', 'judul_ta', 'rumpun_ta', 'pembimbing_id'];
+    protected $fillable = ['nama', 'nim', 'judul_ta', 'rumpun_ta', 'pembimbing_id', 'no_hp'];
     // relasi pembimbing
 
     // Cast kalau rumpun_ta nanti pakai multiple (array/JSON)
@@ -22,5 +22,33 @@ class Mahasiswa extends Model
     public function pembimbing(): BelongsTo
     {
         return $this->belongsTo(Dosen::class, 'pembimbing_id');
+    }
+
+    /**
+     * Relasi: Semua sidang mahasiswa.
+     */
+    public function sidangs()
+    {
+        return $this->hasMany(\App\Models\Sidang::class, 'mahasiswa_id');
+    }
+
+    /**
+     * Relasi: Sidang Seminar TA 1 yang sudah lulus.
+     */
+    public function sidangTa1Lulus()
+    {
+        return $this->hasMany(\App\Models\Sidang::class, 'mahasiswa_id')
+            ->where('jenis_sidang', 'Seminar TA 1')
+            ->where('status', 'lulus');
+    }
+
+    /**
+     * Relasi: Sidang TA 2 yang sudah lulus.
+     */
+    public function sidangTa2Lulus()
+    {
+        return $this->hasMany(\App\Models\Sidang::class, 'mahasiswa_id')
+            ->where('jenis_sidang', 'Sidang TA 2')
+            ->where('status', 'lulus');
     }
 }

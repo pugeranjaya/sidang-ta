@@ -13,7 +13,7 @@
         ════════════════════════════════════════════════════════ --}}
         @if($scheduleOptions && $mode === 'single')
         <div style="margin-top: 2rem;">
-            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem; color: #111827;">Rekomendasi Jadwal Sidang</h2>
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem; color: #292C40;">Rekomendasi Jadwal Sidang</h2>
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 @foreach($scheduleOptions as $index => $option)
                 <x-filament::section>
@@ -32,43 +32,43 @@
 
                     <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem;">
                         {{-- Waktu & Tempat --}}
-                        <div style="display: flex; gap: 2.5rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1.25rem; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 2.5rem; border-bottom: 1px solid #D8DAE5; padding-bottom: 1.25rem; flex-wrap: wrap;">
                             <div>
-                                <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem;">Hari, Tanggal</div>
-                                <div style="font-weight: bold; font-size: 1.125rem; color: #111827;">{{ \Carbon\Carbon::parse($option['tanggal'])->locale('id')->translatedFormat('l, d F Y') }}</div>
+                                <div style="font-size: 0.875rem; color: #4A5078; margin-bottom: 0.25rem;">Hari, Tanggal</div>
+                                <div style="font-weight: bold; font-size: 1.125rem; color: #292C40;">{{ \Carbon\Carbon::parse($option['tanggal'])->locale('id')->translatedFormat('l, d F Y') }}</div>
                             </div>
                             <div>
-                                <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem;">Waktu (WIB)</div>
-                                <div style="font-weight: bold; font-size: 1.125rem; color: #111827;">{{ \Carbon\Carbon::parse($option['jam_mulai'])->format('H:i') }} – {{ \Carbon\Carbon::parse($option['jam_selesai'])->format('H:i') }}</div>
+                                <div style="font-size: 0.875rem; color: #4A5078; margin-bottom: 0.25rem;">Waktu (WIB)</div>
+                                <div style="font-weight: bold; font-size: 1.125rem; color: #292C40;">{{ \Carbon\Carbon::parse($option['jam_mulai'])->format('H:i') }} – {{ \Carbon\Carbon::parse($option['jam_selesai'])->format('H:i') }}</div>
                             </div>
                             <div>
-                                <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem;">Ruangan</div>
-                                <div style="font-weight: bold; font-size: 1.125rem; color: #111827;">{{ $option['ruangan'] }}</div>
+                                <div style="font-size: 0.875rem; color: #4A5078; margin-bottom: 0.25rem;">Ruangan</div>
+                                <div style="font-weight: bold; font-size: 1.125rem; color: #292C40;">{{ $option['ruangan'] }}</div>
                             </div>
                         </div>
 
                         {{-- Dosen --}}
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <div style="min-width: 200px; background-color: #fef3c7; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
-                                <div style="font-size: 0.75rem; color: #d97706; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Ketua Sidang</div>
-                                <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['ketua_sidang_nama'] }}</div>
+                            <div style="min-width: 200px; background-color: #ECEDF2; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #292C40;">
+                                <div style="font-size: 0.75rem; color: #292C40; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Ketua Sidang</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #292C40;">{{ $option['ketua_sidang_nama'] }}</div>
                             </div>
-                            <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
-                                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 1</div>
-                                <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji1_nama'] }}</div>
+                            <div style="min-width: 200px; background-color: #E8EAF6; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #4A5078;">
+                                <div style="font-size: 0.75rem; color: #4A5078; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 1</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #292C40;">{{ $option['penguji1_nama'] }}</div>
                             </div>
-                            <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
-                                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 2</div>
-                                <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji2_nama'] }}</div>
+                            <div style="min-width: 200px; background-color: #E8EAF6; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #4A5078;">
+                                <div style="font-size: 0.75rem; color: #4A5078; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 2</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #292C40;">{{ $option['penguji2_nama'] }}</div>
                             </div>
                             @if($option['jenis_sidang'] === 'Sidang TA 2')
-                            <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
-                                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 3</div>
-                                <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji3_nama'] }}</div>
+                            <div style="min-width: 200px; background-color: #E8EAF6; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #4A5078;">
+                                <div style="font-size: 0.75rem; color: #4A5078; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 3</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #292C40;">{{ $option['penguji3_nama'] }}</div>
                             </div>
-                            <div style="min-width: 200px; background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
-                                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 4</div>
-                                <div style="font-weight: 600; font-size: 0.95rem; color: #111827;">{{ $option['penguji4_nama'] }}</div>
+                            <div style="min-width: 200px; background-color: #E8EAF6; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #4A5078;">
+                                <div style="font-size: 0.75rem; color: #4A5078; font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem;">Penguji 4</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #292C40;">{{ $option['penguji4_nama'] }}</div>
                             </div>
                             @endif
                         </div>
@@ -87,8 +87,8 @@
             {{-- Header & tombol simpan semua --}}
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <h2 style="font-size: 1.5rem; font-weight: bold; color: #111827; margin: 0;">Hasil Batch Penjadwalan</h2>
-                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: bold; color: #292C40; margin: 0;">Hasil Batch Penjadwalan</h2>
+                    <p style="font-size: 0.875rem; color: #4A5078; margin-top: 0.25rem;">
                         {{ collect($batchResults)->filter(fn($r) => $r['success'] ?? false)->count() }} berhasil &nbsp;·&nbsp;
                         {{ collect($batchResults)->reject(fn($r) => $r['success'] ?? false)->count() }} tidak dapat dijadwalkan
                     </p>
@@ -108,50 +108,50 @@
                     <x-slot name="heading">
                         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                             <x-filament::badge color="success">✓ Terjadwal</x-filament::badge>
-                            <span style="font-weight: 700; color: #111827;">{{ $result['mahasiswa_nama'] }}</span>
-                            <span style="font-size: 0.875rem; color: #6b7280;">{{ $result['jenis_sidang'] }}</span>
+                            <span style="font-weight: 700; color: #292C40;">{{ $result['mahasiswa_nama'] }}</span>
+                            <span style="font-size: 0.875rem; color: #4A5078;">{{ $result['jenis_sidang'] }}</span>
                         </div>
                     </x-slot>
 
                     <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
                         {{-- Waktu & Tempat --}}
-                        <div style="display: flex; gap: 2rem; flex-wrap: wrap; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;">
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap; border-bottom: 1px solid #D8DAE5; padding-bottom: 1rem;">
                             <div>
-                                <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; font-weight: 600;">Tanggal</div>
-                                <div style="font-weight: bold; color: #111827;">{{ \Carbon\Carbon::parse($result['tanggal'])->locale('id')->translatedFormat('l, d F Y') }}</div>
+                                <div style="font-size: 0.75rem; color: #4A5078; text-transform: uppercase; font-weight: 600;">Tanggal</div>
+                                <div style="font-weight: bold; color: #292C40;">{{ \Carbon\Carbon::parse($result['tanggal'])->locale('id')->translatedFormat('l, d F Y') }}</div>
                             </div>
                             <div>
-                                <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; font-weight: 600;">Waktu</div>
-                                <div style="font-weight: bold; color: #111827;">{{ \Carbon\Carbon::parse($result['jam_mulai'])->format('H:i') }} – {{ \Carbon\Carbon::parse($result['jam_selesai'])->format('H:i') }} WIB</div>
+                                <div style="font-size: 0.75rem; color: #4A5078; text-transform: uppercase; font-weight: 600;">Waktu</div>
+                                <div style="font-weight: bold; color: #292C40;">{{ \Carbon\Carbon::parse($result['jam_mulai'])->format('H:i') }} – {{ \Carbon\Carbon::parse($result['jam_selesai'])->format('H:i') }} WIB</div>
                             </div>
                             <div>
-                                <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; font-weight: 600;">Ruangan</div>
-                                <div style="font-weight: bold; color: #111827;">{{ $result['ruangan'] }}</div>
+                                <div style="font-size: 0.75rem; color: #4A5078; text-transform: uppercase; font-weight: 600;">Ruangan</div>
+                                <div style="font-weight: bold; color: #292C40;">{{ $result['ruangan'] }}</div>
                             </div>
                         </div>
 
                         {{-- Dosen --}}
                         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                            <div style="min-width: 180px; background-color: #fef3c7; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #f59e0b;">
-                                <div style="font-size: 0.7rem; color: #d97706; font-weight: 800; text-transform: uppercase;">Ketua Sidang</div>
-                                <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['ketua_sidang_nama'] }}</div>
+                            <div style="min-width: 180px; background-color: #ECEDF2; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #292C40;">
+                                <div style="font-size: 0.7rem; color: #292C40; font-weight: 800; text-transform: uppercase;">Ketua Sidang</div>
+                                <div style="font-weight: 600; font-size: 0.875rem; color: #292C40;">{{ $result['ketua_sidang_nama'] }}</div>
                             </div>
-                            <div style="min-width: 180px; background-color: #eff6ff; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #3b82f6;">
-                                <div style="font-size: 0.7rem; color: #2563eb; font-weight: 800; text-transform: uppercase;">Penguji 1</div>
-                                <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['penguji1_nama'] }}</div>
+                            <div style="min-width: 180px; background-color: #E8EAF6; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #4A5078;">
+                                <div style="font-size: 0.7rem; color: #4A5078; font-weight: 800; text-transform: uppercase;">Penguji 1</div>
+                                <div style="font-weight: 600; font-size: 0.875rem; color: #292C40;">{{ $result['penguji1_nama'] }}</div>
                             </div>
-                            <div style="min-width: 180px; background-color: #eff6ff; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #3b82f6;">
-                                <div style="font-size: 0.7rem; color: #2563eb; font-weight: 800; text-transform: uppercase;">Penguji 2</div>
-                                <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['penguji2_nama'] }}</div>
+                            <div style="min-width: 180px; background-color: #E8EAF6; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #4A5078;">
+                                <div style="font-size: 0.7rem; color: #4A5078; font-weight: 800; text-transform: uppercase;">Penguji 2</div>
+                                <div style="font-weight: 600; font-size: 0.875rem; color: #292C40;">{{ $result['penguji2_nama'] }}</div>
                             </div>
                             @if(($result['jenis_sidang'] ?? '') === 'Sidang TA 2')
-                            <div style="min-width: 180px; background-color: #eff6ff; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #3b82f6;">
-                                <div style="font-size: 0.7rem; color: #2563eb; font-weight: 800; text-transform: uppercase;">Penguji 3</div>
-                                <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['penguji3_nama'] ?? '-' }}</div>
+                            <div style="min-width: 180px; background-color: #E8EAF6; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #4A5078;">
+                                <div style="font-size: 0.7rem; color: #4A5078; font-weight: 800; text-transform: uppercase;">Penguji 3</div>
+                                <div style="font-weight: 600; font-size: 0.875rem; color: #292C40;">{{ $result['penguji3_nama'] ?? '-' }}</div>
                             </div>
-                            <div style="min-width: 180px; background-color: #eff6ff; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #3b82f6;">
-                                <div style="font-size: 0.7rem; color: #2563eb; font-weight: 800; text-transform: uppercase;">Penguji 4</div>
-                                <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">{{ $result['penguji4_nama'] ?? '-' }}</div>
+                            <div style="min-width: 180px; background-color: #E8EAF6; padding: 0.6rem 0.75rem; border-radius: 0.375rem; border-left: 3px solid #4A5078;">
+                                <div style="font-size: 0.7rem; color: #4A5078; font-weight: 800; text-transform: uppercase;">Penguji 4</div>
+                                <div style="font-weight: 600; font-size: 0.875rem; color: #292C40;">{{ $result['penguji4_nama'] ?? '-' }}</div>
                             </div>
                             @endif
                         </div>

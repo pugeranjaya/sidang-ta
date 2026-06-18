@@ -9,7 +9,9 @@ class ManageStatistikDosen extends ManageRecords
 {
     protected static string $resource = StatistikDosenResource::class;
 
+    public $filterJenisPeriode = 'bulanan';
     public $filterBulan = 'semua';
+    public $filterMinggu = 'semua';
     public $filterTahun = 'semua';
 
     protected function getHeaderActions(): array
