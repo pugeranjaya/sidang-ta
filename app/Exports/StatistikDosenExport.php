@@ -47,10 +47,6 @@ class StatistikDosenExport implements FromQuery, WithMapping, WithEvents, Should
         ));
         
         // Sort like the frontend
-        $query->orderByRaw('(IFNULL(ketuaSidangs_count,0) + IFNULL(penguji1Sidangs_count,0) + IFNULL(penguji2Sidangs_count,0)) DESC');
-        // Wait, the aliases in getWithCountMap are used, so we should order by the aliases.
-        // But since it's a subquery, Eloquent withCount uses `{relation}_count` if not aliased, 
-        // but we DID alias them!
         $query->orderByRaw('(IFNULL(ketua_kumulatif_count,0) + IFNULL(p1_kumulatif_count,0) + IFNULL(p2_kumulatif_count,0)) DESC');
 
         return $query;
@@ -109,7 +105,11 @@ class StatistikDosenExport implements FromQuery, WithMapping, WithEvents, Should
                 $sheet->setCellValue('G7', 'Penguji');
                 $sheet->setCellValue('H7', 'Kumulatif');
 
-                // Merge cells
+                // Merge cells for title and period
+                $sheet->mergeCells('A1:I1');
+                $sheet->mergeCells('A2:I2');
+                $sheet->mergeCells('A4:I4');
+
                 $sheet->mergeCells('A5:A7');
                 $sheet->mergeCells('B5:B7');
                 $sheet->mergeCells('C5:F5');
@@ -122,8 +122,12 @@ class StatistikDosenExport implements FromQuery, WithMapping, WithEvents, Should
                 // Styling
                 $lastRow = 8 + $this->rowNumber; // Data starts at 9
                 
-                // Header styles
+                // Title and Period Styles
                 $sheet->getStyle('A1:A4')->getFont()->setBold(true)->setSize(12);
+                $sheet->getStyle('A1:A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+                // Table Header Styles
                 $sheet->getStyle('A5:I7')->applyFromArray([
                     'font' => ['bold' => true],
                     'alignment' => [

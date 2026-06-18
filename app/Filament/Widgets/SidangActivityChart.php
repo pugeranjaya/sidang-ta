@@ -24,7 +24,6 @@ class SidangActivityChart extends ChartWidget
 
             $finishedData[] = \App\Models\Sidang::whereYear('tanggal', $year)
                 ->whereMonth('tanggal', $m)
-                ->where('status', 'lulus')
                 ->count();
         }
 

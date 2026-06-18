@@ -15,7 +15,6 @@ class Sidang extends Model
         'jam_mulai',
         'jam_selesai',
         'ruangan',
-        'status',
         'jenis_sidang',
         'penguji1_id',
         'penguji2_id',

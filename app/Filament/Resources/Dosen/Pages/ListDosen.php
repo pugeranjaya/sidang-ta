@@ -4,9 +4,11 @@ namespace App\Filament\Resources\Dosen\Pages;
 
 use App\Filament\Resources\Dosen\DosenResource;
 use App\Imports\DosenImport;
+use App\Models\Dosen;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Maatwebsite\Excel\Facades\Excel;
@@ -14,6 +16,8 @@ use Maatwebsite\Excel\Facades\Excel;
 class ListDosen extends ListRecords
 {
     protected static string $resource = DosenResource::class;
+
+    public ?int $deactivatingDosenId = null;
 
     public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
     {
@@ -47,10 +51,8 @@ class ListDosen extends ListRecords
                     try {
                         $import = new DosenImport();
 
-                        // Laravel-Excel bawaan mendukung pembacaan nama disk yang di setting di FileUpload sebelumnya
                         Excel::import($import, $data['file'], 'local');
 
-                        // Opsional: Hapus file agar folder storage tidak menumpuk file sampah hasil import
                         \Illuminate\Support\Facades\Storage::disk('local')->delete($data['file']);
 
                         $count = $import->getImportedCount();
@@ -61,7 +63,6 @@ class ListDosen extends ListRecords
                             ->success()
                             ->send();
                     } catch (\Exception $e) {
-                        // Jika ada error (termasuk Exception Custom yang kita buat jika header tidak sesuai)
                         Notification::make()
                             ->title('Gagal mengimpor file Excel')
                             ->body(str_replace('GATAL/ERROR: ', '', $e->getMessage()))

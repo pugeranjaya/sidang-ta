@@ -33,15 +33,15 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile(\App\Filament\Pages\EditProfile::class)
             ->brandName('Penjadwalan Sidang Jurusan Teknik Industri')
-            ->favicon(asset('images/logo-ti.png') . '?v=5')
+            ->favicon(asset('images/logo-website.png') . '?v=6')
             ->globalSearch(false)
             ->darkMode(false)
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn(): HtmlString => new HtmlString('
-                    <link rel="icon" type="image/png" href="' . asset('images/logo-ti.png') . '?v=5">
-                    <link rel="shortcut icon" type="image/png" href="' . asset('images/logo-ti.png') . '?v=5">
-                    <link rel="apple-touch-icon" href="' . asset('images/logo-ti.png') . '?v=5">
+                    <link rel="icon" type="image/png" href="' . asset('images/logo-website.png') . '?v=6">
+                    <link rel="shortcut icon" type="image/png" href="' . asset('images/logo-website.png') . '?v=6">
+                    <link rel="apple-touch-icon" href="' . asset('images/logo-website.png') . '?v=6">
                 ')
             )
             ->sidebarCollapsibleOnDesktop()

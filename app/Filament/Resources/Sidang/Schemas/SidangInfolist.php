@@ -31,8 +31,7 @@ class SidangInfolist
                 TextEntry::make('jam_selesai')
                     ->time(),
                 TextEntry::make('ruangan'),
-                TextEntry::make('status')
-                    ->badge(),
+
                 TextEntry::make('ketuaSidang.nama')
                     ->label('Ketua Sidang'),
                 TextEntry::make('penguji1.nama')

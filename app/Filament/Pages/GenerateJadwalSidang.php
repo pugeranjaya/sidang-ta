@@ -60,7 +60,7 @@ class GenerateJadwalSidang extends Page
                     ->label('Jenis Sidang')
                     ->options([
                         'Seminar TA 1' => 'Seminar TA 1',
-                        'Sidang TA 2'  => 'Sidang TA 2',
+                        'Sidang TA 2' => 'Sidang TA 2',
                     ])
                     ->default('Seminar TA 1')
                     ->live()
@@ -75,9 +75,26 @@ class GenerateJadwalSidang extends Page
                 // ── Mode Single: 1 mahasiswa ────────────────────────────────
                 Select::make('mahasiswa_id')
                     ->label('Pilih Mahasiswa')
-                    ->options(Mahasiswa::all()->mapWithKeys(fn($m) => [
-                        $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
-                    ]))
+                    ->options(function (Get $get) {
+                        $jenisSidang = $get('jenis_sidang');
+                        $query = Mahasiswa::query();
+
+                        if ($jenisSidang === 'Seminar TA 1') {
+                            $query->whereDoesntHave('sidangs', function ($q) {
+                                $q->where('jenis_sidang', 'Seminar TA 1');
+                            });
+                        } elseif ($jenisSidang === 'Sidang TA 2') {
+                            $query->whereHas('sidangs', function ($q) {
+                                $q->where('jenis_sidang', 'Seminar TA 1');
+                            })->whereDoesntHave('sidangs', function ($q) {
+                                $q->where('jenis_sidang', 'Sidang TA 2');
+                            });
+                        }
+
+                        return $query->get()->mapWithKeys(fn($m) => [
+                            $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
+                        ]);
+                    })
                     ->searchable()
                     ->preload()
                     ->visible(fn(Get $get) => !$get('mode_batch'))
@@ -88,9 +105,26 @@ class GenerateJadwalSidang extends Page
                     ->label('Pilih Mahasiswa (Multi)')
                     ->helperText('Pilih 1–15 mahasiswa. Sistem akan otomatis mendistribusikan ke 3 ruangan (maks 5 per ruangan).')
                     ->multiple()
-                    ->options(Mahasiswa::all()->mapWithKeys(fn($m) => [
-                        $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
-                    ]))
+                    ->options(function (Get $get) {
+                        $jenisSidang = $get('jenis_sidang');
+                        $query = Mahasiswa::query();
+
+                        if ($jenisSidang === 'Seminar TA 1') {
+                            $query->whereDoesntHave('sidangs', function ($q) {
+                                $q->where('jenis_sidang', 'Seminar TA 1');
+                            });
+                        } elseif ($jenisSidang === 'Sidang TA 2') {
+                            $query->whereHas('sidangs', function ($q) {
+                                $q->where('jenis_sidang', 'Seminar TA 1');
+                            })->whereDoesntHave('sidangs', function ($q) {
+                                $q->where('jenis_sidang', 'Sidang TA 2');
+                            });
+                        }
+
+                        return $query->get()->mapWithKeys(fn($m) => [
+                            $m->id => "{$m->nama} ({$m->nim}) — {$m->rumpun_ta}"
+                        ]);
+                    })
                     ->searchable()
                     ->preload()
                     ->visible(fn(Get $get) => (bool) $get('mode_batch'))
@@ -113,8 +147,8 @@ class GenerateJadwalSidang extends Page
     {
         $data = $this->form->getState();
         $this->scheduleOptions = null;
-        $this->batchResults    = null;
-        $this->debugLogText    = null;
+        $this->batchResults = null;
+        $this->debugLogText = null;
         $isBatch = (bool) ($data['mode_batch'] ?? false);
 
         $scheduler = app(SidangScheduler::class);
@@ -154,7 +188,7 @@ class GenerateJadwalSidang extends Page
                 if (!empty($result['results'])) {
                     $this->batchResults = $result['results'];
                     $berhasil = collect($result['results'])->filter(fn($r) => $r['success'] ?? false)->count();
-                    $gagal    = count($result['results']) - $berhasil;
+                    $gagal = count($result['results']) - $berhasil;
 
                     $msg = "✅ {$berhasil} jadwal berhasil digenerate.";
                     if ($gagal > 0) {
@@ -196,7 +230,7 @@ class GenerateJadwalSidang extends Page
                         ->success()
                         ->send();
                 } else {
-                    $lastLog  = end($debugLog);
+                    $lastLog = end($debugLog);
                     $errorMsg = $lastLog ?: 'Terjadi kesalahan pada algoritma penjadwalan.';
 
                     if (strpos($errorMsg, 'GAGAL: ') === 0) {
@@ -235,16 +269,16 @@ class GenerateJadwalSidang extends Page
 
         try {
             $dbData = [
-                'mahasiswa_id'    => $selected['mahasiswa_id'],
-                'jenis_sidang'    => $selected['jenis_sidang'],
-                'tanggal'         => $selected['tanggal'],
-                'jam_mulai'       => $selected['jam_mulai'],
-                'jam_selesai'     => $selected['jam_selesai'],
-                'ruangan'         => $selected['ruangan'],
-                'penguji1_id'     => $selected['penguji1_id'],
-                'penguji2_id'     => $selected['penguji2_id'],
+                'mahasiswa_id' => $selected['mahasiswa_id'],
+                'jenis_sidang' => $selected['jenis_sidang'],
+                'tanggal' => $selected['tanggal'],
+                'jam_mulai' => $selected['jam_mulai'],
+                'jam_selesai' => $selected['jam_selesai'],
+                'ruangan' => $selected['ruangan'],
+                'penguji1_id' => $selected['penguji1_id'],
+                'penguji2_id' => $selected['penguji2_id'],
                 'ketua_sidang_id' => $selected['ketua_sidang_id'],
-                'status'          => 'belum lulus',
+                'status' => 'belum lulus',
             ];
 
             if ($selected['jenis_sidang'] === 'Sidang TA 2') {
@@ -255,7 +289,7 @@ class GenerateJadwalSidang extends Page
             Sidang::create($dbData);
 
             $this->scheduleOptions = null;
-            $this->debugLogText    = null;
+            $this->debugLogText = null;
             $this->form->fill();
 
             Notification::make()
@@ -279,7 +313,7 @@ class GenerateJadwalSidang extends Page
         }
 
         $disimpan = 0;
-        $gagal    = 0;
+        $gagal = 0;
 
         foreach ($this->batchResults as $mhsId => $result) {
             if (!($result['success'] ?? false)) {
@@ -288,16 +322,16 @@ class GenerateJadwalSidang extends Page
 
             try {
                 $dbData = [
-                    'mahasiswa_id'    => $result['mahasiswa_id'],
-                    'jenis_sidang'    => $result['jenis_sidang'],
-                    'tanggal'         => $result['tanggal'],
-                    'jam_mulai'       => $result['jam_mulai'],
-                    'jam_selesai'     => $result['jam_selesai'],
-                    'ruangan'         => $result['ruangan'],
-                    'penguji1_id'     => $result['penguji1_id'],
-                    'penguji2_id'     => $result['penguji2_id'],
+                    'mahasiswa_id' => $result['mahasiswa_id'],
+                    'jenis_sidang' => $result['jenis_sidang'],
+                    'tanggal' => $result['tanggal'],
+                    'jam_mulai' => $result['jam_mulai'],
+                    'jam_selesai' => $result['jam_selesai'],
+                    'ruangan' => $result['ruangan'],
+                    'penguji1_id' => $result['penguji1_id'],
+                    'penguji2_id' => $result['penguji2_id'],
                     'ketua_sidang_id' => $result['ketua_sidang_id'],
-                    'status'          => 'belum lulus',
+                    'status' => 'belum lulus',
                 ];
 
                 if (($result['jenis_sidang'] ?? '') === 'Sidang TA 2') {

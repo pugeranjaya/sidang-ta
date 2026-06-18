@@ -184,4 +184,39 @@
         </div>
         @endif
     </div>
+
+    {{-- Script: Auto-clear search input setelah memilih opsi di multi-select --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Observe the whole form area for Select components
+            const observer = new MutationObserver(function () {
+                // Find all multi-select containers (they have badge containers)
+                document.querySelectorAll('.fi-select-input-ctn').forEach(function (container) {
+                    // Skip if already patched
+                    if (container._searchClearPatched) return;
+
+                    const selectBtn = container.querySelector('.fi-select-input-btn');
+                    if (!selectBtn) return;
+
+                    // Watch for badge additions (= option selected)
+                    const displayObserver = new MutationObserver(function () {
+                        // Find the search input in the dropdown
+                        const searchInput = container.querySelector('.fi-select-input-search-ctn input');
+                        if (searchInput && searchInput.value !== '') {
+                            searchInput.value = '';
+                            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    });
+
+                    const valueContainer = container.querySelector('.fi-select-input-value-ctn');
+                    if (valueContainer) {
+                        displayObserver.observe(valueContainer, { childList: true, subtree: true });
+                        container._searchClearPatched = true;
+                    }
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    </script>
 </x-filament-panels::page>

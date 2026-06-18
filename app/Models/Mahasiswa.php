@@ -38,8 +38,7 @@ class Mahasiswa extends Model
     public function sidangTa1Lulus()
     {
         return $this->hasMany(\App\Models\Sidang::class, 'mahasiswa_id')
-            ->where('jenis_sidang', 'Seminar TA 1')
-            ->where('status', 'lulus');
+            ->where('jenis_sidang', 'Seminar TA 1');
     }
 
     /**
@@ -48,7 +47,6 @@ class Mahasiswa extends Model
     public function sidangTa2Lulus()
     {
         return $this->hasMany(\App\Models\Sidang::class, 'mahasiswa_id')
-            ->where('jenis_sidang', 'Sidang TA 2')
-            ->where('status', 'lulus');
+            ->where('jenis_sidang', 'Sidang TA 2');
     }
 }

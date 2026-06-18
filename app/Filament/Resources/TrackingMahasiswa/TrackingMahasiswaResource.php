@@ -75,20 +75,18 @@ class TrackingMahasiswaResource extends Resource
     {
         $hasTa2Lulus = Sidang::where('mahasiswa_id', $mahasiswaId)
             ->where('jenis_sidang', 'Sidang TA 2')
-            ->where('status', 'lulus')
             ->exists();
 
         if ($hasTa2Lulus) {
-            return 'Sudah TA 2';
+            return 'TA 2';
         }
 
         $hasTa1Lulus = Sidang::where('mahasiswa_id', $mahasiswaId)
             ->where('jenis_sidang', 'Seminar TA 1')
-            ->where('status', 'lulus')
             ->exists();
 
         if ($hasTa1Lulus) {
-            return 'Sudah TA 1';
+            return 'TA 1';
         }
 
         return 'Belum Sidang';
@@ -145,14 +143,14 @@ class TrackingMahasiswaResource extends Resource
             ->getStateUsing(fn ($record) => self::getProgress($record->id))
             ->color(fn (string $state): string => match ($state) {
                 'Belum Sidang' => 'danger',
-                'Sudah TA 1' => 'warning',
-                'Sudah TA 2' => 'success',
+                'TA 1' => 'warning',
+                'TA 2' => 'success',
                 default => 'gray',
             })
             ->icon(fn (string $state): string => match ($state) {
                 'Belum Sidang' => 'heroicon-m-x-circle',
-                'Sudah TA 1' => 'heroicon-m-clock',
-                'Sudah TA 2' => 'heroicon-m-check-circle',
+                'TA 1' => 'heroicon-m-clock',
+                'TA 2' => 'heroicon-m-check-circle',
                 default => 'heroicon-m-question-mark-circle',
             });
 
@@ -161,8 +159,8 @@ class TrackingMahasiswaResource extends Resource
             ->modifyQueryUsing(function (Builder $query) use ($isAdmin) {
                 $progressSql = "
                     CASE
-                        WHEN EXISTS (SELECT 1 FROM sidang WHERE sidang.mahasiswa_id = mahasiswa.id AND jenis_sidang = 'Sidang TA 2' AND status = 'lulus') THEN 'Sudah TA 2'
-                        WHEN EXISTS (SELECT 1 FROM sidang WHERE sidang.mahasiswa_id = mahasiswa.id AND jenis_sidang = 'Seminar TA 1' AND status = 'lulus') THEN 'Sudah TA 1'
+                        WHEN EXISTS (SELECT 1 FROM sidang WHERE sidang.mahasiswa_id = mahasiswa.id AND jenis_sidang = 'Sidang TA 2') THEN 'TA 2'
+                        WHEN EXISTS (SELECT 1 FROM sidang WHERE sidang.mahasiswa_id = mahasiswa.id AND jenis_sidang = 'Seminar TA 1') THEN 'TA 1'
                         ELSE 'Belum Sidang'
                     END
                 ";
@@ -193,8 +191,8 @@ class TrackingMahasiswaResource extends Resource
                     ->label('Progress')
                     ->options([
                         'belum' => 'Belum Sidang',
-                        'ta1' => 'Sudah TA 1',
-                        'ta2' => 'Sudah TA 2',
+                        'ta1' => 'TA 1',
+                        'ta2' => 'TA 2',
                     ])
                     ->query(function (Builder $query, array $data) {
                         $value = $data['value'] ?? null;

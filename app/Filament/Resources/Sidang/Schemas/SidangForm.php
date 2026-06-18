@@ -44,10 +44,7 @@ class SidangForm
                         'Ruang Seminar LT-2 Jurusan Teknik Industri' => 'Ruang Seminar LT-2 Jurusan Teknik Industri',
                     ])
                     ->required(),
-                Select::make('status')
-                    ->options(['belum lulus' => 'Belum Lulus', 'lulus' => 'Lulus'])
-                    ->default('belum lulus')
-                    ->required(),
+
                 Select::make('ketua_sidang_id')
                     ->label('Ketua Sidang')
                     ->relationship('ketuaSidang', 'nama')

@@ -74,22 +74,7 @@ class SidangTable
                     ])
                     ->searchable()
                     ->visibleFrom('md'),
-                TextColumn::make('status')
-                    ->alignCenter()
-                    ->extraAttributes([
-                        'style' => 'justify-content: flex-start !important;',
-                    ])
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'belum lulus' => 'danger',
-                        'lulus' => 'success',
-                        default => 'gray',
-                    })
-                    ->icon(fn(string $state): string => match ($state) {
-                        'belum lulus' => 'heroicon-o-clock',
-                        'lulus' => 'heroicon-o-academic-cap',
-                        default => 'heroicon-o-question-mark-circle',
-                    }),
+
                 TextColumn::make('mahasiswa.pembimbing.nama')
                     ->label('Pembimbing')
                     ->alignCenter()
@@ -172,30 +157,7 @@ class SidangTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->visible(fn() => auth()->user()?->isAdmin()),
-                    BulkAction::make('tandaiBelumLulus')
-                        ->label('Tandai Belum Lulus')
-                        ->icon('heroicon-o-x-circle')
-                        ->color('danger')
-                        ->requiresConfirmation()
-                        ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
-                            $records->each(function ($record) {
-                                $record->update(['status' => 'belum lulus']);
-                            });
-                        })
-                        ->visible(fn() => auth()->user()?->isAdmin())
-                        ->deselectRecordsAfterCompletion(),
-                    BulkAction::make('tandaiLulus')
-                        ->label('Tandai Lulus')
-                        ->icon('heroicon-o-academic-cap')
-                        ->color('success')
-                        ->requiresConfirmation()
-                        ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
-                            $records->each(function ($record) {
-                                $record->update(['status' => 'lulus']);
-                            });
-                        })
-                        ->visible(fn() => auth()->user()?->isAdmin())
-                        ->deselectRecordsAfterCompletion(),
+
                 ]),
             ])->paginated([10, 50, 70, 100, 150, 200]);
     }

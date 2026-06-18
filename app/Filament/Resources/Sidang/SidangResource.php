@@ -45,7 +45,7 @@ class SidangResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('status', 'belum lulus')->count() ?: null;
+        return null;
     }
 
     public static function getNavigationBadgeColor(): ?string

@@ -22,9 +22,9 @@ class ManageTrackingMahasiswa extends ManageRecords
             'semua' => \Filament\Schemas\Components\Tabs\Tab::make('Semua'),
             'belum_sidang' => \Filament\Schemas\Components\Tabs\Tab::make('Belum Sidang')
                 ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query->whereDoesntHave('sidangTa1Lulus')),
-            'sudah_ta1' => \Filament\Schemas\Components\Tabs\Tab::make('Sudah TA 1')
+            'sudah_ta1' => \Filament\Schemas\Components\Tabs\Tab::make('TA 1')
                 ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query->whereHas('sidangTa1Lulus')->whereDoesntHave('sidangTa2Lulus')),
-            'sudah_ta2' => \Filament\Schemas\Components\Tabs\Tab::make('Sudah TA 2')
+            'sudah_ta2' => \Filament\Schemas\Components\Tabs\Tab::make('TA 2')
                 ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query->whereHas('sidangTa2Lulus')),
         ];
     }

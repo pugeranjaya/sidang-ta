@@ -13,7 +13,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Get;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -80,41 +82,48 @@ class DosenResource extends Resource
                     ->extraInputAttributes(['oninput' => "this.value = this.value.replace(/[^0-9]/g, '')"])
                     ->placeholder('Contoh: 197001011234567890'),
 
-                CheckboxList::make('rumpun_keahlian')
-                    ->label('Rumpun Keahlian')
-                    ->options([
-                        'SPOI' => 'Rekayasa Sistem Produksi dan Optimasi Industri (SPOI)',
-                        'PSIE' => 'Rekayasa Perancangan Sistem Industri dan Ergonomi (PSIE)',
-                        'KPDP' => 'Rekayasa Kualitas Proses dan Desain Produk (KPDP)',
-                        'RPTE' => 'Rekayasa Rantai Pasok dan Tekno Ekonomi (RPTE)',
-                    ])
-                    ->columns(1)
-                    ->required()
-                    ->helperText('Pilih satu atau lebih rumpun keahlian dosen'),
+                Group::make([
+                    CheckboxList::make('rumpun_keahlian')
+                        ->label('Rumpun Keahlian')
+                        ->options([
+                            'SPOI' => 'Rekayasa Sistem Produksi dan Optimasi Industri (SPOI)',
+                            'PSIE' => 'Rekayasa Perancangan Sistem Industri dan Ergonomi (PSIE)',
+                            'KPDP' => 'Rekayasa Kualitas Proses dan Desain Produk (KPDP)',
+                            'RPTE' => 'Rekayasa Rantai Pasok dan Tekno Ekonomi (RPTE)',
+                        ])
+                        ->columns(1)
+                        ->required()
+                        ->helperText('Pilih satu atau lebih rumpun keahlian dosen'),
+                ]),
 
-                Toggle::make('status')
-                    ->label('Status Aktif')
-                    ->default(true)
-                    ->helperText('Nonaktifkan jika dosen tidak bisa menguji di periode ini')
-                    ->onColor('success')
-                    ->offColor('danger')
-                    ->live(),
+                Group::make([
+                    Toggle::make('abaikan_bentrok')
+                        ->label('Abaikan Bentrok Jadwal')
+                        ->default(false)
+                        ->helperText('Aktifkan agar jadwal mengajar dosen ini DIABAIKAN saat pengecekan bentrok. Berguna jika dosen bersedia hadir meski ada kelas di waktu yang sama.')
+                        ->onColor('warning')
+                        ->offColor('gray'),
 
-                Textarea::make('alasan_nonaktif')
-                    ->label('Catatan Alasan Nonaktif')
-                    ->placeholder('Contoh: Cuti akademik, tugas belajar S3, sakit, dll.')
-                    ->helperText('Isi alasan mengapa dosen ini dinonaktifkan')
-                    ->rows(3)
-                    ->maxLength(500)
-                    ->visible(fn ($get): bool => !$get('status'))
-                    ->columnSpanFull(),
+                    Toggle::make('status')
+                        ->label('Status Aktif Dosen')
+                        ->default(true)
+                        ->live()
+                        ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                            if ($state) {
+                                $set('alasan_nonaktif', null);
+                            }
+                        })
+                        ->onColor('success')
+                        ->offColor('danger'),
 
-                Toggle::make('abaikan_bentrok')
-                    ->label('Abaikan Bentrok Jadwal')
-                    ->default(false)
-                    ->helperText('Aktifkan agar jadwal mengajar dosen ini DIABAIKAN saat pengecekan bentrok. Berguna jika dosen bersedia hadir meski ada kelas di waktu yang sama.')
-                    ->onColor('warning')
-                    ->offColor('gray'),
+                    Textarea::make('alasan_nonaktif')
+                        ->label('Alasan Nonaktif')
+                        ->required(fn (Get $get) => !$get('status'))
+                        ->visible(fn (Get $get) => !$get('status'))
+                        ->placeholder('Contoh: Cuti akademik, tugas belajar S3, sakit, dll.')
+                        ->rows(3)
+                        ->maxLength(500),
+                ]),
             ]);
     }
 
@@ -143,8 +152,16 @@ class DosenResource extends Resource
                     ->badge()
                     ->separator(','),
 
-                // Kolom Aktif, Abaikan Bentrok, dan Catatan Nonaktif disembunyikan dari tabel
-                // dan hanya muncul di halaman form edit/create.
+                \Filament\Tables\Columns\ViewColumn::make('status')
+                    ->label('Status')
+                    ->alignCenter()
+                    ->view('filament.tables.columns.status-toggle'),
+
+                \Filament\Tables\Columns\ToggleColumn::make('abaikan_bentrok')
+                    ->label('Abaikan Bentrok')
+                    ->alignCenter()
+                    ->onColor('warning')
+                    ->offColor('gray'),
             ])
             ->filters([
                 \Filament\Tables\Filters\TernaryFilter::make('status')
@@ -154,6 +171,48 @@ class DosenResource extends Resource
                     ->placeholder('Semua'),
             ])
             ->recordActions([
+                \Filament\Actions\Action::make('toggle_status')
+                    ->label('')
+                    ->icon('')
+                    ->extraAttributes(['style' => 'display: none !important; width: 0; height: 0; padding: 0; margin: 0;'])
+                    ->modalHeading(fn (Dosen $record) => $record->status ? 'Nonaktifkan Dosen: ' . $record->nama : null)
+                    ->modalDescription(fn (Dosen $record) => $record->status ? 'Isi alasan mengapa dosen ini perlu dinonaktifkan.' : null)
+                    ->modalSubmitActionLabel('Simpan')
+                    ->form(fn (Dosen $record) => $record->status ? [
+                        Textarea::make('alasan_nonaktif')
+                            ->label('Alasan Nonaktif')
+                            ->required()
+                            ->placeholder('Contoh: Cuti akademik, tugas belajar S3, sakit, dll.')
+                            ->rows(3)
+                            ->maxLength(500),
+                    ] : [])
+                    ->requiresConfirmation(fn (Dosen $record) => !$record->status)
+                    ->modalHeading(fn (Dosen $record) => !$record->status ? 'Aktifkan Dosen: ' . $record->nama : 'Nonaktifkan Dosen: ' . $record->nama)
+                    ->action(function (Dosen $record, array $data) {
+                        if ($record->status) {
+                            // Nonaktifkan
+                            $record->update([
+                                'status' => false,
+                                'alasan_nonaktif' => $data['alasan_nonaktif'],
+                            ]);
+                            \Filament\Notifications\Notification::make()
+                                ->title('Dosen Dinonaktifkan')
+                                ->body($record->nama . ' telah dinonaktifkan.')
+                                ->warning()
+                                ->send();
+                        } else {
+                            // Aktifkan kembali
+                            $record->update([
+                                'status' => true,
+                                'alasan_nonaktif' => null,
+                            ]);
+                            \Filament\Notifications\Notification::make()
+                                ->title('Dosen Diaktifkan')
+                                ->body($record->nama . ' telah diaktifkan kembali.')
+                                ->success()
+                                ->send();
+                        }
+                    }),
                 \Filament\Actions\EditAction::make(),
                 \Filament\Actions\DeleteAction::make(),
             ])

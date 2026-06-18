@@ -203,9 +203,8 @@ class SidangScheduler
 
         // ========== LOGIKA SEMINAR TA 2 ==========
         if ($jenisSidang === 'Sidang TA 2') {
-            $historyTa1 = Sidang::where('mahasiswa_id', $mahasiswaId)
-                ->where('jenis_sidang', 'Seminar TA 1')
-                ->where('status', 'lulus')
+            $historyTa1 = Sidang::query()->where(['mahasiswa_id' => $mahasiswaId])
+                ->where(['jenis_sidang' => 'Seminar TA 1'])
                 ->latest()
                 ->first();
 
@@ -287,7 +286,6 @@ class SidangScheduler
             $options[] = array_merge($schedule, [
                 'mahasiswa_id' => $mahasiswaId,
                 'jenis_sidang' => $jenisSidang,
-                'status' => 'belum lulus',
                 'ruangan' => $this->pilihRuangan($schedule['tanggal'], $schedule['jam_mulai'], $schedule['jam_selesai']),
                 'score_ahp' => number_format($schedule['total_score'], 3),
             ]);
@@ -299,12 +297,12 @@ class SidangScheduler
     private function calculateDosenWorkloads(): void
     {
         if (empty($this->dosenCounts)) {
-            $dosens = Dosen::where('status', true)->get();
+            $dosens = Dosen::query()->where(['status' => true])->get();
             $this->dosenCounts = [];
 
             foreach ($dosens as $d) {
-                $count = Sidang::where(function ($q) use ($d) {
-                    $q->where('penguji1_id', $d->id)
+                $count = Sidang::query()->where(function ($q) use ($d) {
+                    $q->where(['penguji1_id' => $d->id])
                         ->orWhere('penguji2_id', $d->id)
                         ->orWhere('penguji3_id', $d->id)
                         ->orWhere('penguji4_id', $d->id)
@@ -339,7 +337,7 @@ class SidangScheduler
         $toleransiSelisih = $this->dynamicTolerance;
         $maxAllowedMisi = $this->minCount + $toleransiSelisih;
 
-        $allCandidates = Dosen::where('status', true)->whereNotIn('id', $allExcludeIds)->get();
+        $allCandidates = Dosen::query()->where(['status' => true])->whereNotIn('id', $allExcludeIds)->get();
 
         // Ambil dosen yang bebannya dalam batas toleransi
         $candidates = $allCandidates->filter(function ($dosen) use ($maxAllowedMisi) {
@@ -407,12 +405,12 @@ class SidangScheduler
             $scored = $availableInSlot->shuffle()->map(function ($dosen) use ($mahasiswa) {
                 $score = $this->calculateAHPScore($dosen, $mahasiswa);
                 return ['dosen' => $dosen, 'score' => $score];
-            })->sortByDesc('score')->values();
+            })->sortByDesc(fn($item) => $item['score'])->values();
 
             $scoredById = $scored->keyBy(fn($item) => $item['dosen']->id);
 
             // Pilih P1: dosen rumpun cocok dengan skor AHP tertinggi
-            $scoredP1 = $poolP1->map(fn($d) => $scoredById[$d->id])->sortByDesc('score')->values();
+            $scoredP1 = $poolP1->map(fn($d) => $scoredById[$d->id])->sortByDesc(fn($item) => $item['score'])->values();
             $p1 = $scoredP1->first();
 
             // Pilih P2 & Ketua dari sisa dosen (exclude P1)
@@ -437,7 +435,7 @@ class SidangScheduler
         if (empty($scheduleOptions))
             return [];
 
-        $sorted = collect($scheduleOptions)->sortByDesc('total_score')->take(10)->values();
+        $sorted = collect($scheduleOptions)->sortByDesc(fn($item) => $item['total_score'])->take(10)->values();
 
         $results = [];
         foreach ($sorted as $winner) {
@@ -496,7 +494,7 @@ class SidangScheduler
         }
 
         // Muat data semua mahasiswa
-        $allMahasiswa = Mahasiswa::findMany($mahasiswaIds)->keyBy('id');
+        $allMahasiswa = Mahasiswa::findMany($mahasiswaIds)->keyBy(fn($m) => $m->id);
         $results = []; // hasil akhir per mahasiswa
         $usedDosenPerSlot = []; // track dosen yang dipakai per slot agar tidak dobel lintas ruangan
         $usedRuanganPerSlot = []; // track ruangan yang dipakai per slot di memori
@@ -532,10 +530,10 @@ class SidangScheduler
 
                     $scored = $availableInSlot->shuffle()->map(function ($dosen) use ($mahasiswa) {
                         return ['dosen' => $dosen, 'score' => $this->calculateAHPScore($dosen, $mahasiswa)];
-                    })->sortByDesc('score')->values();
+                    })->sortByDesc(fn($item) => $item['score'])->values();
 
                     $scoredById = $scored->keyBy(fn($item) => $item['dosen']->id);
-                    $p1 = $poolP1->map(fn($d) => $scoredById[$d->id])->sortByDesc('score')->first();
+                    $p1 = $poolP1->map(fn($d) => $scoredById[$d->id])->sortByDesc(fn($item) => $item['score'])->first();
                     $scoredUmum = $scored->filter(fn($item) => $item['dosen']->id !== $p1['dosen']->id)->values();
 
                     if ($scoredUmum->count() < 2)
@@ -571,7 +569,6 @@ class SidangScheduler
                         'penguji2_nama' => $p2['dosen']->nama,
                         'ketua_sidang_id' => $k1['dosen']->id,
                         'ketua_sidang_nama' => $k1['dosen']->nama,
-                        'status' => 'belum lulus',
                         'score_ahp' => number_format($p1['score'] + $p2['score'] + $k1['score'], 3),
                     ];
                     $found = true;
@@ -626,8 +623,8 @@ class SidangScheduler
             if (in_array($ruangan, $usedRuanganInThisSlot)) {
                 continue;
             }
-            $terpakai = Sidang::where('ruangan', $ruangan)
-                ->where('tanggal', $tanggal)
+            $terpakai = Sidang::query()->where(['ruangan' => $ruangan])
+                ->where(['tanggal' => $tanggal])
                 ->where(function ($q) use ($jamMulai, $jamSelesai) {
                     $q->whereTime('jam_mulai', '<', $jamSelesai)
                         ->whereTime('jam_selesai', '>', $jamMulai);
@@ -729,9 +726,8 @@ class SidangScheduler
         }
 
         if ($jenisSidang === 'Sidang TA 2') {
-            $historyTa1 = Sidang::where('mahasiswa_id', $mahasiswaId)
-                ->where('jenis_sidang', 'Seminar TA 1')
-                ->where('status', 'lulus')
+            $historyTa1 = Sidang::query()->where(['mahasiswa_id' => $mahasiswaId])
+                ->where(['jenis_sidang' => 'Seminar TA 1'])
                 ->latest()->first();
 
             if (!$historyTa1) {
@@ -761,7 +757,6 @@ class SidangScheduler
                 $options[] = array_merge($slot, [
                     'mahasiswa_id' => $mahasiswaId,
                     'jenis_sidang' => $jenisSidang,
-                    'status' => 'belum lulus',
                     'ruangan' => $this->pilihRuangan($slot['tanggal'], $slot['jam_mulai'], $slot['jam_selesai']),
                     'pembimbing_nama' => $pembimbing->nama,
                     'ketua_nama' => $ketuaSidang->nama,
@@ -842,7 +837,7 @@ class SidangScheduler
     private function getKetersediaanScore(Dosen $dosen): float
     {
         if (!isset($this->dosenJadwalCountCache[$dosen->id])) {
-            $this->dosenJadwalCountCache[$dosen->id] = JadwalMengajar::where('dosen_id', $dosen->id)->count();
+            $this->dosenJadwalCountCache[$dosen->id] = JadwalMengajar::query()->where(['dosen_id' => $dosen->id])->count();
         }
         $jadwalCount = $this->dosenJadwalCountCache[$dosen->id];
 
@@ -867,7 +862,7 @@ class SidangScheduler
 
         // Sub-score 2: Riwayat mengajar MK relevan
         if (!isset($this->dosenMkCache[$dosen->id])) {
-            $this->dosenMkCache[$dosen->id] = JadwalMengajar::where('dosen_id', $dosen->id)->pluck('mata_kuliah')->toArray();
+            $this->dosenMkCache[$dosen->id] = JadwalMengajar::query()->where(['dosen_id' => $dosen->id])->pluck('mata_kuliah')->toArray();
         }
         $mkDosen = $this->dosenMkCache[$dosen->id];
 
@@ -911,13 +906,13 @@ class SidangScheduler
     private function getPengalamanScore(Dosen $dosen): float
     {
         if (!isset($this->dosenPengalamanCache[$dosen->id])) {
-            $count = Sidang::where(function ($q) use ($dosen) {
+            $count = Sidang::query()->where(function ($q) use ($dosen) {
                 $q->where('penguji1_id', $dosen->id)
                     ->orWhere('penguji2_id', $dosen->id)
                     ->orWhere('penguji3_id', $dosen->id)
                     ->orWhere('penguji4_id', $dosen->id)
                     ->orWhere('ketua_sidang_id', $dosen->id);
-            })->where('status', 'lulus')->count();
+            })->count();
 
             $this->dosenPengalamanCache[$dosen->id] = min(round($count / 5, 6), 1.0);
         }
@@ -931,7 +926,7 @@ class SidangScheduler
         $current = Carbon::parse($tanggalMulai);
         $endDate = Carbon::parse($tanggalSelesai);
 
-        $pengecualianData = \App\Models\PengecualianJadwal::whereBetween('tanggal', [$tanggalMulai, $tanggalSelesai])->get();
+        $pengecualianData = \App\Models\PengecualianJadwal::query()->whereBetween('tanggal', [$tanggalMulai, $tanggalSelesai])->get();
         $pengecualianMap = [];
         foreach ($pengecualianData as $p) {
             $pengecualianMap[$p->tanggal][] = [
@@ -1128,8 +1123,8 @@ class SidangScheduler
     private function pilihRuangan(string $tanggal, string $jamMulai, string $jamSelesai): string
     {
         foreach (self::RUANGAN as $ruangan) {
-            $terpakai = Sidang::where('ruangan', $ruangan)
-                ->where('tanggal', $tanggal)
+            $terpakai = Sidang::query()->where(['ruangan' => $ruangan])
+                ->where(['tanggal' => $tanggal])
                 ->where(function ($q) use ($jamMulai, $jamSelesai) {
                     $q->whereTime('jam_mulai', '<', $jamSelesai)
                         ->whereTime('jam_selesai', '>', $jamMulai);
