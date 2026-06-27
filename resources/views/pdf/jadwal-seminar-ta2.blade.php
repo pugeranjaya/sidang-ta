@@ -33,10 +33,10 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+            page-break-inside: auto;
         }
 
-        table,
         th,
         td {
             border: 1px solid black;
@@ -57,9 +57,15 @@
             text-align: center;
         }
 
-        .grup-block {
+        thead {
+            display: table-header-group;
             page-break-inside: avoid;
-            break-inside: avoid;
+            page-break-after: avoid;
+        }
+        
+        thead tr {
+            page-break-inside: avoid;
+            page-break-after: avoid;
         }
     </style>
 </head>
@@ -119,18 +125,16 @@
             $tanggal = \Carbon\Carbon::parse($tanggalStr)->translatedFormat('l, d F Y');
         @endphp
 
-        <div class="grup-block">
-            <div class="info">
-                <strong>Hari/Tanggal : {{ $tanggal }}</strong>
-            </div>
-            <div class="info">
-                <strong>Ruang : {{ $ruangan }}</strong>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 3%">No</th>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="7" style="border: none; background-color: transparent; text-align: left; padding: 0; padding-bottom: 10px;">
+                        <span style="display: block; margin-bottom: 5px;"><strong>Hari/Tanggal : {{ $tanggal }}</strong></span>
+                        <span style="display: block;"><strong>Ruang : {{ $ruangan }}</strong></span>
+                    </th>
+                </tr>
+                <tr>
+                    <th style="width: 3%">No</th>
                         <th style="width: 8%">Jam</th>
                         <th style="width: 12%">Nama</th>
                         <th style="width: 17%">Judul</th>
@@ -163,7 +167,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
     @endforeach
 
     @if($groupedSidang->isEmpty())
@@ -172,32 +175,35 @@
         </div>
     @endif
 
-    <table style="border: none; margin-top: 40px; width: 100%; border-collapse: collapse;">
-        <tr>
-            <td style="border: none; width: 60%; vertical-align: top; padding: 0;">
-                <p style="margin: 0; font-weight: bold;">Keterangan :</p>
-                <p style="margin: 0;">Mahasiswa yang dijadwalkan seminar, diharapkan</p>
-                <table style="border: none; margin: 0; padding: 0; width: 100%;">
-                    <tr>
-                        <td style="border: none; width: 15px; vertical-align: top; padding: 0;">1.</td>
-                        <td style="border: none; padding: 0; vertical-align: top;">Mengkonfirmasi ulang kesediaan Dosen
-                            Pembimbing sesuai jadwal yang telah disusun</td>
-                    </tr>
-                    <tr>
-                        <td style="border: none; width: 15px; vertical-align: top; padding: 0;">2.</td>
-                        <td style="border: none; padding: 0; vertical-align: top;">Hadir 30 menit sebelum pelaksanaan
-                            seminar</td>
-                    </tr>
-                </table>
-            </td>
-            <td style="border: none; width: 40%; vertical-align: top; text-align: center; padding: 0;">
-                <p style="margin: 0;">Yogyakarta, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
-                <br><br><br><br><br>
-                <p style="margin: 0; text-decoration: underline;">{{ $kajur->nama }}</p>
-                <p style="margin: 0;">NIP. {{ formatNip($kajur->nip) }}</p>
-            </td>
-        </tr>
-    </table>
+    <div style="page-break-inside: avoid; margin-top: 10px;">
+        <table style="border: none; width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="border: none; width: 60%; vertical-align: top; padding: 0;">
+                    <p style="margin: 0; font-weight: bold;">Keterangan :</p>
+                    <p style="margin: 0;">Mahasiswa yang dijadwalkan seminar, diharapkan</p>
+                    <table style="border: none; margin: 0; padding: 0; width: 100%;">
+                        <tr>
+                            <td style="border: none; width: 15px; vertical-align: top; padding: 0;">1.</td>
+                            <td style="border: none; padding: 0; vertical-align: top;">Mengkonfirmasi ulang kesediaan Dosen
+                                Pembimbing sesuai jadwal yang telah disusun</td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; width: 15px; vertical-align: top; padding: 0;">2.</td>
+                            <td style="border: none; padding: 0; vertical-align: top;">Hadir 30 menit sebelum pelaksanaan
+                                seminar</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="border: none; width: 40%; vertical-align: top; text-align: center; padding: 0;">
+                    <p style="margin: 0;">Yogyakarta, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+                    <p style="margin: 0;">Ketua Jurusan</p>
+                    <br><br><br>
+                    <p style="margin: 0; text-decoration: underline;">{{ $kajur->nama }}</p>
+                    <p style="margin: 0;">NIP. {{ formatNip($kajur->nip) }}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
 
 </body>
 

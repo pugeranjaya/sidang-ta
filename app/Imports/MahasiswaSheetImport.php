@@ -100,12 +100,12 @@ class MahasiswaSheetImport implements ToCollection, WithHeadingRow
     {
         foreach ($keys as $key) {
             // maatwebsite converts heading to snake_case lowercase
-            $normalized = strtolower(preg_replace('/[\s\(\)\/\-]+/', '_', $key));
+            $normalized = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $key));
             $normalized = trim($normalized, '_');
 
             // cek key asli dan key yang sudah dinormalkan
             foreach ($row as $k => $v) {
-                $rowKey = strtolower(preg_replace('/[\s\(\)\/\-]+/', '_', (string)$k));
+                $rowKey = strtolower(preg_replace('/[^a-z0-9]+/i', '_', (string)$k));
                 $rowKey = trim($rowKey, '_');
                 if ($rowKey === $normalized || $k === $key) {
                     return $v !== null ? trim((string)$v) : null;
@@ -172,10 +172,15 @@ class MahasiswaSheetImport implements ToCollection, WithHeadingRow
                 'no hp wa',
                 'no hp',
                 'no_hp',
+                'hp',
                 'nomor hp',
                 'nomor_hp',
                 'telepon',
                 'whatsapp',
+                'no whatsapp',
+                'no_whatsapp',
+                'nomor whatsapp',
+                'nomor_whatsapp',
             ]);
 
             // Skip baris kosong

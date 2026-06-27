@@ -65,7 +65,17 @@ class TrackingMahasiswaResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema
+            ->components([
+                \Filament\Infolists\Components\TextEntry::make('nama')->label('Nama Mahasiswa'),
+                \Filament\Infolists\Components\TextEntry::make('nim')->label('NIM'),
+                \Filament\Infolists\Components\TextEntry::make('no_hp')->label('No. HP'),
+                \Filament\Infolists\Components\TextEntry::make('pembimbing.nama')->label('Pembimbing'),
+                \Filament\Infolists\Components\TextEntry::make('rumpun_ta')->label('Rumpun TA'),
+                \Filament\Infolists\Components\TextEntry::make('judul_ta')
+                    ->label('Judul TA')
+                    ->columnSpanFull(),
+            ]);
     }
 
     /**
@@ -211,7 +221,9 @@ class TrackingMahasiswaResource extends Resource
                         }
                     }),
             ])
-            ->recordActions([])
+            ->recordActions([
+                \Filament\Actions\ViewAction::make(),
+            ])
             ->toolbarActions([])
             ->paginated([10, 25, 50, 100])
             ->defaultSort('nama');

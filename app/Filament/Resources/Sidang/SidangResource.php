@@ -28,6 +28,12 @@ class SidangResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'mahasiswa.nim';
 
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+        return $user?->isAdmin() || $user?->isDosen();
+    }
+
     public static function canCreate(): bool
     {
         return auth()->user()?->isAdmin() ?? false;

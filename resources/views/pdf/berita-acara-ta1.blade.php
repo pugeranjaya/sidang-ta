@@ -92,8 +92,8 @@
 
         /* Keterangan Nilai */
         .keterangan-nilai {
-            margin-top: 15px;
-            font-size: 10pt;
+            margin-top: 5px;
+            font-size: 9pt;
         }
         .table-keterangan {
             width: 100%;
@@ -115,7 +115,7 @@
             font-weight: normal;
         }
         .table-revisi tr:last-child td {
-            border-bottom: 1px solid #000;
+            border-bottom: none;
         }
     </style>
 </head>
@@ -126,6 +126,12 @@
         Carbon::setLocale('id');
         $mhs = $sidang->mahasiswa;
         $dt = Carbon::parse($sidang->tanggal);
+        
+        $judulTA = $mhs->judul_ta ?? '-';
+        $judulLen = strlen($judulTA);
+        if ($judulLen > 150) $fontSizeJudul = '9pt';
+        elseif ($judulLen > 100) $fontSizeJudul = '10pt';
+        else $fontSizeJudul = '11pt';
         
         $hari = $dt->translatedFormat('l');
         $bulan = $dt->translatedFormat('F');
@@ -194,7 +200,7 @@
         <tr>
             <td style="width: 130px;">Nama Pemakalah</td>
             <td style="width: 15px;">:</td>
-            <td class="bold uppercase">{{ $mhs->nama ?? '-' }}</td>
+            <td class="bold uppercase" style="white-space: nowrap;">{{ $mhs->nama ?? '-' }}</td>
             <td style="width: 70px;">No. Mhs</td>
             <td style="width: 15px;">:</td>
             <td class="bold">{{ $mhs->nim ?? '-' }}</td>
@@ -212,7 +218,7 @@
         <tr>
             <td>Judul TA</td>
             <td>:</td>
-            <td colspan="4" class="uppercase text-justify">{{ $mhs->judul_ta ?? '-' }}</td>
+            <td colspan="4" class="uppercase text-justify" style="font-size: {{ $fontSizeJudul }};">{{ $judulTA }}</td>
         </tr>
     </table>
 
@@ -257,7 +263,7 @@
             <td style="width: 35%;">Tanda Tangan</td>
         </tr>
         <tr>
-            <td class="uppercase">{{ $mhs->nama ?? '-' }}</td>
+            <td class="uppercase" style="white-space: nowrap;">{{ $mhs->nama ?? '-' }}</td>
             <td>{{ $mhs->nim ?? '-' }}</td>
             <td>.............................</td>
         </tr>
@@ -266,53 +272,50 @@
     <div class="section-title underline">Dosen Pembimbing</div>
     <table class="table-ttd-detail">
         <tr>
-            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
-            <td style="width: 45%;">1. ....................</td>
+            <td style="width: 65%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 35%;">1. ....................</td>
         </tr>
     </table>
 
     <div class="section-title underline">Ketua Sidang</div>
     <table class="table-ttd-detail">
         <tr>
-            <td style="width: 55%;">1. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
-            <td style="width: 45%;">1. ....................</td>
+            <td style="width: 65%;">1. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 35%;">1. ....................</td>
         </tr>
     </table>
 
     <div class="section-title underline">Dosen Penguji</div>
     <table class="table-ttd-detail">
         <tr>
-            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
-            <td style="width: 45%;">1. ....................</td>
+            <td style="width: 65%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 35%;">1. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">2. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
-            <td style="width: 45%; padding-left: 100px;">2. ....................</td>
+            <td style="width: 65%;">2. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 35%; padding-left: 100px;">2. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">3. {{ $sidang->penguji1->nama ?? '-' }}</td>
-            <td style="width: 45%;">3. ....................</td>
+            <td style="width: 65%;">3. {{ $sidang->penguji1->nama ?? '-' }}</td>
+            <td style="width: 35%;">3. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">4. {{ $sidang->penguji2->nama ?? '-' }}</td>
-            <td style="width: 45%; padding-left: 100px;">4. ....................</td>
+            <td style="width: 65%;">4. {{ $sidang->penguji2->nama ?? '-' }}</td>
+            <td style="width: 35%; padding-left: 100px;">4. ....................</td>
         </tr>
     </table>
 
     <div class="keterangan-nilai">
         <table class="table-keterangan" style="border: none;">
             <tr>
-                <td style="width: 100px;">*) Keterangan</td>
-                <td style="width: 10px;">:</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>A : X <span style="font-family: DejaVu Sans;">≥</span> 85</td>
-                <td colspan="2">
-                    <span style="display:inline-block; width: 120px;">B+ : 80 <span style="font-family: DejaVu Sans;">≤</span> X < 85</span>
-                    <span style="display:inline-block; width: 120px;">B : 75 <span style="font-family: DejaVu Sans;">≤</span> X < 80</span>
-                    <span style="display:inline-block; width: 120px;">C+ : 70 <span style="font-family: DejaVu Sans;">≤</span> X < 75</span>
-                    <span style="display:inline-block; width: 120px;">C : 60 <span style="font-family: DejaVu Sans;">≤</span> X < 70</span>
+                <td style="width: 90px; vertical-align: top; white-space: nowrap;">*) Keterangan</td>
+                <td style="width: 10px; vertical-align: top;">:</td>
+                <td style="white-space: nowrap;">
+                    A : X <span style="font-family: DejaVu Sans;">≥</span> 85 &nbsp;&nbsp;&nbsp; 
+                    B+ : 80 <span style="font-family: DejaVu Sans;">≤</span> X < 85 &nbsp;&nbsp;&nbsp; 
+                    B : 75 <span style="font-family: DejaVu Sans;">≤</span> X < 80 &nbsp;&nbsp;&nbsp; 
+                    C+ : 70 <span style="font-family: DejaVu Sans;">≤</span> X < 75 &nbsp;&nbsp;&nbsp; 
+                    C : 60 <span style="font-family: DejaVu Sans;">≤</span> X < 70
                 </td>
             </tr>
         </table>
@@ -373,36 +376,36 @@
     <div class="section-title-hadir underline">Dosen Pembimbing</div>
     <table class="table-ttd-hadir">
         <tr>
-            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
-            <td style="width: 45%;">1. ....................</td>
+            <td style="width: 65%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 35%;">1. ....................</td>
         </tr>
     </table>
 
     <div class="section-title-hadir underline">Ketua Sidang</div>
     <table class="table-ttd-hadir">
         <tr>
-            <td style="width: 55%;">1. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
-            <td style="width: 45%;">1. ....................</td>
+            <td style="width: 65%;">1. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 35%;">1. ....................</td>
         </tr>
     </table>
 
     <div class="section-title-hadir underline">Dosen Penguji</div>
     <table class="table-ttd-hadir">
         <tr>
-            <td style="width: 55%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
-            <td style="width: 45%;">1. ....................</td>
+            <td style="width: 65%;">1. {{ $mhs->pembimbing->nama ?? '-' }}</td>
+            <td style="width: 35%;">1. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">2. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
-            <td style="width: 45%; padding-left: 100px;">2. ....................</td>
+            <td style="width: 65%;">2. {{ $sidang->ketuaSidang->nama ?? '-' }}</td>
+            <td style="width: 35%; padding-left: 100px;">2. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">3. {{ $sidang->penguji1->nama ?? '-' }}</td>
-            <td style="width: 45%;">3. ....................</td>
+            <td style="width: 65%;">3. {{ $sidang->penguji1->nama ?? '-' }}</td>
+            <td style="width: 35%;">3. ....................</td>
         </tr>
         <tr>
-            <td style="width: 55%;">4. {{ $sidang->penguji2->nama ?? '-' }}</td>
-            <td style="width: 45%; padding-left: 100px;">4. ....................</td>
+            <td style="width: 65%;">4. {{ $sidang->penguji2->nama ?? '-' }}</td>
+            <td style="width: 35%; padding-left: 100px;">4. ....................</td>
         </tr>
     </table>
 
@@ -417,7 +420,7 @@
     <table class="table-data-top" style="margin-bottom: 25px;">
         <tr><td style="width: 150px;">Nama Mahasiswa</td><td style="width: 15px;">:</td><td class="bold uppercase">{{ $mhs->nama ?? '-' }}</td></tr>
         <tr><td>Nomor Mahasiswa</td><td>:</td><td class="bold">{{ $mhs->nim ?? '-' }}</td></tr>
-        <tr><td>Judul Tugas Akhir</td><td>:</td><td class="bold uppercase text-justify">{{ $mhs->judul_ta ?? '-' }}</td></tr>
+        <tr><td>Judul Tugas Akhir</td><td>:</td><td class="bold uppercase text-justify" style="font-size: {{ $fontSizeJudul }};">{{ $judulTA }}</td></tr>
     </table>
 
     <table class="table-revisi">
@@ -425,7 +428,7 @@
             <th style="text-align: center; width: 85%;">Catatan/Revisi</th>
             <th style="text-align: center; width: 15%;">Hal</th>
         </tr>
-        @for($i=0; $i<22; $i++)
+        @for($i=0; $i<19; $i++)
         <tr>
             <td style="padding: 15px;"></td>
             <td style="padding: 15px;"></td>
@@ -433,15 +436,18 @@
         @endfor
     </table>
 
-    <table style="width: 100%; margin-top: 25px;">
-        <tr>
-            <td style="width: 65%;"></td>
-            <td style="width: 35%; text-align: center;">
-                <p style="margin:0">Yogyakarta, {{ $dt->translatedFormat('j F Y') }}</p>
-                <p style="margin:0">Penguji</p>
-            </td>
-        </tr>
-    </table>
+    <div style="width: 100%; position: absolute; bottom: 0;">
+        <hr style="border: 0; border-top: 1px solid #000; margin: 0 0 10px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 65%;"></td>
+                <td style="width: 35%; text-align: center;">
+                    <p style="margin:0">Yogyakarta, {{ $dt->translatedFormat('j F Y') }}</p>
+                    <p style="margin:0">Penguji</p>
+                </td>
+            </tr>
+        </table>
+    </div>
 
 </body>
 </html>
