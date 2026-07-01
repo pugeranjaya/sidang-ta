@@ -56,12 +56,14 @@ return new class extends Migration
                     ]
                 );
 
-                // For the `dosen` table, try to find an existing record that might have been created by `DosenSeeder` with a generic email.
-                // Or create it if it doesn't exist. We check by similar name (using like).
-                // Or just create it with a dummy NIP/Rumpun Keahlian if they don't exist at all.
-                $cleanNameForSearch = '%' . preg_replace('/[^a-z]/', '%', strtolower(preg_replace('/(prof|dr|ir|s\.t|m\.t|d\.eng|ipu|asean eng|m\.sc|m\.eng|s\.tp|s\.si|m\.si|ph\.d|m\.kom|m\.hum|dra)\.?/i', '', $dosen['nama']))) . '%';
+                // Cek berdasarkan email dulu (mungkin sudah diupdate oleh event User::saved)
+                $existingDosen = Dosen::where('email', $dosen['email'])->first();
                 
-                $existingDosen = Dosen::whereRaw('LOWER(nama) LIKE ?', [$cleanNameForSearch])->first();
+                if (!$existingDosen) {
+                    // Cek berdasarkan nama persis
+                    $existingDosen = Dosen::where('nama', $dosen['nama'])->first();
+                }
+
                 if ($existingDosen) {
                     // Update email to exactly match so they can login
                     $existingDosen->email = $dosen['email'];
