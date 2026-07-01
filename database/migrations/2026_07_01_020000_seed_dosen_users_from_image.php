@@ -71,7 +71,7 @@ return new class extends Migration
                     Dosen::create([
                         'nama' => $dosen['nama'],
                         'email' => $dosen['email'],
-                        'nip' => '00000000 000000 0 000', // Dummy nip
+                        'nip' => 'DUMMY-' . uniqid(), // Fix: Unique dummy nip to prevent constraint violation
                         'rumpun_keahlian' => ['Umum'],
                     ]);
                 }
