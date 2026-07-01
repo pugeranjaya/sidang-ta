@@ -91,7 +91,7 @@
                 <option value="semua">Semua Thn</option>
                 @php
                     // Ambil murni hanya tahun yang ada jadwal sidangnya di database
-                    $years = \App\Models\Sidang::selectRaw('DISTINCT YEAR(tanggal) as tahun')
+                    $years = \App\Models\Sidang::selectRaw('DISTINCT EXTRACT(YEAR FROM tanggal) as tahun')
                         ->whereNotNull('tanggal')
                         ->orderByDesc('tahun')
                         ->pluck('tahun')
