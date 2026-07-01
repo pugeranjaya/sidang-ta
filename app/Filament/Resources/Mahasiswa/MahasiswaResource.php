@@ -37,10 +37,6 @@ class MahasiswaResource extends Resource
         return auth()->user()?->isAdmin() ?? false;
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
 
     public static function getGloballySearchableAttributes(): array
     {

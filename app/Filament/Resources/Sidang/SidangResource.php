@@ -49,15 +49,7 @@ class SidangResource extends Resource
         return auth()->user()?->isAdmin() ?? false;
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return null;
-    }
 
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'warning';
-    }
 
     public static function getGloballySearchableAttributes(): array
     {
