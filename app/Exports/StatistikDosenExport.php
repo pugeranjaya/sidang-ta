@@ -47,7 +47,7 @@ class StatistikDosenExport implements FromQuery, WithMapping, WithEvents, Should
         ));
         
         // Sort like the frontend
-        $query->orderByRaw('(IFNULL(ketua_kumulatif_count,0) + IFNULL(p1_kumulatif_count,0) + IFNULL(p2_kumulatif_count,0)) DESC');
+        $query->orderByRaw('(COALESCE(ketua_kumulatif_count,0) + COALESCE(p1_kumulatif_count,0) + COALESCE(p2_kumulatif_count,0)) DESC');
 
         return $query;
     }
