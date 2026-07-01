@@ -233,7 +233,12 @@ class StatistikDosenResource extends Resource
                     ($record->ketua_kumulatif_count ?? 0) + 
                     ($record->p1_kumulatif_count ?? 0) + 
                     ($record->p2_kumulatif_count ?? 0)
-                ),
+                )
+                ->sortable(query: function (Builder $query, string $direction): Builder {
+                    return $query->orderBy('ketua_kumulatif_count', $direction)
+                                 ->orderBy('p1_kumulatif_count', $direction)
+                                 ->orderBy('p2_kumulatif_count', $direction);
+                }),
         ];
 
         return $table
