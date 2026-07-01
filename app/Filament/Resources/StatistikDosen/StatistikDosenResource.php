@@ -106,7 +106,7 @@ class StatistikDosenResource extends Resource
                     $mingguInt = (int) $minggu;
                     $startDay = ($mingguInt - 1) * 7 + 1;
                     $endDay = $mingguInt === 5 ? 31 : $mingguInt * 7;
-                    $sq->whereRaw("DAY(tanggal) BETWEEN ? AND ?", [$startDay, $endDay]);
+                    $sq->whereRaw("EXTRACT(DAY FROM tanggal) BETWEEN ? AND ?", [$startDay, $endDay]);
                 }
             });
         };
@@ -233,10 +233,7 @@ class StatistikDosenResource extends Resource
                     ($record->ketua_kumulatif_count ?? 0) + 
                     ($record->p1_kumulatif_count ?? 0) + 
                     ($record->p2_kumulatif_count ?? 0)
-                )
-                ->sortable(query: function (Builder $query, string $direction): Builder {
-                    return $query->orderByRaw('(COALESCE(ketua_kumulatif_count,0) + COALESCE(p1_kumulatif_count,0) + COALESCE(p2_kumulatif_count,0)) ' . $direction);
-                }),
+                ),
         ];
 
         return $table
