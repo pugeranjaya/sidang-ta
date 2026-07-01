@@ -26,7 +26,7 @@ class User extends Authenticatable implements FilamentUser
         static::saved(function ($user) {
             if ($user->role === 'dosen') {
                 // Cari dosen yang namanya mengandung nama user (karena dosen di tabel dosen sering ada gelar)
-                $dosen = Dosen::where('nama', 'like', '%' . $user->name . '%')->first();
+                $dosen = Dosen::whereRaw('LOWER(nama) LIKE LOWER(?)', ['%' . $user->name . '%'])->first();
                 if ($dosen) {
                     $dosen->update(['email' => $user->email]);
                 }

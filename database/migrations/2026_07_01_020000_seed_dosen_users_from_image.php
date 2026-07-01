@@ -61,7 +61,7 @@ return new class extends Migration
                 // Or just create it with a dummy NIP/Rumpun Keahlian if they don't exist at all.
                 $cleanNameForSearch = '%' . preg_replace('/[^a-z]/', '%', strtolower(preg_replace('/(prof|dr|ir|s\.t|m\.t|d\.eng|ipu|asean eng|m\.sc|m\.eng|s\.tp|s\.si|m\.si|ph\.d|m\.kom|m\.hum|dra)\.?/i', '', $dosen['nama']))) . '%';
                 
-                $existingDosen = Dosen::where('nama', 'like', $cleanNameForSearch)->first();
+                $existingDosen = Dosen::whereRaw('LOWER(nama) LIKE ?', [$cleanNameForSearch])->first();
                 if ($existingDosen) {
                     // Update email to exactly match so they can login
                     $existingDosen->email = $dosen['email'];
