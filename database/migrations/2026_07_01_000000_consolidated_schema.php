@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Schema;
  */
 return new class extends Migration
 {
+    /**
+     * Disable transaction wrapping for Neon PgBouncer compatibility.
+     */
+    public $withinTransaction = false;
+
     public function up(): void
     {
         // 1. Users, password_reset_tokens, sessions (from Laravel default + role column)
